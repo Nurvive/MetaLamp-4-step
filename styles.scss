@@ -28,11 +28,11 @@ body {
     background-color: #37f3a1;
     border-radius: 50%;
     position: absolute;
-    top:-75%;
+    top: -75%;
     cursor: pointer;
 
     &-bubble {
-      //display: none;
+      display: none;
       position: absolute;
       bottom: 150%;
       background-color: indianred;
@@ -40,6 +40,11 @@ body {
       left: -25%;
       cursor: initial;
       border-radius: 8px;
+    }
+    &:hover{
+      & .slider__head-bubble{
+        display: block;
+      }
     }
   }
 
