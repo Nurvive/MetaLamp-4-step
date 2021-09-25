@@ -41,11 +41,11 @@ body {
       cursor: initial;
       border-radius: 8px;
     }
-    &:hover{
-      & .slider__head-bubble{
-        display: block;
-      }
-    }
+    //&:hover{
+    //  & .slider__head-bubble{
+    //    display: block;
+    //  }
+    //}
   }
 
   &__steps {
