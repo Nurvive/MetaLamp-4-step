@@ -2,25 +2,26 @@ import {Observer} from "./observer";
 
 export class Model extends Observer {
     elem: HTMLElement;
-    bubble: number
-
+    min:number
+    max:number
+    step:number
+    position:number
     constructor(elem: HTMLElement) {
         super()
         this.elem = elem
-        this.bubble = 0
-
+        this.min = 0
+        this.max = 100
+        this.step = 1
+        this.position = 0
     }
 
-    bubbleValue() {
-        return this.bubble
-    }
-
-    changeBubbleValue(optoins) {
-        if (optoins.direction === "+")
-            this.bubble += optoins.value
-        else
-            this.bubble -= optoins.value
-        this.notify(this.bubbleValue())
+    calcPosition(data):void {
+        const leftPercentage = data.xPos / data.elemWidth * 100
+        console.log(leftPercentage)
+        this.position = this.min + ((this.max-this.min)/100 * leftPercentage)
+        this.position = Math.round(this.position / this.step) * this.step
+        console.log(this.position)
+        this.notify({position:this.position, percentage:leftPercentage})
     }
 
 }

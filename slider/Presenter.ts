@@ -11,8 +11,8 @@ export class Presenter {
         this.model = model;
         this.elemHead = document.getElementById('slider__head')
         this.view = view
-        this.view.subscribe(this.model.changeBubbleValue.bind(this.model))
-        this.model.subscribe(this.view.changeBubble.bind(this.view))
+        this.view.subscribe(this.model.calcPosition.bind(this.model))
+        this.model.subscribe(this.view.changePosition.bind(this.view))
     }
 
 

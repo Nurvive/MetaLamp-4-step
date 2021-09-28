@@ -2,12 +2,9 @@ import {Observer} from "./observer";
 
 export class View extends Observer {
     elem: HTMLElement;
-    posInit: number;
-    posX: number;
-    posX2: number;
-    trfRegExp: any;
     elemHead: HTMLElement;
-    elemHeadBubble:HTMLElement
+    elemHeadBubble: HTMLElement
+
     constructor(elem: HTMLElement) {
         super()
         this.elem = elem
@@ -15,9 +12,7 @@ export class View extends Observer {
         this.elemHead = document.getElementById('slider__head')
         this.elem.classList.add('slider')
         this.elemHead.style.transform = 'translate(0px, 0px)';
-        this.trfRegExp = /[-0-9.]+(?=px)/
         this.elemHeadBubble = this.elem.querySelector('[data-type="bubble"]')
-        this.posX = 0
         this.setup();
 
     }
@@ -41,55 +36,47 @@ export class View extends Observer {
         this.elem.innerHTML = this.getTemplate();
     }
 
-    protected setup() {
+    protected setup() :void {
         this.elemHead.addEventListener('mousedown', this.swipeStart)
         this.elemHead.addEventListener('touchstart', this.swipeStart);
     }
 
+    private isInside(pos:number) :boolean {
+        return pos >= 0 && pos < this.elem.offsetWidth;
+    }
 
-    getEvent(event) {
+    getEvent(event:any):MouseEvent {
         return (event.type.search('touch') !== -1) ? event.touches[0] : event;
     }
 
-    swipeStart = (event) => {
-        const evt = this.getEvent(event);
-        this.posInit = this.posX = evt.clientX;
+    swipeStart  = () :void =>  {
         this.elemHeadBubble.style.display = 'block'
-        document.addEventListener('touchmove', this.swipeAction);
+        document.addEventListener('touchmove', this.swipeAction, { passive: false });
         document.addEventListener('mousemove', this.swipeAction);
         document.addEventListener('touchend', this.swipeEnd);
         document.addEventListener('mouseup', this.swipeEnd);
     }
 
-    swipeAction = (event) => {
+    swipeAction = (event: Event) :void => {
         event.preventDefault()
         const evt = this.getEvent(event);
-        let style = this.elemHead.style.transform;
-        let transform = +style.match(this.trfRegExp)[0];
-        this.posX2 = this.posX - evt.clientX;
-        this.posX = evt.clientX;
-        let newPos = transform - this.posX2;
-
-        if (newPos >= 0 && newPos < this.elem.clientWidth - this.elemHead.clientWidth) {
-            this.elemHead.style.transform = `translate(${transform - this.posX2}px, 0px)`
-            if (this.posX2 >= 1)
-                this.notify({direction: '-',value:this.posX2})
-            else if(this.posX2 <= -1)
-                this.notify({direction: '+', value:this.posX2*-1})
+        let xPos = evt.clientX - this.elem.offsetLeft;
+        if (this.isInside(xPos)) {
+            this.notify({xPos: xPos, elemWidth:this.elem.getBoundingClientRect().width})
         }
     }
-
-    swipeEnd = () => {
-        document.removeEventListener('touchmove', this.swipeAction);
+    swipeEnd = () :void => {
+        document.removeEventListener('touchmove', this.swipeAction, );
         document.removeEventListener('mousemove', this.swipeAction);
         document.removeEventListener('touchend', this.swipeEnd);
         document.removeEventListener('mouseup', this.swipeEnd);
         this.elemHeadBubble.style.display = 'none'
-
     }
 
-    changeBubble(value: number): void {
-        this.elemHeadBubble.innerHTML = String(value)
+    changePosition(data): void {
+        this.elemHeadBubble.innerHTML = String(Math.round(data.position))
+        const newPos = (this.elem.getBoundingClientRect().width - this.elemHead.getBoundingClientRect().width) / 100 * data.percentage
+        this.elemHead.style.transform = `translate(${newPos}px, 0px)`
     }
 
 }
