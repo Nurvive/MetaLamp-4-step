@@ -7,10 +7,12 @@ export class Slider {
     presenter: Presenter;
     model: Model;
 
-    constructor(elem:HTMLElement) {
+    constructor(elem: HTMLElement, settings: object) {
         this.elem = elem
         this.model = new Model(this.elem)
+        this.model.init(settings)
         this.view = new View(this.elem)
+        this.view.init(this.model.state)
         this.presenter = new Presenter(this.elem, this.model, this.view)
     }
 }
