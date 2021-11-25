@@ -50,7 +50,8 @@ export class View extends Observer {
     }
 
     swipeStart = (): void => {
-        this.head.showBubble()
+        if(this.state.bubble)
+            this.head.showBubble();
         document.addEventListener('touchmove', this.swipeAction, {passive: false});
         document.addEventListener('mousemove', this.swipeAction);
         document.addEventListener('touchend', this.swipeEnd);
@@ -70,7 +71,8 @@ export class View extends Observer {
         document.removeEventListener('mousemove', this.swipeAction);
         document.removeEventListener('touchend', this.swipeEnd);
         document.removeEventListener('mouseup', this.swipeEnd);
-        this.head.hideBubble()
+        if(this.state.bubble)
+            this.head.hideBubble();
     }
 
     changePosition(data): void {
