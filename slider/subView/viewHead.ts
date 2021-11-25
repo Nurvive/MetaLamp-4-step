@@ -44,10 +44,12 @@ export default class viewHead {
     showBubble() {
         this.bubble.style.display = 'block'
     }
-    hideBubble(){
+
+    hideBubble() {
         this.bubble.style.display = 'none'
     }
-    get getWidth(){
+
+    get getWidth() {
         return this.element.getBoundingClientRect().width
     }
 }

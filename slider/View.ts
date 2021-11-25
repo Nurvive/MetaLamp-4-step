@@ -1,44 +1,33 @@
 import {Observer} from "./observer";
 import viewHead from './subView/viewHead';
+import Scale from "./subView/Scale";
 
 export class View extends Observer {
     elem: HTMLElement;
     state: any
     head: viewHead
+    Scale: Scale
 
     constructor(elem: HTMLElement) {
         super()
         this.elem = elem
         this.state = {};
+
     }
 
     init(options) {
         Object.assign(this.state, options);
-        this.render();
-        this.head = new viewHead(this.elem, this.state.direction, this.state.type,this.state.bubble);
+        this.Scale = new Scale(this.elem, this.state.direction);
+        this.Scale.init(this.state.min, this.state.max)
+        this.head = new viewHead(this.elem, this.state.direction, this.state.type, this.state.bubble);
         this.head.init(this.state.min);
         this.setup();
-    }
-
-    protected getTemplate(): string {
-        return `
-    <ul class="slider__steps">
-        <li class="slider__step">0</li>
-        <li class="slider__step">25</li>
-        <li class="slider__step">50</li>
-        <li class="slider__step">75</li>
-        <li class="slider__step">100</li>
-    </ul>
-        `
-    }
-
-    protected render(): void {
-        this.elem.innerHTML = this.getTemplate();
     }
 
     protected setup(): void {
         this.head.element.addEventListener('mousedown', this.swipeStart)
         this.head.element.addEventListener('touchstart', this.swipeStart);
+        this.Scale.element.addEventListener('click',this.onScaleClick)
     }
 
     private isInside(pos: number): boolean {
@@ -48,9 +37,11 @@ export class View extends Observer {
     getEvent(event: any): MouseEvent {
         return (event.type.search('touch') !== -1) ? event.touches[0] : event;
     }
-
+    onScaleClick(){
+        //доделать обработчик
+    }
     swipeStart = (): void => {
-        if(this.state.bubble)
+        if (this.state.bubble)
             this.head.showBubble();
         document.addEventListener('touchmove', this.swipeAction, {passive: false});
         document.addEventListener('mousemove', this.swipeAction);
@@ -71,7 +62,7 @@ export class View extends Observer {
         document.removeEventListener('mousemove', this.swipeAction);
         document.removeEventListener('touchend', this.swipeEnd);
         document.removeEventListener('mouseup', this.swipeEnd);
-        if(this.state.bubble)
+        if (this.state.bubble)
             this.head.hideBubble();
     }
 

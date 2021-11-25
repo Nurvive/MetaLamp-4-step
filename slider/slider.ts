@@ -1,6 +1,7 @@
 import {View} from './View'
 import {Presenter} from './Presenter'
 import {Model} from './Model'
+
 export class Slider {
     view: View;
     elem: HTMLElement;

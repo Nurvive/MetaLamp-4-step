@@ -5,8 +5,9 @@ export class Presenter {
     elem: HTMLElement;
     model: Model;
     elemHead: HTMLElement;
-    view:View
-    constructor(elem: HTMLElement, model: Model, view:View) {
+    view: View
+
+    constructor(elem: HTMLElement, model: Model, view: View) {
         this.elem = elem;
         this.model = model;
         this.elemHead = document.getElementById('slider__head')
