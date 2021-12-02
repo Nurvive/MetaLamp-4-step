@@ -13,14 +13,18 @@ body {
 
 .slider {
   //&__body {
-  width: 100%;
-  height: 10px;
-  background-color: #ccc;
-  border-radius: 8px;
-  border: 1px solid black;
-  position: relative;
-  //}
 
+  //}
+  &__line{
+    width: 100%;
+    height: 10px;
+    background-color: #ccc;
+    border-radius: 8px;
+    border: 1px solid black;
+    position: relative;
+    &_vertical{
+    }
+  }
   &__head {
     width: 20px;
     height: 20px;

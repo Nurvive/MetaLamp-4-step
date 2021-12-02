@@ -1,25 +1,26 @@
 import {Observer} from "./observer";
 import viewHead from './subView/viewHead';
 import Scale from "./subView/Scale";
-
+import Line from "./subView/Line"
 export class View extends Observer {
     elem: HTMLElement;
     state: any
     head: viewHead
     scale: Scale
-
+    line : Line
     constructor(elem: HTMLElement) {
         super()
         this.elem = elem
         this.state = {};
-
     }
 
     init(options) {
         Object.assign(this.state, options);
-        this.scale = new Scale(this.elem, this.state.direction);
+        this.line = new Line(this.elem,this.state.direction)
+        this.line.init()
+        this.scale = new Scale(this.line.element, this.state.direction);
         this.scale.init(this.state.min, this.state.max)
-        this.head = new viewHead(this.elem, this.state.direction, this.state.type, this.state.bubble);
+        this.head = new viewHead(this.line.element, this.state.direction, this.state.type, this.state.bubble);
         this.head.init(this.state.min);
         this.setup();
     }
