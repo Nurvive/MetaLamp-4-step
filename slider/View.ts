@@ -6,7 +6,7 @@ export class View extends Observer {
     elem: HTMLElement;
     state: any
     head: viewHead
-    Scale: Scale
+    scale: Scale
 
     constructor(elem: HTMLElement) {
         super()
@@ -17,8 +17,8 @@ export class View extends Observer {
 
     init(options) {
         Object.assign(this.state, options);
-        this.Scale = new Scale(this.elem, this.state.direction);
-        this.Scale.init(this.state.min, this.state.max)
+        this.scale = new Scale(this.elem, this.state.direction);
+        this.scale.init(this.state.min, this.state.max)
         this.head = new viewHead(this.elem, this.state.direction, this.state.type, this.state.bubble);
         this.head.init(this.state.min);
         this.setup();
@@ -27,7 +27,7 @@ export class View extends Observer {
     protected setup(): void {
         this.head.element.addEventListener('mousedown', this.swipeStart)
         this.head.element.addEventListener('touchstart', this.swipeStart);
-        this.Scale.element.addEventListener('click',this.onScaleClick)
+        this.scale.element.addEventListener('click', this.onScaleClick.bind(this))
     }
 
     private isInside(pos: number): boolean {
@@ -37,9 +37,16 @@ export class View extends Observer {
     getEvent(event: any): MouseEvent {
         return (event.type.search('touch') !== -1) ? event.touches[0] : event;
     }
-    onScaleClick(){
-        //доделать обработчик
+
+    onScaleClick(event) {
+        event.preventDefault()
+        const evt = this.getEvent(event);
+        const xPos = evt.clientX - this.elem.offsetLeft;
+        if (this.isInside(xPos)) {
+            this.notify({xPos: xPos, elemWidth: this.scale.getWidth})
+        }
     }
+
     swipeStart = (): void => {
         if (this.state.bubble)
             this.head.showBubble();
@@ -52,7 +59,7 @@ export class View extends Observer {
     swipeAction = (event: Event): void => {
         event.preventDefault()
         const evt = this.getEvent(event);
-        let xPos = evt.clientX - this.elem.offsetLeft;
+        const xPos = evt.clientX - this.elem.offsetLeft;
         if (this.isInside(xPos)) {
             this.notify({xPos: xPos, elemWidth: this.elem.getBoundingClientRect().width})
         }

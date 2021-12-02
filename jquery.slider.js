@@ -7,7 +7,7 @@ import {Slider} from "./slider/slider"
             max: 100,
             min: 0,
             step: 1,
-            position: 0,
+            initValue: 0,
             type: 'single'
         }, options)
 
