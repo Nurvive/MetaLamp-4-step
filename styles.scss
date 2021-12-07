@@ -12,9 +12,6 @@ body {
 }
 
 .slider {
-  //&__body {
-
-  //}
   &__line {
     width: 100%;
     height: 10px;
@@ -22,6 +19,23 @@ body {
     border-radius: 8px;
     border: 1px solid black;
     position: relative;
+    padding: 1px;
+
+    & .slider__line-progress {
+      position: relative;
+      overflow: hidden;
+      display: block;
+      width: 0;
+      height: 100%;
+      background-color: rgb(43, 194, 83);
+      box-shadow: inset 0 2px 9px rgba(255, 255, 255, 0.3),
+      inset 0 -2px 6px rgba(0, 0, 0, 0.4);
+
+      &_vertical {
+        width: 100%;
+        height: 0;
+      }
+    }
 
     &_vertical {
       width: 10px;
@@ -60,7 +74,7 @@ body {
   }
 
   &__scale {
-    position: relative;
+    position: absolute;
     top: 6px;
     width: 100%;
     height: 20px;
@@ -112,15 +126,6 @@ body {
       text-align: right;
     }
   }
-
-  //&__steps {
-  //  list-style-type: none;
-  //  color: #757575;
-  //  padding: 0;
-  //  display: flex;
-  //  justify-content: space-between;
-  //  width: 100%;
-  //}
 }
 
 

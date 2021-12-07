@@ -13,7 +13,9 @@ import {Slider} from "./slider/slider"
 
         return this.each(function (e) {
             let ths = $(this);
-            let slider = new Slider(ths[0], settings)
+            if (settings.step > settings.max - settings.min)
+                throw "Шаг не может быть больше разницы максимума и минимума";
+            let slider = new Slider(ths[0], settings);
         })
     }
 })(jQuery)

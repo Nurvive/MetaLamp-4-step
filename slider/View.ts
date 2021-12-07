@@ -80,13 +80,14 @@ export class View extends Observer {
     }
 
     changePosition(data): void {
-        this.head.updateBubble(Math.round(data.position))
+        this.head.updateBubble(Math.round(data.position));
         let newPos;
         if (this.state.direction === 'horizontal')
-            newPos = (this.elem.getBoundingClientRect().width - this.head.getWidth) / 100 * data.percentage
+            newPos = (this.elem.getBoundingClientRect().width - this.head.getWidth) / 100 * data.percentage;
         else
-            newPos = (this.elem.getBoundingClientRect().height - this.head.getHeight) / 100 * data.percentage
-        this.head.updatePosition(newPos)
+            newPos = (this.elem.getBoundingClientRect().height - this.head.getHeight) / 100 * data.percentage;
+        this.head.updatePosition(newPos);
+        this.line.progressValue(newPos);
     }
 
 }
