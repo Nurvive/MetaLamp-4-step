@@ -15,16 +15,21 @@ body {
   //&__body {
 
   //}
-  &__line{
+  &__line {
     width: 100%;
     height: 10px;
     background-color: #ccc;
     border-radius: 8px;
     border: 1px solid black;
     position: relative;
-    &_vertical{
+
+    &_vertical {
+      width: 10px;
+      height: 300px;
+
     }
   }
+
   &__head {
     width: 20px;
     height: 20px;
@@ -35,6 +40,11 @@ body {
     top: -75%;
     cursor: pointer;
     z-index: 3;
+
+    &_vertical {
+      top: 0;
+      left: -6px;
+    }
 
     &-bubble {
       display: none;
@@ -47,12 +57,6 @@ body {
       border-radius: 8px;
       z-index: 3;
     }
-
-    //&:hover{
-    //  & .slider__head-bubble{
-    //    display: block;
-    //  }
-    //}
   }
 
   &__scale {
@@ -77,6 +81,7 @@ body {
     background: black;
     transform: translateX(-50%);
     position: absolute;
+
     &_vertical {
       left: 14px;
       height: 1px;

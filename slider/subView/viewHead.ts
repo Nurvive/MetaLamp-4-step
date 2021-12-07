@@ -33,7 +33,10 @@ export default class viewHead {
     }
 
     updatePosition(newPos: number) {
-        this.element.style.transform = `translate(${newPos}px, 0px)`;
+        if (this.direction === 'horizontal')
+            this.element.style.transform = `translate(${newPos}px, 0px)`;
+        else
+            this.element.style.transform = `translate(0px, ${newPos}px)`;
     }
 
     updateBubble(value: number) {
@@ -51,5 +54,9 @@ export default class viewHead {
 
     get getWidth() {
         return this.element.getBoundingClientRect().width
+    }
+
+    get getHeight() {
+        return this.element.getBoundingClientRect().height
     }
 }

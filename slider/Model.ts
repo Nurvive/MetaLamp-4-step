@@ -6,12 +6,14 @@ interface state {
     max?: number
     position?: number
     step?: number
+    direction?: string
 }
 
 export class Model extends Observer {
     elem: HTMLElement;
     state: state
-    value:number
+    value: number
+
     constructor(elem: HTMLElement) {
         super()
         this.elem = elem
@@ -25,10 +27,11 @@ export class Model extends Observer {
     }
 
     calcPosition(data): void {
-        const leftPercentage = data.xPos / data.elemWidth * 100
-        this.state.position = this.state.min + ((this.state.max - this.state.min) / 100 * leftPercentage)
+        let percentage;
+        percentage = data.Pos / data.elemSize * 100;
+        this.state.position = this.state.min + ((this.state.max - this.state.min) / 100 * percentage)
         this.state.position = Math.round(this.state.position / this.state.step) * this.state.step
-        this.notify({position: this.state.position, percentage: leftPercentage})
+        this.notify({position: this.state.position, percentage: percentage})
         this.value = this.state.position
     }
 

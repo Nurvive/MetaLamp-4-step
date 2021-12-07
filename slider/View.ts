@@ -2,21 +2,23 @@ import {Observer} from "./observer";
 import viewHead from './subView/viewHead';
 import Scale from "./subView/Scale";
 import Line from "./subView/Line"
+
 export class View extends Observer {
     elem: HTMLElement;
     state: any
     head: viewHead
     scale: Scale
-    line : Line
+    line: Line
+
     constructor(elem: HTMLElement) {
         super()
         this.elem = elem
         this.state = {};
     }
 
-    init(options) {
+    init(options: object) {
         Object.assign(this.state, options);
-        this.line = new Line(this.elem,this.state.direction)
+        this.line = new Line(this.elem, this.state.direction)
         this.line.init()
         this.scale = new Scale(this.line.element, this.state.direction);
         this.scale.init(this.state.min, this.state.max)
@@ -28,25 +30,21 @@ export class View extends Observer {
     protected setup(): void {
         this.head.element.addEventListener('mousedown', this.swipeStart)
         this.head.element.addEventListener('touchstart', this.swipeStart);
-        this.scale.element.addEventListener('click', this.onScaleClick.bind(this))
+        this.scale.element.addEventListener('click', this.swipeAction.bind(this))
     }
 
-    private isInside(pos: number): boolean {
+    private isInsideX(pos: number): boolean {
         return pos >= 0 && pos < this.elem.offsetWidth;
+    }
+
+    private isInsideY(pos: number): boolean {
+        return pos >= 0 && pos < this.elem.offsetHeight;
     }
 
     getEvent(event: any): MouseEvent {
         return (event.type.search('touch') !== -1) ? event.touches[0] : event;
     }
 
-    onScaleClick(event) {
-        event.preventDefault()
-        const evt = this.getEvent(event);
-        const xPos = evt.clientX - this.elem.offsetLeft;
-        if (this.isInside(xPos)) {
-            this.notify({xPos: xPos, elemWidth: this.scale.getWidth})
-        }
-    }
 
     swipeStart = (): void => {
         if (this.state.bubble)
@@ -60,9 +58,16 @@ export class View extends Observer {
     swipeAction = (event: Event): void => {
         event.preventDefault()
         const evt = this.getEvent(event);
-        const xPos = evt.clientX - this.elem.offsetLeft;
-        if (this.isInside(xPos)) {
-            this.notify({xPos: xPos, elemWidth: this.elem.getBoundingClientRect().width})
+        if (this.state.direction === 'horizontal') {
+            const xPos = evt.clientX - this.elem.offsetLeft;
+            if (this.isInsideX(xPos)) {
+                this.notify({Pos: xPos, elemSize: this.elem.getBoundingClientRect().width})
+            }
+        } else {
+            const yPos = evt.clientY - this.elem.offsetTop;
+            if (this.isInsideY(yPos)) {
+                this.notify({Pos: yPos, elemSize: this.elem.getBoundingClientRect().height})
+            }
         }
     }
     swipeEnd = (): void => {
@@ -76,7 +81,11 @@ export class View extends Observer {
 
     changePosition(data): void {
         this.head.updateBubble(Math.round(data.position))
-        const newPos = (this.elem.getBoundingClientRect().width - this.head.getWidth) / 100 * data.percentage
+        let newPos;
+        if (this.state.direction === 'horizontal')
+            newPos = (this.elem.getBoundingClientRect().width - this.head.getWidth) / 100 * data.percentage
+        else
+            newPos = (this.elem.getBoundingClientRect().height - this.head.getHeight) / 100 * data.percentage
         this.head.updatePosition(newPos)
     }
 
