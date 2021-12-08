@@ -8,7 +8,8 @@ import {Slider} from "./slider/slider"
             min: 0,
             step: 1,
             initValue: 0,
-            type: 'single'
+            type: 'single',
+
         }, options)
 
         return this.each(function (e) {

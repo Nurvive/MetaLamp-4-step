@@ -9,7 +9,8 @@ $().ready(function () {
         max: 100,
         min: 0,
         step: 2,
-        initValue: 0
+        initValue: 0,
+        type:'double'
     });
 })
 // import {Slider} from "./slider"

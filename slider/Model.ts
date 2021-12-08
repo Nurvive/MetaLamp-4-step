@@ -31,7 +31,7 @@ export class Model extends Observer {
         percentage = data.Pos / data.elemSize * 100;
         this.state.position = this.state.min + ((this.state.max - this.state.min) / 100 * percentage)
         this.state.position = Math.round(this.state.position / this.state.step) * this.state.step
-        this.notify({position: this.state.position, percentage: percentage})
+        this.notify({position: this.state.position, percentage: percentage, target:data.target})
         this.value = this.state.position
     }
 

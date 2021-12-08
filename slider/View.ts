@@ -5,10 +5,11 @@ import Line from "./subView/Line"
 
 export class View extends Observer {
     elem: HTMLElement;
-    state: any
-    head: viewHead
-    scale: Scale
-    line: Line
+    state: any;
+    head: viewHead;
+    scale: Scale;
+    line: Line;
+    head2: viewHead;
 
     constructor(elem: HTMLElement) {
         super()
@@ -22,12 +23,20 @@ export class View extends Observer {
         this.line.init()
         this.scale = new Scale(this.line.element, this.state.direction);
         this.scale.init(this.state.min, this.state.max)
+        if (this.state.type === 'double') {
+            this.head2 = new viewHead(this.line.element, this.state.direction, this.state.type, this.state.bubble);
+            this.head2.init(this.state.min);
+        }
         this.head = new viewHead(this.line.element, this.state.direction, this.state.type, this.state.bubble);
         this.head.init(this.state.min);
         this.setup();
     }
 
     protected setup(): void {
+        if (this.state.type === 'double') {
+            this.head2.element.addEventListener('mousedown', this.swipeStart)
+            this.head2.element.addEventListener('touchstart', this.swipeStart);
+        }
         this.head.element.addEventListener('mousedown', this.swipeStart)
         this.head.element.addEventListener('touchstart', this.swipeStart);
         this.scale.element.addEventListener('click', this.swipeAction.bind(this))
@@ -46,9 +55,13 @@ export class View extends Observer {
     }
 
 
-    swipeStart = (): void => {
-        if (this.state.bubble)
-            this.head.showBubble();
+    swipeStart = (e:Event): void => {
+        if (this.state.bubble) {
+            if (e.target === this.head.element)
+                this.head.showBubble()
+            else if(e.target === this.head2.element)
+                this.head2.showBubble()
+        }
         document.addEventListener('touchmove', this.swipeAction, {passive: false});
         document.addEventListener('mousemove', this.swipeAction);
         document.addEventListener('touchend', this.swipeEnd);
@@ -61,32 +74,45 @@ export class View extends Observer {
         if (this.state.direction === 'horizontal') {
             const xPos = evt.clientX - this.elem.offsetLeft;
             if (this.isInsideX(xPos)) {
-                this.notify({Pos: xPos, elemSize: this.elem.getBoundingClientRect().width})
+                this.notify({Pos: xPos, elemSize: this.elem.getBoundingClientRect().width, target:event.target})
             }
         } else {
             const yPos = evt.clientY - this.elem.offsetTop;
             if (this.isInsideY(yPos)) {
-                this.notify({Pos: yPos, elemSize: this.elem.getBoundingClientRect().height})
+                this.notify({Pos: yPos, elemSize: this.elem.getBoundingClientRect().height, target:event.target})
             }
         }
     }
-    swipeEnd = (): void => {
+    swipeEnd = (e:Event): void => {
         document.removeEventListener('touchmove', this.swipeAction,);
         document.removeEventListener('mousemove', this.swipeAction);
         document.removeEventListener('touchend', this.swipeEnd);
         document.removeEventListener('mouseup', this.swipeEnd);
-        if (this.state.bubble)
-            this.head.hideBubble();
+        if (this.state.bubble) {
+            if (e.target === this.head.element)
+                this.head.hideBubble()
+            else if(e.target === this.head2.element)
+                this.head2.hideBubble()
+        }
     }
 
     changePosition(data): void {
-        this.head.updateBubble(Math.round(data.position));
         let newPos;
         if (this.state.direction === 'horizontal')
             newPos = (this.elem.getBoundingClientRect().width - this.head.getWidth) / 100 * data.percentage;
         else
             newPos = (this.elem.getBoundingClientRect().height - this.head.getHeight) / 100 * data.percentage;
-        this.head.updatePosition(newPos);
+        if (this.state.bubble) {
+            if (data.target === this.head.element) {
+                this.head.updateBubble(Math.round(data.position));
+                this.head.updatePosition(newPos);
+            }
+            else if(data.target === this.head2.element) {
+                this.head2.updateBubble(Math.round(data.position));
+                this.head2.updatePosition(newPos);
+            }
+        }
+
         this.line.progressValue(newPos);
     }
 
