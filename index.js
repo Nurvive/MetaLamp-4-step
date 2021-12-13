@@ -8,9 +8,8 @@ $().ready(function () {
         direction: 'horizontal',
         max: 100,
         min: 0,
-        step: 2,
-        initValue: 0,
-        type:'double'
+        step: 1,
+        // type:'double'
     });
 })
 // import {Slider} from "./slider"

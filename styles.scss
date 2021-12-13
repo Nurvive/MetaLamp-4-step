@@ -15,7 +15,7 @@ body {
 .slider {
   &__line {
     width: 100%;
-    height: 10px;
+    height: 7px;
     background-color: #ccc;
     border-radius: 8px;
     border: 1px solid black;
@@ -46,8 +46,8 @@ body {
   }
 
   &__head {
-    width: 20px;
-    height: 20px;
+    width: 14px;
+    height: 14px;
     border: 1px solid black;
     background-color: #37f3a1;
     border-radius: 50%;
@@ -55,10 +55,13 @@ body {
     top: -75%;
     cursor: pointer;
     z-index: 3;
+    transform: translateX(-40%);
 
     &_vertical {
       top: 0;
-      left: -6px;
+      left: -3px;
+      transform: translateY(-40%);
+
     }
 
     &-bubble {
@@ -76,7 +79,7 @@ body {
 
   &__scale {
     position: absolute;
-    top: 6px;
+    top: 4px;
     width: 100%;
     height: 20px;
     cursor: pointer;

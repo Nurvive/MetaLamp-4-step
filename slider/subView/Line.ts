@@ -4,10 +4,12 @@ export default class Line {
     template: string
     element: HTMLElement
     progressBar: HTMLElement
+    type: string
 
-    constructor(parent: HTMLElement, direction: string) {
+    constructor(parent: HTMLElement, direction: string, type: string) {
         this.parent = parent
         this.direction = direction
+        this.type = type
     }
 
     init(): void {
@@ -17,12 +19,22 @@ export default class Line {
         this.progressBar = this.element.querySelector('.slider__line-progress');
     }
 
-    progressValue(value: number): void {
-        if (this.direction === 'horizontal')
-            this.progressBar.style.width = String(value) + "px";
-        else
-            this.progressBar.style.height = String(value) + "px";
-
+    progressValue(To: HTMLElement, From: HTMLElement): void {
+        if (this.direction === 'horizontal') {
+            if (this.type == 'single') {
+                this.progressBar.style.width = To.style.left;
+            } else {
+                this.progressBar.style.width = parseInt(To.style.left) - parseInt(From.style.left) + '%';
+                this.progressBar.style.left = From.style.left;
+            }
+        } else {
+            if (this.type == 'single') {
+                this.progressBar.style.height = To.style.top;
+            } else {
+                this.progressBar.style.height = parseInt(To.style.top) - parseInt(From.style.top) + '%';
+                this.progressBar.style.top = From.style.top;
+            }
+        }
     }
 
     get getWidth() {

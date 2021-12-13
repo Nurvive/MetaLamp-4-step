@@ -19,16 +19,20 @@ export class View extends Observer {
 
     init(options: object) {
         Object.assign(this.state, options);
-        this.line = new Line(this.elem, this.state.direction)
+        this.line = new Line(this.elem, this.state.direction, this.state.type)
         this.line.init()
         this.scale = new Scale(this.line.element, this.state.direction);
         this.scale.init(this.state.min, this.state.max)
         if (this.state.type === 'double') {
             this.head2 = new viewHead(this.line.element, this.state.direction, this.state.type, this.state.bubble);
-            this.head2.init(this.state.min);
+            const head2StartPos = this.calcHandleStartPosition(this.state.valueFrom);
+            this.head2.init(head2StartPos);
+            this.head2.element.setAttribute('data-valueFrom', 'true');
         }
         this.head = new viewHead(this.line.element, this.state.direction, this.state.type, this.state.bubble);
-        this.head.init(this.state.min);
+        const headStartPos = this.calcHandleStartPosition(this.state.valueTo);
+        this.head.init(headStartPos);
+        this.line.progressValue(this.head.element, this.head2?.element)
         this.setup();
     }
 
@@ -39,15 +43,11 @@ export class View extends Observer {
         }
         this.head.element.addEventListener('mousedown', this.swipeStart)
         this.head.element.addEventListener('touchstart', this.swipeStart);
-        this.scale.element.addEventListener('click', this.swipeAction.bind(this))
+        this.scale.element.addEventListener('click', this.onLineClick.bind(this))
     }
 
-    private isInsideX(pos: number): boolean {
-        return pos >= 0 && pos < this.elem.offsetWidth;
-    }
-
-    private isInsideY(pos: number): boolean {
-        return pos >= 0 && pos < this.elem.offsetHeight;
+    calcHandleStartPosition(value: number): number {
+        return (value - this.state.min) / (this.state.max - this.state.min);
     }
 
     getEvent(event: any): MouseEvent {
@@ -55,65 +55,116 @@ export class View extends Observer {
     }
 
 
-    swipeStart = (e:Event): void => {
+    swipeStart = (e: Event): void => {
         if (this.state.bubble) {
             if (e.target === this.head.element)
                 this.head.showBubble()
-            else if(e.target === this.head2.element)
+            else if (this.state.type === 'double')
                 this.head2.showBubble()
         }
-        document.addEventListener('touchmove', this.swipeAction, {passive: false});
-        document.addEventListener('mousemove', this.swipeAction);
-        document.addEventListener('touchend', this.swipeEnd);
-        document.addEventListener('mouseup', this.swipeEnd);
-    }
-
-    swipeAction = (event: Event): void => {
-        event.preventDefault()
-        const evt = this.getEvent(event);
+        const evt = this.getEvent(e);
+        const target = evt.target as Element;
+        let updatedHead = target.hasAttribute('data-valueFrom') ? 'valueFrom' : 'valueTo';
+        const halfHandleWidth = this.head.getWidth / 2;
+        let lineWidth, lineHeight, lineLeftCoordinate, lineTopCoordinate, handleLeftCoordinate, handleTopCoordinate,
+            shift
         if (this.state.direction === 'horizontal') {
-            const xPos = evt.clientX - this.elem.offsetLeft;
-            if (this.isInsideX(xPos)) {
-                this.notify({Pos: xPos, elemSize: this.elem.getBoundingClientRect().width, target:event.target})
-            }
+            lineWidth = this.line.getWidth;
+            lineLeftCoordinate = this.line.getLeftCoordinate;
+            handleLeftCoordinate = target.getBoundingClientRect().left;
+            shift = evt.clientX - handleLeftCoordinate;
         } else {
-            const yPos = evt.clientY - this.elem.offsetTop;
-            if (this.isInsideY(yPos)) {
-                this.notify({Pos: yPos, elemSize: this.elem.getBoundingClientRect().height, target:event.target})
-            }
+            lineHeight = this.line.getHeight;
+            lineTopCoordinate = this.line.getTopCoordinate;
+            handleTopCoordinate = target.getBoundingClientRect().top;
+            shift = evt.clientY - handleTopCoordinate;
         }
-    }
-    swipeEnd = (e:Event): void => {
-        document.removeEventListener('touchmove', this.swipeAction,);
-        document.removeEventListener('mousemove', this.swipeAction);
-        document.removeEventListener('touchend', this.swipeEnd);
-        document.removeEventListener('mouseup', this.swipeEnd);
-        if (this.state.bubble) {
-            if (e.target === this.head.element)
+        const swipeAction = (event: Event): void => {
+            event.preventDefault()
+            const evt = this.getEvent(event);
+            let newPosition;
+            if (this.state.direction === 'horizontal') {
+                newPosition = (evt.clientX - shift - lineLeftCoordinate + halfHandleWidth) / lineWidth;
+            } else {
+                newPosition = (evt.clientY - shift - lineTopCoordinate + halfHandleWidth) / lineHeight;
+            }
+            newPosition = newPosition > 1 ? 1 : newPosition;
+            newPosition = newPosition < 0 ? 0 : newPosition;
+            this.notify({Pos: newPosition, target: updatedHead})
+        }
+        const swipeEnd = (): void => {
+            document.removeEventListener('touchmove', swipeAction);
+            document.removeEventListener('mousemove', swipeAction);
+            document.removeEventListener('touchend', swipeEnd);
+            document.removeEventListener('mouseup', swipeEnd);
+            if (this.state.bubble) {
                 this.head.hideBubble()
-            else if(e.target === this.head2.element)
-                this.head2.hideBubble()
+                if (this.state.type == 'double')
+                    this.head2.hideBubble()
+            }
+        }
+        document.addEventListener('touchmove', swipeAction, {passive: false});
+        document.addEventListener('mousemove', swipeAction);
+        document.addEventListener('touchend', swipeEnd);
+        document.addEventListener('mouseup', swipeEnd);
+    }
+
+    onLineClick(event) {
+        let newPositionRelative = this.calcLineClickPositionRelative(event);
+
+        this.notify({
+            target: 'value',
+            Pos: newPositionRelative,
+        });
+
+    }
+
+    changePosition(data) {
+        if (data.target === 'valueTo') {
+            let position = this.getValueRelative(data.value, this.state.min, this.state.max);
+            if (position < 0) {
+                position = 0;
+            }
+            if (position > 1) {
+                position = 1;
+            }
+            this.head.updatePosition(position);
+            this.head.updateBubble(position);
+            this.line.progressValue(this.head.element, this.head2?.element)
+        } else {
+            let position = this.getValueRelative(data.value, this.state.min, this.state.max);
+            if (position < 0) {
+                position = 0;
+            }
+            if (position > 1) {
+                position = 1;
+            }
+            this.head2.updatePosition(position);
+            this.head2.updateBubble(position);
+            this.line.progressValue(this.head.element, this.head2?.element)
+
         }
     }
 
-    changePosition(data): void {
-        let newPos;
-        if (this.state.direction === 'horizontal')
-            newPos = (this.elem.getBoundingClientRect().width - this.head.getWidth) / 100 * data.percentage;
-        else
-            newPos = (this.elem.getBoundingClientRect().height - this.head.getHeight) / 100 * data.percentage;
-        if (this.state.bubble) {
-            if (data.target === this.head.element) {
-                this.head.updateBubble(Math.round(data.position));
-                this.head.updatePosition(newPos);
-            }
-            else if(data.target === this.head2.element) {
-                this.head2.updateBubble(Math.round(data.position));
-                this.head2.updatePosition(newPos);
-            }
-        }
-
-        this.line.progressValue(newPos);
+    getValueRelative(value, min, max) {
+        return (value - min) / (max - min);
     }
 
+    calcLineClickPositionRelative(event: Event): number {
+        const evt = this.getEvent(event);
+
+        let lineWidth, lineLeftCoordinate, newPositionRelative, lineHeight, lineTopCoordinate
+        if (this.state.direction === 'horizontal') {
+            lineWidth = this.line.getWidth;
+            lineLeftCoordinate = this.line.getLeftCoordinate;
+            newPositionRelative = (evt.clientX - lineLeftCoordinate) / lineWidth;
+        } else {
+            lineHeight = this.line.getHeight;
+            lineTopCoordinate = this.line.getTopCoordinate;
+            newPositionRelative = (evt.clientY - lineTopCoordinate) / lineHeight;
+        }
+        newPositionRelative = newPositionRelative > 1 ? 1 : newPositionRelative;
+        newPositionRelative = newPositionRelative < 0 ? 0 : newPositionRelative;
+        return newPositionRelative;
+    }
 }

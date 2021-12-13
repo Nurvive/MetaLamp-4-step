@@ -9,7 +9,8 @@ import {Slider} from "./slider/slider"
             step: 1,
             initValue: 0,
             type: 'single',
-
+            valueTo: 100,
+            valueFrom: 0
         }, options)
 
         return this.each(function (e) {

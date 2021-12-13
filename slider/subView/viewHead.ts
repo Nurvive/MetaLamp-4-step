@@ -17,7 +17,7 @@ export default class viewHead {
         }
     }
 
-    init(value: number) {
+    init(value: number): void {
         this.template = this.direction === 'horizontal' ?
             `<div class='slider__head'>
             </div>` :
@@ -28,20 +28,20 @@ export default class viewHead {
         if (this.bubble) {
             this.element.append(this.bubble)
         }
-        this.updatePosition(0);
+        this.updatePosition(value);
         this.updateBubble(value);
     }
 
     updatePosition(newPos: number) {
         if (this.direction === 'horizontal')
-            this.element.style.transform = `translate(${newPos}px, 0px)`;
+            this.element.style.left = newPos * 100 + '%';
         else
-            this.element.style.transform = `translate(0px, ${newPos}px)`;
+            this.element.style.top = newPos * 100 + '%';
     }
 
     updateBubble(value: number) {
         if (this.bubble)
-            this.bubble.innerHTML = String(value);
+            this.bubble.innerHTML = String(Math.round(value * 100));
     }
 
     showBubble() {
