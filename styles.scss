@@ -56,7 +56,9 @@ body {
     cursor: pointer;
     z-index: 3;
     transform: translateX(-40%);
-
+    &[data-valuefrom]{
+      z-index: 2;
+    }
     &_vertical {
       top: 0;
       left: -3px;

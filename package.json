@@ -9,5 +9,9 @@
   "dependencies": {
     "eslint-config-airbnb": "^18.2.1",
     "jquery": "^3.6.0"
+  },
+  "scripts": {
+    "dev": "parcel index.html",
+    "build": "parcel build index.html"
   }
 }

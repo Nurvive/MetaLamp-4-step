@@ -1,4 +1,4 @@
-import {Observer} from "./observer";
+import {Observer} from './observer';
 
 interface state {
     initValue?: number;
@@ -15,19 +15,20 @@ interface state {
 
 export class Model extends Observer {
     elem: HTMLElement;
+
     state: state
+
     value: number
 
     constructor(elem: HTMLElement) {
-        super()
-        this.elem = elem
+        super();
+        this.elem = elem;
         this.state = {};
     }
 
     init(options: object) {
         Object.assign(this.state, options);
-        this.value = this.state.initValue
-
+        this.value = this.state.initValue;
     }
 
     calcPosition(data) {
@@ -37,23 +38,23 @@ export class Model extends Observer {
             updatedProperty = 'valueTo';
             updatedValue = this.calcValue(data.Pos);
             updatedValue = this.validValueTo(updatedValue);
-        } else if (data.target === "value") {
+            this.state.valueTo = updatedValue
+        } else if (data.target === 'value') {
             updatedValue = this.calcValue(data.Pos);
             if (this.state.type === 'single') {
                 updatedProperty = 'valueTo';
             } else {
-                let isValueTo = () => {
-                    return (updatedValue - this.state.valueFrom) / (this.state.valueTo - this.state.valueFrom) >= 0.5;
-                }
+                const isValueTo = () => (updatedValue - this.state.valueFrom) / (this.state.valueTo - this.state.valueFrom) >= 0.5;
                 updatedProperty = isValueTo() ? 'valueTo' : 'valueFrom';
             }
+            this.state[updatedProperty] = updatedValue
         } else {
             updatedProperty = 'valueFrom';
             updatedValue = this.calcValue(data.Pos);
             updatedValue = this.validValueFrom(updatedValue);
+            this.state.valueFrom = updatedValue
         }
-        this.notify({target: updatedProperty, value: updatedValue})
-
+        this.notify({target: updatedProperty, value: updatedValue});
     }
 
     calcValue(value) {
@@ -63,7 +64,7 @@ export class Model extends Observer {
     }
 
     calcValueByStep(value) {
-        let stepsInValue = value / this.state.step;
+        const stepsInValue = value / this.state.step;
 
         if (stepsInValue % 1 >= 0.5) {
             value = this.state.step * Math.ceil(stepsInValue);
@@ -71,8 +72,7 @@ export class Model extends Observer {
             value = this.state.step * Math.floor(stepsInValue);
         }
 
-        // количество знаков после запятой
-        let accuracy = this.state.step.toString().includes('.') ? (this.state.step.toString().split('.').pop().length) : 0;
+        const accuracy = this.state.step.toString().includes('.') ? (this.state.step.toString().split('.').pop().length) : 0;
 
         return value.toFixed(accuracy);
     }
@@ -81,13 +81,11 @@ export class Model extends Observer {
         let value = valueTo;
 
         if (this.state.type === 'single') {
-
             if (value > this.state.max) {
                 value = this.state.max;
             } else if (value < this.state.min) {
                 value = this.state.min;
             }
-
         } else if (this.state.type === 'double') {
             if (value > this.state.max) {
                 value = this.state.max;
@@ -103,7 +101,6 @@ export class Model extends Observer {
 
         if (this.state.type === 'single') {
             value = null;
-
         } else if (this.state.type === 'double') {
             if (value < this.state.min) {
                 value = this.state.min;

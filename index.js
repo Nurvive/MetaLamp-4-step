@@ -9,7 +9,7 @@ $().ready(function () {
         max: 100,
         min: 0,
         step: 1,
-        // type:'double'
+        type:'double'
     });
 })
 // import {Slider} from "./slider"
