@@ -37,6 +37,10 @@ export default class viewHead {
       this.updateBubble(value);
     }
 
+    removeHead(){
+        this.element.parentNode.removeChild(this.element)
+    }
+
     updatePosition(newPos: number) : void {
       if (this.direction === 'horizontal') { this.element.style.left = `${newPos * 100}%`; } else { this.element.style.top = `${newPos * 100}%`; }
     }

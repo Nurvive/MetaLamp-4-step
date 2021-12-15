@@ -16,9 +16,11 @@ export default class Line {
       this.direction = direction;
       this.type = type;
     }
-
+    set setType(type:string){
+        this.type = type
+    }
     init(): void {
-      this.template = this.direction === 'horizontal' ? '<div class=\'slider__line\'><span class="slider__line-progress"></span></div>' : '<div class=\'slider__line slider__line_vertical\'><span class="slider__line-progress slider__line-progress_vertical"></span></div>';
+      this.template = this.direction === 'horizontal' ? '<div class="slider__line"><span class="slider__line-progress"></span></div>' : '<div class="slider__line slider__line_vertical"><span class="slider__line-progress slider__line-progress_vertical"></span></div>';
       this.parent.insertAdjacentHTML('beforeend', this.template);
       this.element = this.parent.querySelector('.slider__line');
       this.progressBar = this.element.querySelector('.slider__line-progress');
@@ -38,6 +40,10 @@ export default class Line {
         this.progressBar.style.height = `${parseInt(To.style.top) - parseInt(From.style.top)}%`;
         this.progressBar.style.top = From.style.top;
       }
+    }
+
+    removeLine(){
+        this.element.parentNode.removeChild(this.element)
     }
 
     get getWidth() {

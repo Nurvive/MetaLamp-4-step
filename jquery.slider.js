@@ -1,40 +1,69 @@
 import {Slider} from "./slider/slider"
 
 (function ($) {
+    let slider
     const methods = {
-       init : function (options) {
+        init: function (options) {
 
             let settings = $.extend({
                 bubble: true,
                 max: 100,
                 min: 0,
                 step: 1,
-                initValue: 0,
                 type: 'single',
                 valueTo: 100,
-                valueFrom: 0
+                valueFrom: 5
             }, options)
 
             return this.each(function () {
                 let ths = $(this);
                 if (settings.step > settings.max - settings.min)
                     throw "Шаг не может быть больше разницы максимума и минимума";
-                let slider = new Slider(ths[0], settings);
+                slider = new Slider(ths[0], settings);
             })
         },
-        update : function( content ) {
-            console.log(content);
-
+        hideBubble: function () {
+            slider.hideBubble()
+        },
+        showBubble: function () {
+            slider.showBubble()
+        },
+        changeOrientation: function (value) {
+            slider.changeOrientation(value)
+        },
+        changeType: function (value) {
+            slider.changeType(value)
+        },
+        changeStep: function (value) {
+            if (isNaN(value))
+                throw 'step должно быть числом'
+            slider.changeStep(value)
+        },
+        changeTo: function (value) {
+            if (isNaN(value))
+                throw 'valueTo должно быть числом'
+            slider.changeTo(value)
+        },
+        changeMax: function (value) {
+            if (isNaN(value))
+                throw 'valueFrom должно быть числом'
+            slider.changeMax(value)
+        },
+        changeMin: function (value) {
+            if (isNaN(value))
+                throw 'valueFrom должно быть числом'
+            slider.changeMin(value)
         }
+
     }
 
     $.fn.Slider = function (method) {
-        if ( methods[method] ) {
-            return methods[ method ].apply( this, Array.prototype.slice.call( arguments, 1 ));
-        } else if ( typeof method === 'object' || ! method ) {
-            return methods.init.apply( this, arguments );
+        if (methods[method]) {
+            return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
+        } else if (typeof method === 'object' || !method) {
+            return methods.init.apply(this, arguments);
         } else {
-            $.error( 'Метод с именем ' +  method + ' не существует для jQuery.slider' );
+            $.error('Метод с именем ' + method + ' не существует для jQuery.slider');
         }
     };
 })(jQuery)

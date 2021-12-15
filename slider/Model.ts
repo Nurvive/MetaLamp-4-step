@@ -1,7 +1,6 @@
 import {Observer} from './observer';
 
 interface state {
-    initValue?: number;
     min?: number
     max?: number
     position?: number
@@ -10,7 +9,6 @@ interface state {
     type?: string
     valueFrom?: number
     valueTo?: number
-
 }
 
 export class Model extends Observer {
@@ -26,14 +24,13 @@ export class Model extends Observer {
         this.state = {};
     }
 
-    init(options: object) {
+    init(options: object): void {
         Object.assign(this.state, options);
-        this.value = this.state.initValue;
     }
 
-    calcPosition(data) {
-        let updatedValue;
-        let updatedProperty;
+    calcPosition(data): void {
+        let updatedValue: number;
+        let updatedProperty: string;
         if (data.target === 'valueTo') {
             updatedProperty = 'valueTo';
             updatedValue = this.calcValue(data.Pos);
@@ -57,14 +54,14 @@ export class Model extends Observer {
         this.notify({target: updatedProperty, value: updatedValue});
     }
 
-    calcValue(value) {
+    calcValue(value: number): number {
         value *= (this.state.max - this.state.min);
 
         return this.state.min + +this.calcValueByStep(value);
     }
 
-    calcValueByStep(value) {
-        const stepsInValue = value / this.state.step;
+    calcValueByStep(value: number): string {
+        const stepsInValue: number = value / this.state.step;
 
         if (stepsInValue % 1 >= 0.5) {
             value = this.state.step * Math.ceil(stepsInValue);
@@ -72,13 +69,13 @@ export class Model extends Observer {
             value = this.state.step * Math.floor(stepsInValue);
         }
 
-        const accuracy = this.state.step.toString().includes('.') ? (this.state.step.toString().split('.').pop().length) : 0;
+        const accuracy: number = this.state.step.toString().includes('.') ? (this.state.step.toString().split('.').pop().length) : 0;
 
         return value.toFixed(accuracy);
     }
 
-    validValueTo(valueTo) {
-        let value = valueTo;
+    validValueTo(valueTo: number): number {
+        let value: number = valueTo;
 
         if (this.state.type === 'single') {
             if (value > this.state.max) {
@@ -96,8 +93,8 @@ export class Model extends Observer {
         return value;
     }
 
-    validValueFrom(valueFrom) {
-        let value = valueFrom;
+    validValueFrom(valueFrom: number): number {
+        let value: number = valueFrom;
 
         if (this.state.type === 'single') {
             value = null;
@@ -110,5 +107,30 @@ export class Model extends Observer {
         }
 
         return value;
+    }
+
+    set changeOrientation(value: string) {
+        this.state.direction = value
+    }
+
+    set changeType(value: string) {
+        this.state.type = value
+    }
+
+    set changeStep(value: number) {
+        if (value > this.state.max - this.state.min)
+            throw "Шаг не может быть больше разницы максимума и минимума"
+        this.state.step = value
+    }
+
+    changeTo(value: number): void {
+        this.state.valueTo = this.validValueTo(value)
+        this.notify({value: this.state.valueTo, target: 'valueTo'})
+        //TODO передавать проверенное value в view
+    }
+
+    changeFrom(value: number): void {
+        this.state.valueFrom = this.validValueFrom(value)
+        this.notify({value: this.state.valueFrom, target: 'valueFrom'})
     }
 }

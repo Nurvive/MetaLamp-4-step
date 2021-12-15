@@ -22,7 +22,7 @@ export class View extends Observer {
         this.state = {};
     }
 
-    init(options: object) {
+    init(options: object): void {
         Object.assign(this.state, options);
         this.line = new Line(this.elem, this.state.direction, this.state.type);
         this.line.init();
@@ -30,7 +30,7 @@ export class View extends Observer {
         this.scale.init(this.state.min, this.state.max);
         if (this.state.type === 'double') {
             this.head2 = new viewHead(this.line.element, this.state.direction, this.state.type, this.state.bubble);
-            const head2StartPos = this.calcHandleStartPosition(this.state.valueFrom);
+            const head2StartPos: number = this.calcHandleStartPosition(this.state.valueFrom);
             this.head2.init(head2StartPos);
             this.head2.element.setAttribute('data-valueFrom', 'true');
         }
@@ -57,6 +57,7 @@ export class View extends Observer {
         this.scale.element.addEventListener('click', this.onLineClick.bind(this));
     }
 
+
     calcHandleStartPosition(value: number): number {
         return (value - this.state.min) / (this.state.max - this.state.min);
     }
@@ -67,17 +68,17 @@ export class View extends Observer {
 
     swipeStart = (e: Event): void => {
 
-        const evt = this.getEvent(e);
+        const evt: MouseEvent = this.getEvent(e);
         const target = evt.target as Element;
-        const updatedHead = target.hasAttribute('data-valueFrom') ? 'valueFrom' : 'valueTo';
-        const halfHandleWidth = this.head.getWidth / 2;
-        let lineWidth;
-        let lineHeight;
-        let lineLeftCoordinate;
-        let lineTopCoordinate;
-        let handleLeftCoordinate;
-        let handleTopCoordinate;
-        let shift;
+        const updatedHead: string = target.hasAttribute('data-valueFrom') ? 'valueFrom' : 'valueTo';
+        const halfHandleWidth: number = this.head.getWidth / 2;
+        let lineWidth: number;
+        let lineHeight: number;
+        let lineLeftCoordinate: number;
+        let lineTopCoordinate: number;
+        let handleLeftCoordinate: number;
+        let handleTopCoordinate: number;
+        let shift: number;
         if (this.state.direction === 'horizontal') {
             lineWidth = this.line.getWidth;
             lineLeftCoordinate = this.line.getLeftCoordinate;
@@ -91,8 +92,8 @@ export class View extends Observer {
         }
         const swipeAction = (event: Event): void => {
             event.preventDefault();
-            const evt = this.getEvent(event);
-            let newPosition;
+            const evt: MouseEvent = this.getEvent(event);
+            let newPosition: number;
             if (this.state.direction === 'horizontal') {
                 newPosition = (evt.clientX - shift - lineLeftCoordinate + halfHandleWidth) / lineWidth;
             } else {
@@ -107,10 +108,6 @@ export class View extends Observer {
             document.removeEventListener('mousemove', swipeAction);
             document.removeEventListener('touchend', swipeEnd);
             document.removeEventListener('mouseup', swipeEnd);
-            // if (this.state.bubble) {
-            //   this.head.hideBubble();
-            //   if (this.state.type == 'double') { this.head2.hideBubble(); }
-            // }
         };
         document.addEventListener('touchmove', swipeAction, {passive: false});
         document.addEventListener('mousemove', swipeAction);
@@ -118,8 +115,8 @@ export class View extends Observer {
         document.addEventListener('mouseup', swipeEnd);
     }
 
-    onLineClick(event) {
-        const newPositionRelative = this.calcLineClickPositionRelative(event);
+    onLineClick(event): void {
+        const newPositionRelative: number = this.calcLineClickPositionRelative(event);
 
         this.notify({
             target: 'value',
@@ -127,9 +124,9 @@ export class View extends Observer {
         });
     }
 
-    changePosition(data) {
+    changePosition(data): void {
         if (data.target === 'valueTo') {
-            let position = this.getValueRelative(data.value, this.state.min, this.state.max);
+            let position: number = this.getValueRelative(data.value, this.state.min, this.state.max);
             if (position < 0) {
                 position = 0;
             }
@@ -153,19 +150,19 @@ export class View extends Observer {
         }
     }
 
-    getValueRelative(value, min, max) {
+
+    getValueRelative(value: number, min: number, max: number): number {
         return (value - min) / (max - min);
     }
 
     calcLineClickPositionRelative(event: Event): number {
-        const evt = this.getEvent(event);
+        const evt: MouseEvent = this.getEvent(event);
 
-        let lineWidth;
-        let lineLeftCoordinate;
-        let newPositionRelative;
-        let lineHeight;
-        let
-            lineTopCoordinate;
+        let lineWidth: number;
+        let lineLeftCoordinate: number;
+        let newPositionRelative: number;
+        let lineHeight: number;
+        let lineTopCoordinate: number;
         if (this.state.direction === 'horizontal') {
             lineWidth = this.line.getWidth;
             lineLeftCoordinate = this.line.getLeftCoordinate;
@@ -178,5 +175,40 @@ export class View extends Observer {
         newPositionRelative = newPositionRelative > 1 ? 1 : newPositionRelative;
         newPositionRelative = newPositionRelative < 0 ? 0 : newPositionRelative;
         return newPositionRelative;
+    }
+
+    hideBubble(): void {
+        this.head.hideBubble()
+        this.head2?.hideBubble()
+    }
+
+    showBubble(): void {
+        this.head.showBubble()
+        this.head2?.showBubble()
+    }
+
+    changeOrientation(value: string): void {
+        this.state.direction = value;
+        this.head.removeHead();
+        this.head2?.removeHead();
+        this.scale.removeScale();
+        this.line.removeLine();
+        this.init({})
+    }
+
+    changeType(value: string): void {
+        this.state.type = value;
+        this.head.removeHead();
+        this.head2?.removeHead();
+        this.head2 = null
+        this.scale.removeScale();
+        this.line.removeLine();
+        this.init({})
+    }
+
+    set changeStep(value: number) {
+        if (value > this.state.max - this.state.min)
+            throw "Шаг не может быть больше разницы максимума и минимума"
+        this.state.step = value
     }
 }

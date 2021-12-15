@@ -14,11 +14,10 @@ export default class Scale {
 
     init(min: number, max: number) {
       this.template = this.direction === 'horizontal'
-        ? '<div class=\'slider__scale\'></div>'
-        : '<div class=\'slider__scale slider__scale_vertical\'></div>';
+        ? '<div class="slider__scale"></div>'
+        : '<div class="slider__scale slider__scale_vertical"></div>';
       this.parent.insertAdjacentHTML('beforeend', this.template);
       this.element = this.parent.querySelector('.slider__scale');
-
       const step = (max - min) / 4;
       if (this.direction === 'horizontal') {
         for (let i = 0; i <= 100; i += 5) {
@@ -52,7 +51,9 @@ export default class Scale {
         }
       }
     }
-
+    removeScale(){
+        this.element.parentNode.removeChild(this.element)
+    }
     get getWidth() {
       return this.element.getBoundingClientRect().width;
     }
