@@ -190,19 +190,21 @@ export class View extends Observer {
     }
 
     hideBubble(): void {
+        this.updateState({target: 'bubble', value: false})
         this.head.hideBubble()
         this.head2?.hideBubble()
         this.notify({target: 'bubble', value: false, onlyState: true})
     }
 
     showBubble(): void {
+        this.updateState({target: 'bubble', value: true})
         this.head.showBubble()
         this.head2?.showBubble()
         this.notify({target: 'bubble', value: true, onlyState: true})
     }
 
     changeOrientation(value: string): void {
-        this.state.direction = value;
+        this.updateState({target: 'direction', value: value})
         this.head.removeHead();
         this.head2?.removeHead();
         this.scale.removeScale();
@@ -212,7 +214,7 @@ export class View extends Observer {
     }
 
     changeType(value: string): void {
-        this.state.type = value;
+        this.updateState({target: 'type', value: value})
         this.head.removeHead();
         this.head2?.removeHead();
         this.head2 = null
