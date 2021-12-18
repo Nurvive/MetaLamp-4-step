@@ -17,7 +17,9 @@ $().ready(function () {
         max: 100,
         min: 0,
         step: 1,
-        type: 'double'
+        type: 'double',
+        valueTo: 100,
+        valueFrom: 4
     });
 
     $bubbleButton.on('click', function () {

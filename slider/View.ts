@@ -3,10 +3,22 @@ import viewHead from './subView/viewHead';
 import Scale from './subView/Scale';
 import Line from './subView/Line';
 
+interface state {
+    min?: number
+    max?: number
+    position?: number
+    step?: number
+    direction?: string
+    type?: string
+    valueFrom?: number
+    valueTo?: number
+    bubble?: boolean
+}
+
 export class View extends Observer {
     elem: HTMLElement;
 
-    state: any;
+    state: state;
 
     head: viewHead;
 
@@ -31,12 +43,12 @@ export class View extends Observer {
         if (this.state.type === 'double') {
             this.head2 = new viewHead(this.line.element, this.state.direction, this.state.type, this.state.bubble);
             const head2StartPos: number = this.calcHandleStartPosition(this.state.valueFrom);
-            this.head2.init(head2StartPos);
+            this.head2.init(head2StartPos, this.state.valueFrom);
             this.head2.element.setAttribute('data-valueFrom', 'true');
         }
         this.head = new viewHead(this.line.element, this.state.direction, this.state.type, this.state.bubble);
         const headStartPos = this.calcHandleStartPosition(this.state.valueTo);
-        this.head.init(headStartPos);
+        this.head.init(headStartPos, this.state.valueTo);
         if (this.state.bubble) {
             this.head.showBubble();
             if (this.state.type === 'double') {
@@ -67,7 +79,6 @@ export class View extends Observer {
     }
 
     swipeStart = (e: Event): void => {
-
         const evt: MouseEvent = this.getEvent(e);
         const target = evt.target as Element;
         const updatedHead: string = target.hasAttribute('data-valueFrom') ? 'valueFrom' : 'valueTo';
@@ -101,7 +112,7 @@ export class View extends Observer {
             }
             newPosition = newPosition > 1 ? 1 : newPosition;
             newPosition = newPosition < 0 ? 0 : newPosition;
-            this.notify({Pos: newPosition, target: updatedHead});
+            this.notify({value: newPosition, target: updatedHead, onlyState: false});
         };
         const swipeEnd = (): void => {
             document.removeEventListener('touchmove', swipeAction);
@@ -120,7 +131,8 @@ export class View extends Observer {
 
         this.notify({
             target: 'value',
-            Pos: newPositionRelative,
+            value: newPositionRelative,
+            onlyState: false
         });
     }
 
@@ -134,9 +146,9 @@ export class View extends Observer {
                 position = 1;
             }
             this.head.updatePosition(position);
-            this.head.updateBubble(position);
+            this.head.updateBubble(this.state.valueTo);
             this.line.progressValue(this.head.element, this.head2?.element);
-        } else {
+        } else if (data.target === "valueFrom") {
             let position = this.getValueRelative(data.value, this.state.min, this.state.max);
             if (position < 0) {
                 position = 0;
@@ -145,7 +157,7 @@ export class View extends Observer {
                 position = 1;
             }
             this.head2.updatePosition(position);
-            this.head2.updateBubble(position);
+            this.head2.updateBubble(this.state.valueFrom);
             this.line.progressValue(this.head.element, this.head2?.element);
         }
     }
@@ -180,11 +192,13 @@ export class View extends Observer {
     hideBubble(): void {
         this.head.hideBubble()
         this.head2?.hideBubble()
+        this.notify({target: 'bubble', value: false, onlyState: true})
     }
 
     showBubble(): void {
         this.head.showBubble()
         this.head2?.showBubble()
+        this.notify({target: 'bubble', value: true, onlyState: true})
     }
 
     changeOrientation(value: string): void {
@@ -194,6 +208,7 @@ export class View extends Observer {
         this.scale.removeScale();
         this.line.removeLine();
         this.init({})
+        this.notify({target: 'direction', value: value, onlyState: true})
     }
 
     changeType(value: string): void {
@@ -204,6 +219,7 @@ export class View extends Observer {
         this.scale.removeScale();
         this.line.removeLine();
         this.init({})
+        this.notify({target: 'type', value: value, onlyState: true})
     }
 
     set changeStep(value: number) {
@@ -211,4 +227,33 @@ export class View extends Observer {
             throw "Шаг не может быть больше разницы максимума и минимума"
         this.state.step = value
     }
+
+    changeMax(value: number): void {
+        if (value < this.state.min || value <= this.state.valueFrom) {
+            throw "Максимум не может быть меньше минимума"
+        }
+        this.updateState({target: 'max', value: value})
+        this.head.removeHead();
+        this.head2?.removeHead();
+        this.scale.removeScale();
+        this.line.removeLine();
+        this.init({})
+    }
+    changeMin(value: number): void {
+        if (value > this.state.max || value >= this.state.valueTo) {
+            throw "Минимум не может быть больше максимума"
+        }
+        this.updateState({target: 'min', value: value})
+        this.head.removeHead();
+        this.head2?.removeHead();
+        this.scale.removeScale();
+        this.line.removeLine();
+        this.init({})
+    }
+
+    updateState(data): void {
+        this.state[data.target] = data.value
+    }
+
+
 }

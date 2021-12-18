@@ -52,11 +52,14 @@ export class Slider {
     }
 
     changeMax(value: number): void {
-        this.model.changeFrom(value)
+        this.model.changeMax(value)
+        this.view.changeMax(value)
     }
 
     changeMin(value: number): void {
-        this.model.changeFrom(value)
+        this.model.changeMin(value)
+        this.view.changeMin(value)
+
     }
 
 }

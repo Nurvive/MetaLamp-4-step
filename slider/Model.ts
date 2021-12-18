@@ -9,6 +9,8 @@ interface state {
     type?: string
     valueFrom?: number
     valueTo?: number
+    bubble?: boolean
+
 }
 
 export class Model extends Observer {
@@ -29,28 +31,28 @@ export class Model extends Observer {
     }
 
     calcPosition(data): void {
+        if (data.onlyState)
+            return
         let updatedValue: number;
         let updatedProperty: string;
         if (data.target === 'valueTo') {
             updatedProperty = 'valueTo';
-            updatedValue = this.calcValue(data.Pos);
+            updatedValue = this.calcValue(data.value);
             updatedValue = this.validValueTo(updatedValue);
-            this.state.valueTo = updatedValue
         } else if (data.target === 'value') {
-            updatedValue = this.calcValue(data.Pos);
+            updatedValue = this.calcValue(data.value);
             if (this.state.type === 'single') {
                 updatedProperty = 'valueTo';
             } else {
                 const isValueTo = () => (updatedValue - this.state.valueFrom) / (this.state.valueTo - this.state.valueFrom) >= 0.5;
                 updatedProperty = isValueTo() ? 'valueTo' : 'valueFrom';
             }
-            this.state[updatedProperty] = updatedValue
         } else {
             updatedProperty = 'valueFrom';
-            updatedValue = this.calcValue(data.Pos);
+            updatedValue = this.calcValue(data.value);
             updatedValue = this.validValueFrom(updatedValue);
-            this.state.valueFrom = updatedValue
         }
+        this.updateState({target: updatedProperty, value: updatedValue, onlyState: true})
         this.notify({target: updatedProperty, value: updatedValue});
     }
 
@@ -123,14 +125,40 @@ export class Model extends Observer {
         this.state.step = value
     }
 
+    changeMax(value: number): void {
+        if (value < this.state.min || value <= this.state.valueFrom) {
+            throw "Максимум не может быть меньше минимума"
+        }
+        this.updateState({target: 'max', value: value, onlyState: true})
+        if (value < this.state.valueTo) {
+            this.changeTo(value)
+        }
+
+    }
+
+    changeMin(value: number): void {
+        if (value > this.state.max || value >= this.state.valueTo) {
+            throw "Минимум не может быть больше максимума"
+        }
+        this.updateState({target: 'min', value: value, onlyState: true})
+        if (value > this.state.valueFrom) {
+            this.changeFrom(value)
+        }
+    }
+
     changeTo(value: number): void {
-        this.state.valueTo = this.validValueTo(value)
+        this.updateState({target:'valueTo',value:this.validValueTo(value),onlyState:true})
         this.notify({value: this.state.valueTo, target: 'valueTo'})
-        //TODO передавать проверенное value в view
     }
 
     changeFrom(value: number): void {
-        this.state.valueFrom = this.validValueFrom(value)
+        this.updateState({target:'valueFrom',value:this.validValueFrom(value),onlyState:true})
         this.notify({value: this.state.valueFrom, target: 'valueFrom'})
+    }
+
+    updateState(data): void {
+        if (!data.onlyState)
+            return
+        this.state[data.target] = data.value
     }
 }

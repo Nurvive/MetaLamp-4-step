@@ -22,7 +22,7 @@ export default class viewHead {
       }
     }
 
-    init(value: number): void {
+    init(value: number, bubbleValue:number): void {
       this.template = this.direction === 'horizontal'
         ? `<div class='slider__head'>
             </div>`
@@ -34,7 +34,7 @@ export default class viewHead {
         this.element.append(this.bubble);
       }
       this.updatePosition(value);
-      this.updateBubble(value);
+      this.updateBubble(bubbleValue);
     }
 
     removeHead(){
@@ -46,7 +46,7 @@ export default class viewHead {
     }
 
     updateBubble(value: number) :void {
-      if (this.bubble) { this.bubble.innerHTML = String(Math.round(value * 100)); }
+      if (this.bubble) { this.bubble.innerHTML = String(value); }
     }
 
     showBubble():void {

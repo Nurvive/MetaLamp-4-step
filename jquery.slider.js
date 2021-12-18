@@ -19,6 +19,10 @@ import {Slider} from "./slider/slider"
                 let ths = $(this);
                 if (settings.step > settings.max - settings.min)
                     throw "Шаг не может быть больше разницы максимума и минимума";
+                if (settings.valueTo > settings.max)
+                    throw "Текущее значение не может быть больше максимума";
+                if (settings.valueFrom < settings.min)
+                    throw "Текущее значение не может быть меньше минимума";
                 slider = new Slider(ths[0], settings);
             })
         },
@@ -43,6 +47,11 @@ import {Slider} from "./slider/slider"
             if (isNaN(value))
                 throw 'valueTo должно быть числом'
             slider.changeTo(value)
+        },
+        changeFrom: function (value) {
+            if (isNaN(value))
+                throw 'valueFrom должно быть числом'
+            slider.changeFrom(value)
         },
         changeMax: function (value) {
             if (isNaN(value))
