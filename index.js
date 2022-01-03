@@ -22,6 +22,9 @@ $().ready(function () {
         valueFrom: 4,
         onChangeTo: function (value) {
             $toInput.val(value)
+        },
+        onChangeFrom: function (value) {
+            $fromInput.val(value)
         }
     });
 

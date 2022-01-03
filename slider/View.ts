@@ -14,7 +14,7 @@ interface state {
     valueTo?: number
     bubble?: boolean
     onChangeTo?: Function
-
+    onChangeFrom?: Function
 }
 
 export class View extends Observer {
@@ -161,6 +161,7 @@ export class View extends Observer {
             }
             this.head2.updatePosition(position);
             this.head2.updateBubble(this.state.valueFrom);
+            this.state.onChangeFrom(this.state.valueFrom)
             this.line.progressValue(this.head.element, this.head2?.element);
         }
     }

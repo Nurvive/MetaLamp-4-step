@@ -13,8 +13,8 @@ import {Slider} from "./slider/slider"
                 type: 'single',
                 valueTo: 100,
                 valueFrom: 5,
-                onChangeTo: function () {
-                    console.log('work')}
+                onChangeTo: function () {},
+                onChangeFrom: function () {}
             }, options)
 
             return this.each(function () {
