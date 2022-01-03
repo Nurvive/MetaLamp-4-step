@@ -1,10 +1,9 @@
 import {Slider} from "./slider/slider"
 
 (function ($) {
-    let slider
+    let sliders=[];
     const methods = {
         init: function (options) {
-
             let settings = $.extend({
                 bubble: true,
                 max: 100,
@@ -13,8 +12,10 @@ import {Slider} from "./slider/slider"
                 type: 'single',
                 valueTo: 100,
                 valueFrom: 5,
-                onChangeTo: function () {},
-                onChangeFrom: function () {}
+                onChangeTo: function () {
+                },
+                onChangeFrom: function () {
+                }
             }, options)
 
             return this.each(function () {
@@ -25,42 +26,78 @@ import {Slider} from "./slider/slider"
                     throw "Текущее значение не может быть больше максимума";
                 if (settings.valueFrom < settings.min)
                     throw "Текущее значение не может быть меньше минимума";
-                slider = new Slider(ths[0], settings);
+                sliders.push(new Slider(ths[0], settings));
             })
         },
         hideBubble: function () {
+            let slider;
+            sliders.forEach((x)=> {
+                x.elem === this[0] ? slider = x : null
+            })
             slider.hideBubble()
         },
         showBubble: function () {
+            let slider;
+            sliders.forEach((x)=> {
+                x.elem === this[0] ? slider = x : null
+            })
             slider.showBubble()
         },
         changeOrientation: function (value) {
+            let slider;
+            sliders.forEach((x)=> {
+                x.elem === this[0] ? slider = x : null
+            })
             slider.changeOrientation(value)
         },
         changeType: function (value) {
+            let slider;
+            sliders.forEach((x)=> {
+                x.elem === this[0] ? slider = x : null
+            })
             slider.changeType(value)
         },
         changeStep: function (value) {
+            let slider;
+            sliders.forEach((x)=> {
+                x.elem === this[0] ? slider = x : null
+            })
             if (isNaN(value))
                 throw 'step должно быть числом'
             slider.changeStep(value)
         },
         changeTo: function (value) {
+            let slider;
+            sliders.forEach((x)=> {
+                x.elem === this[0] ? slider = x : null
+            })
             if (isNaN(value))
                 throw 'valueTo должно быть числом'
             slider.changeTo(value)
         },
         changeFrom: function (value) {
+            let slider;
+            sliders.forEach((x)=> {
+                x.elem === this[0] ? slider = x : null
+            })
             if (isNaN(value))
                 throw 'valueFrom должно быть числом'
             slider.changeFrom(value)
         },
         changeMax: function (value) {
+            let slider;
+            sliders.forEach((x)=> {
+                x.elem === this[0] ? slider = x : null
+            })
             if (isNaN(value))
                 throw 'valueFrom должно быть числом'
             slider.changeMax(value)
         },
         changeMin: function (value) {
+            let slider;
+            sliders.forEach((x)=> {
+                x.elem === this[0] ? slider = x : null
+            })
             if (isNaN(value))
                 throw 'valueFrom должно быть числом'
             slider.changeMin(value)
