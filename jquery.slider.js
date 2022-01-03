@@ -12,7 +12,9 @@ import {Slider} from "./slider/slider"
                 step: 1,
                 type: 'single',
                 valueTo: 100,
-                valueFrom: 5
+                valueFrom: 5,
+                onChangeTo: function () {
+                    console.log('work')}
             }, options)
 
             return this.each(function () {
@@ -62,7 +64,8 @@ import {Slider} from "./slider/slider"
             if (isNaN(value))
                 throw 'valueFrom должно быть числом'
             slider.changeMin(value)
-        }
+        },
+
 
     }
 

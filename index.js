@@ -19,7 +19,10 @@ $().ready(function () {
         step: 1,
         type: 'double',
         valueTo: 100,
-        valueFrom: 4
+        valueFrom: 4,
+        onChangeTo: function (value) {
+            $toInput.val(value)
+        }
     });
 
     $bubbleButton.on('click', function () {

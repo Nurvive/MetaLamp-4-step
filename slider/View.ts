@@ -13,6 +13,8 @@ interface state {
     valueFrom?: number
     valueTo?: number
     bubble?: boolean
+    onChangeTo?: Function
+
 }
 
 export class View extends Observer {
@@ -147,6 +149,7 @@ export class View extends Observer {
             }
             this.head.updatePosition(position);
             this.head.updateBubble(this.state.valueTo);
+            this.state.onChangeTo(this.state.valueTo)
             this.line.progressValue(this.head.element, this.head2?.element);
         } else if (data.target === "valueFrom") {
             let position = this.getValueRelative(data.value, this.state.min, this.state.max);

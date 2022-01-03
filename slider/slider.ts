@@ -2,6 +2,19 @@ import {View} from './View';
 import {Presenter} from './Presenter';
 import {Model} from './Model';
 
+interface settings {
+    min?: number
+    max?: number
+    position?: number
+    step?: number
+    direction?: string
+    type?: string
+    valueFrom?: number
+    valueTo?: number
+    bubble?: boolean
+    onChangeTo?: () => void
+}
+
 export class Slider {
     view: View;
 
@@ -10,8 +23,10 @@ export class Slider {
     presenter: Presenter;
 
     model: Model;
+    settings: settings
 
     constructor(elem: HTMLElement, settings: object) {
+        this.settings = settings
         this.elem = elem;
         this.model = new Model(this.elem);
         this.model.init(settings);
