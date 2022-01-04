@@ -2,6 +2,7 @@ import {Observer} from './observer';
 import viewHead from './subView/viewHead';
 import Scale from './subView/Scale';
 import Line from './subView/Line';
+import {notifyData} from "./Model";
 
 interface state {
     min: number
@@ -14,15 +15,10 @@ interface state {
     bubble: boolean
     onChangeTo: Function
     onChangeFrom: Function
+
     [key: string]: string | number | boolean | undefined | Function
 }
-interface notifyData {
-    valueN?: number;
-    valueS?: string;
-    valueB?: boolean;
-    value?:number
-    target: string;
-}
+
 export class View extends Observer {
     elem: HTMLElement;
 
@@ -47,8 +43,10 @@ export class View extends Observer {
             valueTo: 100,
             valueFrom: 5,
             direction: 'horizontal',
-            onChangeTo: function () {},
-            onChangeFrom: function () {}
+            onChangeTo: function () {
+            },
+            onChangeFrom: function () {
+            }
         };
         this.head = null as unknown as viewHead;
         this.scale = null as unknown as Scale;
@@ -129,7 +127,7 @@ export class View extends Observer {
             }
             newPosition = newPosition > 1 ? 1 : newPosition;
             newPosition = newPosition < 0 ? 0 : newPosition;
-            this.notify({value: newPosition, target: updatedHead, onlyState: false});
+            this.notify({valueN: newPosition, target: updatedHead, onlyState: false});
         };
         const swipeEnd = (): void => {
             document.removeEventListener('touchmove', swipeAction);
@@ -143,19 +141,19 @@ export class View extends Observer {
         document.addEventListener('mouseup', swipeEnd);
     }
 
-    onLineClick(event:MouseEvent): void {
+    onLineClick(event: MouseEvent): void {
         const newPositionRelative: number = this.calcLineClickPositionRelative(event);
 
         this.notify({
             target: 'value',
-            value: newPositionRelative,
+            valueN: newPositionRelative,
             onlyState: false
         });
     }
 
-    changePosition(data:notifyData): void {
+    changePosition(data: notifyData): void {
         if (data.target === 'valueTo') {
-            let position: number = this.getValueRelative(data.value!, this.state.min, this.state.max);
+            let position: number = this.getValueRelative(data.valueN!, this.state.min, this.state.max);
             if (position < 0) {
                 position = 0;
             }
@@ -167,7 +165,7 @@ export class View extends Observer {
             this.state.onChangeTo(this.state.valueTo)
             this.line.progressValue(this.head.element, this.head2?.element);
         } else if (data.target === "valueFrom") {
-            let position = this.getValueRelative(data.value!, this.state.min, this.state.max);
+            let position = this.getValueRelative(data.valueN!, this.state.min, this.state.max);
             if (position < 0) {
                 position = 0;
             }
@@ -182,7 +180,7 @@ export class View extends Observer {
     }
 
 
-    getValueRelative(value: number , min: number, max: number): number {
+    getValueRelative(value: number, min: number, max: number): number {
         return (value - min) / (max - min);
     }
 
@@ -212,14 +210,14 @@ export class View extends Observer {
         this.updateState({target: 'bubble', valueB: false})
         this.head.hideBubble()
         this.head2?.hideBubble()
-        this.notify({target: 'bubble', value: false, onlyState: true})
+        this.notify({target: 'bubble', valueB: false, onlyState: true})
     }
 
     showBubble(): void {
         this.updateState({target: 'bubble', valueB: true})
         this.head.showBubble()
         this.head2?.showBubble()
-        this.notify({target: 'bubble', value: true, onlyState: true})
+        this.notify({target: 'bubble', valueB: true, onlyState: true})
     }
 
     changeOrientation(value: string): void {
@@ -229,7 +227,7 @@ export class View extends Observer {
         this.scale.removeScale();
         this.line.removeLine();
         this.init({})
-        this.notify({target: 'direction', value: value, onlyState: true})
+        this.notify({target: 'direction', valueS: value, onlyState: true})
     }
 
     changeType(value: string): void {
@@ -240,7 +238,7 @@ export class View extends Observer {
         this.scale.removeScale();
         this.line.removeLine();
         this.init({})
-        this.notify({target: 'type', value: value, onlyState: true})
+        this.notify({target: 'type', valueS: value, onlyState: true})
     }
 
     set changeStep(value: number) {
@@ -273,11 +271,8 @@ export class View extends Observer {
         this.init({})
     }
 
-    updateState(data:notifyData): void {
-        if(data.hasOwnProperty('value'))
-            this.state[data.target] = data.value
-        else
-            this.state[data.target] = typeof this.state[data.target] === 'string' ? data.valueS : typeof this.state[data.target] === 'number' ? data.valueN : data.valueB;
+    updateState(data: notifyData): void {
+        this.state[data.target] = typeof this.state[data.target] === 'string' ? data.valueS : typeof this.state[data.target] === 'number' ? data.valueN : data.valueB;
     }
 
 

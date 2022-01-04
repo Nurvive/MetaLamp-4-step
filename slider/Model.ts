@@ -9,15 +9,15 @@ interface state {
     valueFrom: number;
     valueTo: number;
     bubble: boolean;
-
     [key: string]: string | number | boolean | undefined
 
 }
-
-interface notifyData {
-    value: number;
+export interface notifyData {
+    valueN?: number;
+    valueS?: string;
+    valueB?: boolean;
     target: string;
-    onlyState: boolean;
+    onlyState?: boolean;
 }
 
 export class Model extends Observer {
@@ -54,12 +54,12 @@ export class Model extends Observer {
         let updatedProperty: string;
         if (data.target === 'valueTo') {
             updatedProperty = 'valueTo';
-            updatedValue = this.calcValue(data.value);
+            updatedValue = this.calcValue(data.valueN!);
             updatedValue = this.validValueTo(updatedValue);
             // console.log(updatedValue)
             // console.log(this.state.valueTo)
         } else if (data.target === 'value') {
-            updatedValue = this.calcValue(data.value);
+            updatedValue = this.calcValue(data.valueN!);
             if (this.state.type === 'single') {
                 updatedProperty = 'valueTo';
             } else {
@@ -68,11 +68,11 @@ export class Model extends Observer {
             }
         } else {
             updatedProperty = 'valueFrom';
-            updatedValue = this.calcValue(data.value);
+            updatedValue = this.calcValue(data.valueN!);
             updatedValue = this.validValueFrom(updatedValue);
         }
-        this.updateState({target: updatedProperty, value: updatedValue, onlyState: true})
-        this.notify({target: updatedProperty, value: updatedValue});
+        this.updateState({target: updatedProperty, valueN: updatedValue, onlyState: true})
+        this.notify({target: updatedProperty, valueN: updatedValue});
     }
 
     calcValue(value: number): number {
@@ -146,7 +146,7 @@ export class Model extends Observer {
         if (value < this.state.min || value <= this.state.valueFrom) {
             throw "Максимум не может быть меньше минимума"
         }
-        this.updateState({target: 'max', value: value, onlyState: true})
+        this.updateState({target: 'max', valueN: value, onlyState: true})
         if (value < this.state.valueTo) {
             this.changeTo(value)
         }
@@ -157,25 +157,23 @@ export class Model extends Observer {
         if (value > this.state.max || value >= this.state.valueTo) {
             throw "Минимум не может быть больше максимума"
         }
-        this.updateState({target: 'min', value: value, onlyState: true})
+        this.updateState({target: 'min', valueN: value, onlyState: true})
         if (value > this.state.valueFrom) {
             this.changeFrom(value)
         }
     }
 
     changeTo(value: number): void {
-        this.updateState({target: 'valueTo', value: this.validValueTo(value), onlyState: true})
-        this.notify({value: this.state.valueTo, target: 'valueTo'})
+        this.updateState({target: 'valueTo', valueN: this.validValueTo(value), onlyState: true})
+        this.notify({valueN: this.state.valueTo, target: 'valueTo'})
     }
 
     changeFrom(value: number): void {
-        this.updateState({target: 'valueFrom', value: this.validValueFrom(value), onlyState: true})
-        this.notify({value: this.state.valueFrom, target: 'valueFrom'})
+        this.updateState({target: 'valueFrom', valueN: this.validValueFrom(value), onlyState: true})
+        this.notify({valueN: this.state.valueFrom, target: 'valueFrom'})
     }
 
     updateState(data: notifyData): void {
-        if (!data.onlyState)
-            return
-        this.state[data.target] = data.value
+        this.state[data.target] = typeof this.state[data.target] === 'string' ? data.valueS : typeof this.state[data.target] === 'number' ? data.valueN : data.valueB;
     }
 }
