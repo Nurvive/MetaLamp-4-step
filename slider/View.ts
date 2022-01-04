@@ -21,7 +21,6 @@ export class View extends Observer {
     elem: HTMLElement;
 
     state: state;
-
     head: viewHead;
 
     scale: Scale;
@@ -159,7 +158,7 @@ export class View extends Observer {
             if (position > 1) {
                 position = 1;
             }
-            this.head2.updatePosition(position);
+            this.head2.updatePosition(position); //здесь ломается второй слайдер
             this.head2.updateBubble(this.state.valueFrom);
             this.state.onChangeFrom(this.state.valueFrom)
             this.line.progressValue(this.head.element, this.head2?.element);

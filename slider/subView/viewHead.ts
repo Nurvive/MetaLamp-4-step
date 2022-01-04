@@ -17,9 +17,7 @@ export default class viewHead {
       this.parent = parent;
       this.direction = direction;
       this.type = type;
-      if (bubble) {
-        this.bubble = new headBubble();
-      }
+      this.bubble = new headBubble();
     }
 
     init(value: number, bubbleValue:number): void {
