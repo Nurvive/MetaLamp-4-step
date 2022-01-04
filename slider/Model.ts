@@ -9,9 +9,11 @@ interface state {
     valueFrom: number;
     valueTo: number;
     bubble: boolean;
+
     [key: string]: string | number | boolean | undefined
 
 }
+
 export interface notifyData {
     valueN?: number;
     valueS?: string;
@@ -38,61 +40,64 @@ export class Model extends Observer {
             type: 'single',
             valueTo: 100,
             valueFrom: 5,
-            direction: 'horizontal',
+            direction: 'horizontal'
         };
-        this.value = 0
+        this.value = 0;
     }
 
-    init(options: object): void {
+    init(options: Record<string, unknown>): void {
         Object.assign(this.state, options);
     }
 
     calcPosition(data: notifyData): void {
-        if (data.onlyState)
-            return
-        let updatedValue: number;
+        if (data.onlyState) return;
+        let updatedValue = 0;
         let updatedProperty: string;
+        if (data.valueN !== undefined) {
+            updatedValue = this.calcValue(data.valueN);
+        }
         if (data.target === 'valueTo') {
             updatedProperty = 'valueTo';
-            updatedValue = this.calcValue(data.valueN!);
             updatedValue = this.validValueTo(updatedValue);
-            // console.log(updatedValue)
-            // console.log(this.state.valueTo)
         } else if (data.target === 'value') {
-            updatedValue = this.calcValue(data.valueN!);
             if (this.state.type === 'single') {
                 updatedProperty = 'valueTo';
             } else {
-                const isValueTo = () => (updatedValue - this.state.valueFrom) / (this.state.valueTo - this.state.valueFrom) >= 0.5;
+                const isValueTo = () => (updatedValue - this.state.valueFrom)
+                    / (this.state.valueTo - this.state.valueFrom) >= 0.5;
                 updatedProperty = isValueTo() ? 'valueTo' : 'valueFrom';
             }
         } else {
             updatedProperty = 'valueFrom';
-            updatedValue = this.calcValue(data.valueN!);
             updatedValue = this.validValueFrom(updatedValue);
         }
-        this.updateState({target: updatedProperty, valueN: updatedValue, onlyState: true})
+        this.updateState({target: updatedProperty, valueN: updatedValue, onlyState: true});
         this.notify({target: updatedProperty, valueN: updatedValue});
     }
 
     calcValue(value: number): number {
-        value *= (this.state.max - this.state.min);
+        let newValue: number = value;
+        newValue *= (this.state.max - this.state.min);
 
-        return this.state.min + +this.calcValueByStep(value);
+        return this.state.min + +this.calcValueByStep(newValue);
     }
 
     calcValueByStep(value: number): string {
-        const stepsInValue: number = value / this.state.step;
+        let newValue: number = value;
+        const stepsInValue: number = newValue / this.state.step;
 
         if (stepsInValue % 1 >= 0.5) {
-            value = this.state.step * Math.ceil(stepsInValue);
+            newValue = this.state.step * Math.ceil(stepsInValue);
         } else {
-            value = this.state.step * Math.floor(stepsInValue);
+            newValue = this.state.step * Math.floor(stepsInValue);
+        }
+        const popRes: string | undefined = this.state.step.toString().split('.').pop();
+        let accuracy = 0;
+        if (popRes !== undefined) {
+            accuracy = this.state.step.toString().includes('.') ? (popRes.length) : 0;
         }
 
-        const accuracy: number = this.state.step.toString().includes('.') ? (this.state.step.toString().split('.').pop()!.length) : 0;
-
-        return value.toFixed(accuracy);
+        return newValue.toFixed(accuracy);
     }
 
     validValueTo(valueTo: number): number {
@@ -129,51 +134,55 @@ export class Model extends Observer {
     }
 
     set changeOrientation(value: string) {
-        this.state.direction = value
+        this.state.direction = value;
     }
 
     set changeType(value: string) {
-        this.state.type = value
+        this.state.type = value;
     }
 
     set changeStep(value: number) {
-        if (value > this.state.max - this.state.min)
-            throw "Шаг не может быть больше разницы максимума и минимума"
-        this.state.step = value
+        if (value > this.state.max - this.state.min) throw new Error('Шаг не может быть больше разницы максимума и минимума');
+        this.state.step = value;
     }
 
     changeMax(value: number): void {
         if (value < this.state.min || value <= this.state.valueFrom) {
-            throw "Максимум не может быть меньше минимума"
+            throw new Error('Максимум не может быть меньше минимума');
         }
-        this.updateState({target: 'max', valueN: value, onlyState: true})
+        this.updateState({target: 'max', valueN: value, onlyState: true});
         if (value < this.state.valueTo) {
-            this.changeTo(value)
+            this.changeTo(value);
         }
-
     }
 
     changeMin(value: number): void {
         if (value > this.state.max || value >= this.state.valueTo) {
-            throw "Минимум не может быть больше максимума"
+            throw new Error('Минимум не может быть больше максимума');
         }
-        this.updateState({target: 'min', valueN: value, onlyState: true})
+        this.updateState({target: 'min', valueN: value, onlyState: true});
         if (value > this.state.valueFrom) {
-            this.changeFrom(value)
+            this.changeFrom(value);
         }
     }
 
     changeTo(value: number): void {
-        this.updateState({target: 'valueTo', valueN: this.validValueTo(value), onlyState: true})
-        this.notify({valueN: this.state.valueTo, target: 'valueTo'})
+        this.updateState({target: 'valueTo', valueN: this.validValueTo(value), onlyState: true});
+        this.notify({valueN: this.state.valueTo, target: 'valueTo'});
     }
 
     changeFrom(value: number): void {
-        this.updateState({target: 'valueFrom', valueN: this.validValueFrom(value), onlyState: true})
-        this.notify({valueN: this.state.valueFrom, target: 'valueFrom'})
+        this.updateState({target: 'valueFrom', valueN: this.validValueFrom(value), onlyState: true});
+        this.notify({valueN: this.state.valueFrom, target: 'valueFrom'});
     }
 
     updateState(data: notifyData): void {
-        this.state[data.target] = typeof this.state[data.target] === 'string' ? data.valueS : typeof this.state[data.target] === 'number' ? data.valueN : data.valueB;
+        if (typeof this.state[data.target] === 'string') {
+            this.state[data.target] = data.valueS;
+        } else if (typeof this.state[data.target] === 'number') {
+            this.state[data.target] = data.valueN;
+        } else {
+            this.state[data.target] = data.valueB;
+        }
     }
 }
