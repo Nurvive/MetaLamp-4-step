@@ -17,7 +17,7 @@ export class Presenter {
         this.view = view;
         this.view.subscribe(this.model.updateState.bind(this.model));
         this.view.subscribe(this.model.calcPosition.bind(this.model));
-        this.model.subscribe(this.view.updateState.bind(this.view))
+        this.model.subscribe(this.view.updateState.bind(this.view));
         this.model.subscribe(this.view.changePosition.bind(this.view));
     }
 }
