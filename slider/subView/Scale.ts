@@ -15,7 +15,7 @@ export default class Scale {
             : '<div class="slider__scale slider__scale_vertical"></div>';
         this.parent.insertAdjacentHTML('beforeend', this.template);
         this.element = this.parent.querySelector('.slider__scale') as HTMLElement;
-        this.init(min, max)
+        this.init(min, max);
     }
 
     init(min: number, max: number): void {
@@ -28,25 +28,23 @@ export default class Scale {
                     this.element.insertAdjacentHTML('beforeend', `<div class='slider__dash slider__dash_vertical' style='top: ${i}%;'></div><div class='slider__scale-number slider__scale-number_vertical' style='top: ${i}%;'></div>`);
                 }
                 const numbers = this.element.querySelectorAll('.slider__scale-number');
-                let number;
-                number = numbers[numbers.length - 1];
+                const number = numbers[numbers.length - 1];
 
-                i == 0
+                i === 0
                     ? number.innerHTML = String(min)
-                    : number.innerHTML = String(min + i / 25 * step);
+                    : number.innerHTML = String(min + (i / 25) * step);
+            } else if (this.direction === 'horizontal') {
+                this.element.insertAdjacentHTML('beforeend', `<div class='slider__dash slider__dash_small' style='left: ${i}%;'></div>`);
             } else {
-                if (this.direction === 'horizontal') {
-                    this.element.insertAdjacentHTML('beforeend', `<div class='slider__dash slider__dash_small' style='left: ${i}%;'></div>`);
-
-                } else {
-                    this.element.insertAdjacentHTML('beforeend', `<div class='slider__dash slider__dash_small-vertical' style='top: ${i}%;'></div>`);
-                }
+                this.element.insertAdjacentHTML('beforeend', `<div class='slider__dash slider__dash_small-vertical' style='top: ${i}%;'></div>`);
             }
         }
     }
 
     removeScale(): void {
-        this.element.parentNode!.removeChild(this.element)
+        if (this.element.parentNode !== null) {
+            this.element.parentNode.removeChild(this.element);
+        }
     }
 
     get getWidth(): number {
