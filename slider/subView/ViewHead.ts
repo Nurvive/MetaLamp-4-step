@@ -1,6 +1,6 @@
-import headBubble from './headBubble';
+import HeadBubble from './HeadBubble';
 
-export default class viewHead {
+export default class ViewHead {
     parent: HTMLElement
 
     direction: string
@@ -17,7 +17,7 @@ export default class viewHead {
         this.parent = parent;
         this.direction = direction;
         this.type = type;
-        this.bubble = new headBubble();
+        this.bubble = new HeadBubble();
         this.template = this.direction === 'horizontal'
             ? `<div class='slider__head'>
             </div>`

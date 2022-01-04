@@ -1,4 +1,4 @@
-export default class headBubble {
+export default class HeadBubble {
     element: any
 
     constructor() {
