@@ -12,7 +12,7 @@ export default class Scale {
       this.direction = direction;
     }
 
-    init(min: number, max: number) {
+    init(min: number, max: number):void {
       this.template = this.direction === 'horizontal'
         ? '<div class="slider__scale"></div>'
         : '<div class="slider__scale slider__scale_vertical"></div>';
@@ -51,22 +51,22 @@ export default class Scale {
         }
       }
     }
-    removeScale(){
+    removeScale():void{
         this.element.parentNode.removeChild(this.element)
     }
-    get getWidth() {
+    get getWidth():number {
       return this.element.getBoundingClientRect().width;
     }
 
-    get getLeftCoordinate() {
+    get getLeftCoordinate():number {
       return this.element.getBoundingClientRect().left;
     }
 
-    get getHeight() {
+    get getHeight():number {
       return this.element.getBoundingClientRect().height;
     }
 
-    get getTopCoordinate() {
+    get getTopCoordinate():number {
       return this.element.getBoundingClientRect().top;
     }
 }

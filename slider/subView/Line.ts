@@ -42,23 +42,23 @@ export default class Line {
       }
     }
 
-    removeLine(){
+    removeLine(): void{
         this.element.parentNode.removeChild(this.element)
     }
 
-    get getWidth() {
+    get getWidth():number {
       return this.element.getBoundingClientRect().width;
     }
 
-    get getLeftCoordinate() {
+    get getLeftCoordinate():number {
       return this.element.getBoundingClientRect().left;
     }
 
-    get getHeight() {
+    get getHeight():number {
       return this.element.getBoundingClientRect().height;
     }
 
-    get getTopCoordinate() {
+    get getTopCoordinate():number {
       return this.element.getBoundingClientRect().top;
     }
 }

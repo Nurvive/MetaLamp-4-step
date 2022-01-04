@@ -12,7 +12,11 @@ interface state {
     bubble?: boolean
 
 }
-
+interface notifyData{
+    value:number
+    target:string
+    onlyState:boolean
+}
 export class Model extends Observer {
     elem: HTMLElement;
 
@@ -30,7 +34,7 @@ export class Model extends Observer {
         Object.assign(this.state, options);
     }
 
-    calcPosition(data): void {
+    calcPosition(data:notifyData): void {
         if (data.onlyState)
             return
         let updatedValue: number;
@@ -156,7 +160,7 @@ export class Model extends Observer {
         this.notify({value: this.state.valueFrom, target: 'valueFrom'})
     }
 
-    updateState(data): void {
+    updateState(data: notifyData): void {
         if (!data.onlyState)
             return
         this.state[data.target] = data.value

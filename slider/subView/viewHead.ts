@@ -35,7 +35,7 @@ export default class viewHead {
       this.updateBubble(bubbleValue);
     }
 
-    removeHead(){
+    removeHead():void{
         this.element.parentNode.removeChild(this.element)
     }
 

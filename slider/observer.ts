@@ -1,19 +1,19 @@
 export class Observer {
-    observers:any
+    observers:Array<Function>
 
     constructor() {
       this.observers = [];
     }
 
-    subscribe(observer) {
+    subscribe(observer:Function) {
       this.observers.push(observer);
     }
 
-    unsubscribe(observer) {
+    unsubscribe(observer:Function) {
       this.observers = this.observers.filter((x) => x !== observer);
     }
 
-    notify(data) {
+    notify(data:object) {
       this.observers.forEach((x) => x(data));
     }
 }
