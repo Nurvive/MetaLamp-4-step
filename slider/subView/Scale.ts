@@ -7,66 +7,61 @@ export default class Scale {
 
     element: HTMLElement
 
-    constructor(parent: HTMLElement, direction: string) {
-      this.parent = parent;
-      this.direction = direction;
+    constructor(parent: HTMLElement, direction: string, min: number, max: number) {
+        this.parent = parent;
+        this.direction = direction;
+        this.template = this.direction === 'horizontal'
+            ? '<div class="slider__scale"></div>'
+            : '<div class="slider__scale slider__scale_vertical"></div>';
+        this.parent.insertAdjacentHTML('beforeend', this.template);
+        this.element = this.parent.querySelector('.slider__scale') as HTMLElement;
+        this.init(min, max)
     }
 
-    init(min: number, max: number):void {
-      this.template = this.direction === 'horizontal'
-        ? '<div class="slider__scale"></div>'
-        : '<div class="slider__scale slider__scale_vertical"></div>';
-      this.parent.insertAdjacentHTML('beforeend', this.template);
-      this.element = this.parent.querySelector('.slider__scale');
-      const step = (max - min) / 4;
-      if (this.direction === 'horizontal') {
+    init(min: number, max: number): void {
+        const step = (max - min) / 4;
         for (let i = 0; i <= 100; i += 5) {
-          if (i % 25 === 0) {
-            this.element.insertAdjacentHTML('beforeend', `<div class='slider__dash' style='left: ${i}%;'></div><div class='slider__scale-number' style='left: ${i}%;'></div>`);
-            const numbers = this.element.querySelectorAll('.slider__scale-number');
-            let number;
-            number = numbers[numbers.length - 1];
+            if (i % 25 === 0) {
+                if (this.direction === 'horizontal') {
+                    this.element.insertAdjacentHTML('beforeend', `<div class='slider__dash' style='left: ${i}%;'></div><div class='slider__scale-number' style='left: ${i}%;'></div>`);
+                } else {
+                    this.element.insertAdjacentHTML('beforeend', `<div class='slider__dash slider__dash_vertical' style='top: ${i}%;'></div><div class='slider__scale-number slider__scale-number_vertical' style='top: ${i}%;'></div>`);
+                }
+                const numbers = this.element.querySelectorAll('.slider__scale-number');
+                let number;
+                number = numbers[numbers.length - 1];
 
-            i == 0
-              ? number.innerHTML = min
-              : number.innerHTML = min + i / 25 * step;
-          } else {
-            this.element.insertAdjacentHTML('beforeend', `<div class='slider__dash slider__dash_small' style='left: ${i}%;'></div>`);
-          }
+                i == 0
+                    ? number.innerHTML = String(min)
+                    : number.innerHTML = String(min + i / 25 * step);
+            } else {
+                if (this.direction === 'horizontal') {
+                    this.element.insertAdjacentHTML('beforeend', `<div class='slider__dash slider__dash_small' style='left: ${i}%;'></div>`);
+
+                } else {
+                    this.element.insertAdjacentHTML('beforeend', `<div class='slider__dash slider__dash_small-vertical' style='top: ${i}%;'></div>`);
+                }
+            }
         }
-      } else {
-        for (let i = 0; i <= 100; i += 5) {
-          if (i % 25 === 0) {
-            this.element.insertAdjacentHTML('beforeend', `<div class='slider__dash slider__dash_vertical' style='top: ${i}%;'></div><div class='slider__scale-number slider__scale-number_vertical' style='top: ${i}%;'></div>`);
-            const numbers = this.element.querySelectorAll('.slider__scale-number');
-            let number;
-            number = numbers[numbers.length - 1];
-
-            i == 0
-              ? number.innerHTML = min
-              : number.innerHTML = min + i / 25 * step;
-          } else {
-            this.element.insertAdjacentHTML('beforeend', `<div class='slider__dash slider__dash_small-vertical' style='top: ${i}%;'></div>`);
-          }
-        }
-      }
-    }
-    removeScale():void{
-        this.element.parentNode.removeChild(this.element)
-    }
-    get getWidth():number {
-      return this.element.getBoundingClientRect().width;
     }
 
-    get getLeftCoordinate():number {
-      return this.element.getBoundingClientRect().left;
+    removeScale(): void {
+        this.element.parentNode!.removeChild(this.element)
     }
 
-    get getHeight():number {
-      return this.element.getBoundingClientRect().height;
+    get getWidth(): number {
+        return this.element.getBoundingClientRect().width;
     }
 
-    get getTopCoordinate():number {
-      return this.element.getBoundingClientRect().top;
+    get getLeftCoordinate(): number {
+        return this.element.getBoundingClientRect().left;
+    }
+
+    get getHeight(): number {
+        return this.element.getBoundingClientRect().height;
+    }
+
+    get getTopCoordinate(): number {
+        return this.element.getBoundingClientRect().top;
     }
 }

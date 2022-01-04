@@ -6,7 +6,7 @@ export class Presenter {
 
     model: Model;
 
-    elemHead: HTMLElement;
+    elemHead: HTMLElement | null;
 
     view: View
 

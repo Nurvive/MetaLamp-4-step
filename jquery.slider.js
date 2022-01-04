@@ -12,6 +12,7 @@ import {Slider} from "./slider/slider"
                 type: 'single',
                 valueTo: 100,
                 valueFrom: 5,
+                direction: 'horizontal',
                 onChangeTo: function () {
                 },
                 onChangeFrom: function () {

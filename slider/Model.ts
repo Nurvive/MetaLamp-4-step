@@ -1,22 +1,25 @@
 import {Observer} from './observer';
 
 interface state {
-    min?: number
-    max?: number
-    position?: number
-    step?: number
-    direction?: string
-    type?: string
-    valueFrom?: number
-    valueTo?: number
-    bubble?: boolean
+    min: number;
+    max: number;
+    step: number;
+    direction: string;
+    type: string;
+    valueFrom: number;
+    valueTo: number;
+    bubble: boolean;
+
+    [key: string]: string | number | boolean | undefined
 
 }
-interface notifyData{
-    value:number
-    target:string
-    onlyState:boolean
+
+interface notifyData {
+    value: number;
+    target: string;
+    onlyState: boolean;
 }
+
 export class Model extends Observer {
     elem: HTMLElement;
 
@@ -27,14 +30,24 @@ export class Model extends Observer {
     constructor(elem: HTMLElement) {
         super();
         this.elem = elem;
-        this.state = {};
+        this.state = {
+            bubble: true,
+            max: 100,
+            min: 0,
+            step: 1,
+            type: 'single',
+            valueTo: 100,
+            valueFrom: 5,
+            direction: 'horizontal',
+        };
+        this.value = 0
     }
 
     init(options: object): void {
         Object.assign(this.state, options);
     }
 
-    calcPosition(data:notifyData): void {
+    calcPosition(data: notifyData): void {
         if (data.onlyState)
             return
         let updatedValue: number;
@@ -43,6 +56,8 @@ export class Model extends Observer {
             updatedProperty = 'valueTo';
             updatedValue = this.calcValue(data.value);
             updatedValue = this.validValueTo(updatedValue);
+            // console.log(updatedValue)
+            // console.log(this.state.valueTo)
         } else if (data.target === 'value') {
             updatedValue = this.calcValue(data.value);
             if (this.state.type === 'single') {
@@ -75,7 +90,7 @@ export class Model extends Observer {
             value = this.state.step * Math.floor(stepsInValue);
         }
 
-        const accuracy: number = this.state.step.toString().includes('.') ? (this.state.step.toString().split('.').pop().length) : 0;
+        const accuracy: number = this.state.step.toString().includes('.') ? (this.state.step.toString().split('.').pop()!.length) : 0;
 
         return value.toFixed(accuracy);
     }
@@ -101,9 +116,8 @@ export class Model extends Observer {
 
     validValueFrom(valueFrom: number): number {
         let value: number = valueFrom;
-
         if (this.state.type === 'single') {
-            value = null;
+            value = 0;
         } else if (this.state.type === 'double') {
             if (value < this.state.min) {
                 value = this.state.min;
@@ -111,7 +125,6 @@ export class Model extends Observer {
                 value = this.state.valueTo - this.state.step;
             }
         }
-
         return value;
     }
 
@@ -151,12 +164,12 @@ export class Model extends Observer {
     }
 
     changeTo(value: number): void {
-        this.updateState({target:'valueTo',value:this.validValueTo(value),onlyState:true})
+        this.updateState({target: 'valueTo', value: this.validValueTo(value), onlyState: true})
         this.notify({value: this.state.valueTo, target: 'valueTo'})
     }
 
     changeFrom(value: number): void {
-        this.updateState({target:'valueFrom',value:this.validValueFrom(value),onlyState:true})
+        this.updateState({target: 'valueFrom', value: this.validValueFrom(value), onlyState: true})
         this.notify({value: this.state.valueFrom, target: 'valueFrom'})
     }
 

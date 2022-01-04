@@ -13,53 +13,56 @@ export default class viewHead {
 
     bubble: any
 
-    constructor(parent: HTMLElement, direction: string, type: string, bubble: boolean) {
-      this.parent = parent;
-      this.direction = direction;
-      this.type = type;
-      this.bubble = new headBubble();
-    }
-
-    init(value: number, bubbleValue:number): void {
-      this.template = this.direction === 'horizontal'
-        ? `<div class='slider__head'>
+    constructor(parent: HTMLElement, direction: string, type: string, value: number, bubbleValue: number) {
+        this.parent = parent;
+        this.direction = direction;
+        this.type = type;
+        this.bubble = new headBubble();
+        this.template = this.direction === 'horizontal'
+            ? `<div class='slider__head'>
             </div>`
-        : `<div class='slider__head slider__head_vertical'>
+            : `<div class='slider__head slider__head_vertical'>
             </div>`;
-      this.parent.insertAdjacentHTML('afterbegin', this.template);
-      this.element = this.parent.querySelector('.slider__head');
-      if (this.bubble) {
-        this.element.append(this.bubble);
-      }
-      this.updatePosition(value);
-      this.updateBubble(bubbleValue);
+        this.parent.insertAdjacentHTML('afterbegin', this.template);
+        this.element = this.parent.querySelector('.slider__head') as HTMLElement;
+        if (this.bubble) {
+            this.element.append(this.bubble);
+        }
+        this.updatePosition(value);
+        this.updateBubble(bubbleValue);
     }
 
-    removeHead():void{
-        this.element.parentNode.removeChild(this.element)
+    removeHead(): void {
+        this.element.parentNode!.removeChild(this.element)
     }
 
-    updatePosition(newPos: number) : void {
-      if (this.direction === 'horizontal') { this.element.style.left = `${newPos * 100}%`; } else { this.element.style.top = `${newPos * 100}%`; }
+    updatePosition(newPos: number): void {
+        if (this.direction === 'horizontal') {
+            this.element.style.left = `${newPos * 100}%`;
+        } else {
+            this.element.style.top = `${newPos * 100}%`;
+        }
     }
 
-    updateBubble(value: number) :void {
-      if (this.bubble) { this.bubble.innerHTML = String(value); }
+    updateBubble(value: number): void {
+        if (this.bubble) {
+            this.bubble.innerHTML = String(value);
+        }
     }
 
-    showBubble():void {
-      this.bubble.style.display = 'block';
+    showBubble(): void {
+        this.bubble.style.display = 'block';
     }
 
-    hideBubble():void {
-      this.bubble.style.display = 'none';
+    hideBubble(): void {
+        this.bubble.style.display = 'none';
     }
 
-    get getWidth():number {
-      return this.element.getBoundingClientRect().width;
+    get getWidth(): number {
+        return this.element.getBoundingClientRect().width;
     }
 
-    get getHeight():number {
-      return this.element.getBoundingClientRect().height;
+    get getHeight(): number {
+        return this.element.getBoundingClientRect().height;
     }
 }
