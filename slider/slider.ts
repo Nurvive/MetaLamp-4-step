@@ -11,8 +11,7 @@ export class Slider {
 
     model: Model;
 
-
-    constructor(elem: HTMLElement, settings: object) {
+    constructor(elem: HTMLElement, settings: Record<string, unknown>) {
         this.elem = elem;
         this.model = new Model(this.elem);
         this.model.init(settings);
@@ -22,16 +21,16 @@ export class Slider {
     }
 
     hideBubble(): void {
-        this.view.hideBubble()
+        this.view.hideBubble();
     }
 
     showBubble(): void {
-        this.view.showBubble()
+        this.view.showBubble();
     }
 
     changeOrientation(value: string): void {
-        this.view.changeOrientation(value)
-        this.model.changeOrientation = value
+        this.view.changeOrientation(value);
+        this.model.changeOrientation = value;
     }
 
     changeType(value: string): void {
@@ -40,27 +39,25 @@ export class Slider {
     }
 
     changeStep(value: number): void {
-        this.model.changeStep = value
-        this.view.changeStep = value
+        this.model.changeStep = value;
+        this.view.changeStep = value;
     }
 
     changeTo(value: number): void {
-        this.model.changeTo(value)
+        this.model.changeTo(value);
     }
 
     changeFrom(value: number): void {
-        this.model.changeFrom(value)
+        this.model.changeFrom(value);
     }
 
     changeMax(value: number): void {
-        this.model.changeMax(value)
-        this.view.changeMax(value)
+        this.model.changeMax(value);
+        this.view.changeMax(value);
     }
 
     changeMin(value: number): void {
-        this.model.changeMin(value)
-        this.view.changeMin(value)
-
+        this.model.changeMin(value);
+        this.view.changeMin(value);
     }
-
 }
