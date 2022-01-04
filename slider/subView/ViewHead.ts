@@ -11,9 +11,10 @@ export default class ViewHead {
 
     element: HTMLElement
 
-    bubble: any
+    bubble: HTMLElement
 
-    constructor(parent: HTMLElement, direction: string, type: string, value: number, bubbleValue: number) {
+    constructor(parent: HTMLElement, direction: string, type: string,
+        value: number, bubbleValue: number) {
         this.parent = parent;
         this.direction = direction;
         this.type = type;
@@ -33,7 +34,9 @@ export default class ViewHead {
     }
 
     removeHead(): void {
-        this.element.parentNode!.removeChild(this.element)
+        if (this.element.parentNode !== null) {
+            this.element.parentNode.removeChild(this.element);
+        }
     }
 
     updatePosition(newPos: number): void {
