@@ -79,10 +79,10 @@ export class Model extends Observer {
         let newValue: number = value;
         newValue *= (this.state.max - this.state.min);
 
-        return this.state.min + +this.calcValueByStep(newValue);
+        return this.state.min + this.calcValueByStep(newValue);
     }
 
-    calcValueByStep(value: number): string {
+    calcValueByStep(value: number): number {
         let newValue: number = value;
         const stepsInValue: number = newValue / this.state.step;
 
@@ -96,8 +96,7 @@ export class Model extends Observer {
         if (popRes !== undefined) {
             accuracy = this.state.step.toString().includes('.') ? (popRes.length) : 0;
         }
-
-        return newValue.toFixed(accuracy);
+        return Number(newValue.toFixed(accuracy));
     }
 
     validValueTo(valueTo: number): number {
