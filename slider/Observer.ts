@@ -11,7 +11,7 @@ export class Observer {
         this.observers.push(observer);
     }
 
-    unsubscribe(observer: () => void): void {
+    unsubscribe(observer: (data: notifyData) => void): void {
         this.observers = this.observers.filter((x) => x !== observer);
     }
 

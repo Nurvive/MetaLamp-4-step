@@ -1,4 +1,4 @@
-import {Observer} from './observer';
+import {Observer} from './Observer';
 import ViewHead from './subView/ViewHead';
 import Scale from './subView/Scale';
 import Line from './subView/Line';
