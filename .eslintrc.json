@@ -2,7 +2,8 @@
   "env": {
     "browser": true,
     "es2021": true,
-    "jquery": true
+    "jquery": true,
+    "jest/globals": true
   },
   "extends": [
     "airbnb-base/legacy",
@@ -14,7 +15,8 @@
     "sourceType": "module"
   },
   "plugins": [
-    "@typescript-eslint"
+    "@typescript-eslint",
+    "jest"
   ],
   "rules": {
     "linebreak-style": [

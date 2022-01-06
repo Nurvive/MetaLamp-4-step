@@ -20,44 +20,53 @@ export class Slider {
         this.presenter = new Presenter(this.elem, this.model, this.view);
     }
 
-    hideBubble(): void {
+    hideBubble(): boolean {
         this.view.hideBubble();
+        return true;
     }
 
-    showBubble(): void {
+    showBubble(): boolean {
         this.view.showBubble();
+        return true;
     }
 
-    changeOrientation(value: string): void {
+    changeOrientation(value: string): boolean {
         this.view.changeOrientation(value);
         this.model.changeOrientation = value;
+        return true;
     }
 
-    changeType(value: string): void {
+    changeType(value: string): boolean {
         this.view.changeType(value);
         this.model.changeType = value;
+        return true;
     }
 
-    changeStep(value: number): void {
+    changeStep(value: number): boolean {
         this.model.changeStep = value;
         this.view.changeStep = value;
+        return true;
     }
 
-    changeTo(value: number): void {
+    changeTo(value: number): boolean {
         this.model.changeTo(value);
+        return true;
     }
 
-    changeFrom(value: number): void {
+    changeFrom(value: number): boolean {
         this.model.changeFrom(value);
+        return true;
     }
 
-    changeMax(value: number): void {
+    changeMax(value: number): boolean {
         this.model.changeMax(value);
         this.view.changeMax(value);
+        return true;
     }
 
-    changeMin(value: number): void {
+    changeMin(value: number): boolean {
         this.model.changeMin(value);
         this.view.changeMin(value);
+        return true;
     }
 }
