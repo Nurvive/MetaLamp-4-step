@@ -62,12 +62,12 @@ export class View extends Observer {
         this.scale = new Scale(this.line.element,
             this.state.direction, this.state.min, this.state.max);
         if (this.state.type === 'double') {
-            const head2StartPos: number = this.calcHandleStartPosition(this.state.valueFrom);
+            const head2StartPos: number = this.calcHeadStartPosition(this.state.valueFrom);
             this.head2 = new ViewHead(this.line.element,
                 this.state.direction, this.state.type, head2StartPos, this.state.valueFrom);
             this.head2.element.setAttribute('data-valueFrom', 'true');
         }
-        const headStartPos = this.calcHandleStartPosition(this.state.valueTo);
+        const headStartPos = this.calcHeadStartPosition(this.state.valueTo);
         this.head = new ViewHead(this.line.element,
             this.state.direction, this.state.type, headStartPos, this.state.valueTo);
         if (this.state.bubble) {
@@ -94,7 +94,7 @@ export class View extends Observer {
         this.scale.element.addEventListener('click', this.onLineClick.bind(this));
     }
 
-    calcHandleStartPosition(value: number): number {
+    calcHeadStartPosition(value: number): number {
         return (value - this.state.min) / (this.state.max - this.state.min);
     }
 
@@ -109,41 +109,35 @@ export class View extends Observer {
         const evt: MouseEvent | Touch = View.getEvent(e);
         const target = evt.target as Element;
         const updatedHead: string = target.hasAttribute('data-valueFrom') ? 'valueFrom' : 'valueTo';
-        const halfHandleWidth: number = this.head.getWidth / 2;
-        let lineWidth: number;
-        let lineHeight: number;
-        let lineLeftCoordinate: number;
-        let lineTopCoordinate: number;
-        let handleLeftCoordinate: number;
-        let handleTopCoordinate: number;
-        let shift: number;
+        const dataArray: Array<number> = [];
         if (this.state.direction === 'horizontal') {
-            lineWidth = this.line.getWidth;
-            lineLeftCoordinate = this.line.getLeftCoordinate;
-            handleLeftCoordinate = target.getBoundingClientRect().left;
-            shift = evt.clientX - handleLeftCoordinate;
+            dataArray.push(target.getBoundingClientRect().left);
+            dataArray.push(evt.clientX);
         } else {
-            lineHeight = this.line.getHeight;
-            lineTopCoordinate = this.line.getTopCoordinate;
-            handleTopCoordinate = target.getBoundingClientRect().top;
-            shift = evt.clientY - handleTopCoordinate;
+            dataArray.push(target.getBoundingClientRect().top);
+            dataArray.push(evt.clientY);
         }
         const swipeAction = (event: MouseEvent | TouchEvent): void => {
             if ('preventDefault' in event) {
                 event.preventDefault();
             }
             const evtSwipe: MouseEvent | Touch = View.getEvent(event);
-            let newPosition: number;
             if (this.state.direction === 'horizontal') {
-                newPosition = (evtSwipe.clientX - shift - lineLeftCoordinate + halfHandleWidth)
-                    / lineWidth;
+                dataArray.push(this.line.getWidth);
+                dataArray.push(this.line.getLeftCoordinate);
+                dataArray.push(evtSwipe.clientX);
             } else {
-                newPosition = (evtSwipe.clientY - shift - lineTopCoordinate + halfHandleWidth)
-                    / lineHeight;
+                dataArray.push(this.line.getHeight);
+                dataArray.push(this.line.getTopCoordinate);
+                dataArray.push(evtSwipe.clientY);
             }
-            newPosition = newPosition > 1 ? 1 : newPosition;
-            newPosition = newPosition < 0 ? 0 : newPosition;
-            this.notify({valueN: newPosition, target: updatedHead, onlyState: false});
+            dataArray.push(this.head.getWidth / 2);
+            this.notify({
+                valueArr: dataArray.slice(),
+                target: updatedHead,
+                onlyState: false
+            });
+            dataArray.splice(2, dataArray.length - 2);
         };
         const swipeEnd = (): void => {
             document.removeEventListener('touchmove', swipeAction);
@@ -165,36 +159,6 @@ export class View extends Observer {
             valueN: newPositionRelative,
             onlyState: false
         });
-    }
-
-    changePosition(data: notifyData): void {
-        let position = 0;
-        if (data.valueN !== undefined) {
-            position = View.getValueRelative(data.valueN, this.state.min, this.state.max);
-        }
-        if (position < 0) {
-            position = 0;
-        }
-        if (position > 1) {
-            position = 1;
-        }
-        if (data.target === 'valueTo') {
-            this.head.updatePosition(position);
-            this.head.updateBubble(this.state.valueTo);
-            this.state.onChangeTo(this.state.valueTo);
-            this.line.progressValue(this.head.element, this.head2?.element);
-        } else if (data.target === 'valueFrom') {
-            if (this.head2 !== undefined) {
-                this.head2.updatePosition(position);
-                this.head2.updateBubble(this.state.valueFrom);
-            }
-            this.state.onChangeFrom(this.state.valueFrom);
-            this.line.progressValue(this.head.element, this.head2?.element);
-        }
-    }
-
-    static getValueRelative(value: number, min: number, max: number): number {
-        return (value - min) / (max - min);
     }
 
     calcLineClickPositionRelative(event: MouseEvent | TouchEvent): number {
@@ -219,22 +183,43 @@ export class View extends Observer {
         return newPositionRelative;
     }
 
+    changePosition(data: notifyData): void {
+        if (data.onlyState) return;
+        let position = 0;
+        if (data.valueN !== undefined) {
+            position = data.valueN;
+        }
+        if (data.target === 'valueTo') {
+            this.head.updatePosition(position);
+            this.head.updateBubble(this.state.valueTo);
+            this.state.onChangeTo(this.state.valueTo);
+            this.line.progressValue(this.head.element, this.head2?.element);
+        } else if (data.target === 'valueFrom') {
+            if (this.head2 !== undefined) {
+                this.head2.updatePosition(position);
+                this.head2.updateBubble(this.state.valueFrom);
+            }
+            this.state.onChangeFrom(this.state.valueFrom);
+            this.line.progressValue(this.head.element, this.head2?.element);
+        }
+    }
+
     hideBubble(): void {
-        this.updateState({target: 'bubble', valueB: false});
+        this.updateState({target: 'bubble', valueB: false, onlyState: true});
         this.head.hideBubble();
         this.head2?.hideBubble();
         this.notify({target: 'bubble', valueB: false, onlyState: true});
     }
 
     showBubble(): void {
-        this.updateState({target: 'bubble', valueB: true});
+        this.updateState({target: 'bubble', valueB: true, onlyState: true});
         this.head.showBubble();
         this.head2?.showBubble();
         this.notify({target: 'bubble', valueB: true, onlyState: true});
     }
 
     changeOrientation(value: string): void {
-        this.updateState({target: 'direction', valueS: value});
+        this.updateState({target: 'direction', valueS: value, onlyState: true});
         this.head.removeHead();
         this.head2?.removeHead();
         this.scale.removeScale();
@@ -244,7 +229,7 @@ export class View extends Observer {
     }
 
     changeType(value: string): void {
-        this.updateState({target: 'type', valueS: value});
+        this.updateState({target: 'type', valueS: value, onlyState: true});
         this.head.removeHead();
         this.head2?.removeHead();
         delete this.head2;
@@ -263,7 +248,7 @@ export class View extends Observer {
         if (value < this.state.min || value <= this.state.valueFrom) {
             throw new Error('Максимум не может быть меньше минимума');
         }
-        this.updateState({target: 'max', valueN: value});
+        this.updateState({target: 'max', valueN: value, onlyState: true});
         this.head.removeHead();
         this.head2?.removeHead();
         this.scale.removeScale();
@@ -275,7 +260,7 @@ export class View extends Observer {
         if (value > this.state.max || value >= this.state.valueTo) {
             throw new Error('Минимум не может быть больше максимума');
         }
-        this.updateState({target: 'min', valueN: value});
+        this.updateState({target: 'min', valueN: value, onlyState: true});
         this.head.removeHead();
         this.head2?.removeHead();
         this.scale.removeScale();
@@ -284,6 +269,7 @@ export class View extends Observer {
     }
 
     updateState(data: notifyData): void {
+        if (!data.onlyState) return;
         if (typeof this.state[data.target] === 'string') {
             this.state[data.target] = data.valueS;
         } else if (typeof this.state[data.target] === 'number') {
