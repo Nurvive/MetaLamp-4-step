@@ -16,7 +16,7 @@ $().ready(function () {
         direction: 'horizontal',
         max: 100,
         min: 0,
-        step: 1,
+        step: 1.5,
         type: 'double',
         valueTo: 100,
         valueFrom: 0,
@@ -38,19 +38,19 @@ $().ready(function () {
         this.checked ? slider1.Slider('changeType', 'double') : slider1.Slider('changeType', 'single');
     });
     $stepInput.on('input', function () {
-        slider1.Slider('changeStep', parseInt(this.value, 10));
+        slider1.Slider('changeStep', parseFloat(this.value));
     });
     $toInput.on('input', function () {
-        slider1.Slider('changeTo', parseInt(this.value, 10));
+        slider1.Slider('changeTo', parseFloat(this.value));
     });
     $fromInput.on('input', function () {
-        slider1.Slider('changeFrom', parseInt(this.value, 10));
+        slider1.Slider('changeFrom', parseFloat(this.value));
     });
     $maxInput.on('input', function () {
-        slider1.Slider('changeMax', parseInt(this.value, 10));
+        slider1.Slider('changeMax', parseFloat(this.value));
     });
     $minInput.on('input', function () {
-        slider1.Slider('changeMin', parseInt(this.value, 10));
+        slider1.Slider('changeMin', parseFloat(this.value));
     });
     const $bubbleButton2 = $('input[data-type="bubble2"]');
     const $verticalButton2 = $('input[data-type="vertical2"]');
