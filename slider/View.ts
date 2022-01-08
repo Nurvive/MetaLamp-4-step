@@ -67,12 +67,12 @@ export class View extends Observer {
         if (this.state.type === 'double') {
             const head2StartPos: number = this.calcHeadStartPosition(this.state.valueFrom);
             this.head2 = new ViewHead(this.line.element,
-                this.state.direction, this.state.type, head2StartPos, this.state.valueFrom);
+                this.state.direction, head2StartPos, this.state.valueFrom);
             this.head2.element.setAttribute('data-valueFrom', 'true');
         }
         const headStartPos = this.calcHeadStartPosition(this.state.valueTo);
         this.head = new ViewHead(this.line.element,
-            this.state.direction, this.state.type, headStartPos, this.state.valueTo);
+            this.state.direction, headStartPos, this.state.valueTo);
         if (this.state.bubble) {
             this.head.showBubble();
             if (this.state.type === 'double') {

@@ -5,19 +5,16 @@ export default class ViewHead {
 
     direction: string
 
-    type: string
-
     template: string
 
     element: HTMLElement
 
     bubble: HTMLElement
 
-    constructor(parent: HTMLElement, direction: string, type: string,
+    constructor(parent: HTMLElement, direction: string,
         value: number, bubbleValue: number) {
         this.parent = parent;
         this.direction = direction;
-        this.type = type;
         this.bubble = (new HeadBubble()).element;
         this.template = this.direction === 'horizontal'
             ? `<div class='slider__head'>
