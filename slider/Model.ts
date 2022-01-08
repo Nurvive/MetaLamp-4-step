@@ -64,6 +64,7 @@ export class Model extends Observer {
         let HeadTopCoordinate: number;
         let shift: number;
         let newPosition = 0;
+        let newPositionRelative = 0;
         let updatedValue = 0;
         let updatedProperty: string;
         if (data.target === 'valueTo') {
@@ -76,11 +77,23 @@ export class Model extends Observer {
                 newPosition = (data.valueArr[4] - shift - lineLeftCoordinate + halfHeadWidth)
                     / lineWidth;
             }
-            newPosition = newPosition > 1 ? 1 : newPosition;
-            newPosition = newPosition < 0 ? 0 : newPosition;
+            newPosition = Model.moreThan0LessThan1(newPosition);
             updatedValue = this.calcValue(newPosition);
             updatedValue = this.validValueTo(updatedValue);
         } else if (data.target === 'value') {
+            if (data.valueArr !== undefined) {
+                if (this.state.direction === 'horizontal') {
+                    lineWidth = data.valueArr[0];
+                    lineLeftCoordinate = data.valueArr[1];
+                    newPositionRelative = (data.valueArr[2] - lineLeftCoordinate) / lineWidth;
+                } else {
+                    lineHeight = data.valueArr[0];
+                    lineTopCoordinate = data.valueArr[1];
+                    newPositionRelative = (data.valueArr[2] - lineTopCoordinate) / lineHeight;
+                }
+                newPositionRelative = Model.moreThan0LessThan1(newPositionRelative);
+            }
+            updatedValue = this.calcValue(newPositionRelative);
             if (this.state.type === 'single') {
                 updatedProperty = 'valueTo';
             } else {
@@ -88,6 +101,7 @@ export class Model extends Observer {
                     / (this.state.valueTo - this.state.valueFrom) >= 0.5;
                 updatedProperty = isValueTo() ? 'valueTo' : 'valueFrom';
             }
+            updatedValue = updatedProperty === 'valueFrom' ? this.validValueFrom(updatedValue) : this.validValueTo(updatedValue);
         } else {
             updatedProperty = 'valueFrom';
             if (data.valueArr !== undefined) {
@@ -98,29 +112,35 @@ export class Model extends Observer {
                 newPosition = (data.valueArr[4] - shift - lineTopCoordinate + halfHeadWidth)
                     / lineHeight;
             }
-            newPosition = newPosition > 1 ? 1 : newPosition;
-            newPosition = newPosition < 0 ? 0 : newPosition;
+            newPosition = Model.moreThan0LessThan1(newPosition);
             updatedValue = this.calcValue(newPosition);
             updatedValue = this.validValueFrom(updatedValue);
         }
+
         this.updateState({
             target: updatedProperty,
             valueN: updatedValue,
             onlyState: true
         });
-        let position = Model.getValueRelative(updatedValue, this.state.min, this.state.max);
-        position = position > 1 ? 1 : position;
-        position = position < 0 ? 0 : position;
         this.notify({
             target: updatedProperty,
             valueN: updatedValue,
             onlyState: true
         });
+        let position = Model.getValueRelative(updatedValue, this.state.min, this.state.max);
+        position = Model.moreThan0LessThan1(position);
         this.notify({
             target: updatedProperty,
             valueN: position,
             onlyState: false
         });
+    }
+
+    static moreThan0LessThan1(value: number) : number {
+        let newValue = value;
+        newValue = newValue > 1 ? 1 : newValue;
+        newValue = newValue < 0 ? 0 : newValue;
+        return newValue;
     }
 
     static getValueRelative(value: number, min: number, max: number): number {
@@ -253,6 +273,7 @@ export class Model extends Observer {
     }
 
     updateState(data: notifyData): void {
+        if (!data.onlyState) return;
         if (typeof this.state[data.target] === 'string') {
             this.state[data.target] = data.valueS;
         } else if (typeof this.state[data.target] === 'number') {

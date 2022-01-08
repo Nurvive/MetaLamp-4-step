@@ -152,35 +152,28 @@ export class View extends Observer {
     }
 
     onLineClick(event: MouseEvent): void {
-        const newPositionRelative: number = this.calcLineClickPositionRelative(event);
+        const dataArray: Array<number> = this.calcLineClickPositionRelative(event);
 
         this.notify({
             target: 'value',
-            valueN: newPositionRelative,
+            valueArr: dataArray.slice(),
             onlyState: false
         });
     }
 
-    calcLineClickPositionRelative(event: MouseEvent | TouchEvent): number {
+    calcLineClickPositionRelative(event: MouseEvent | TouchEvent): Array<number> {
         const evt: MouseEvent | Touch = View.getEvent(event);
-
-        let lineWidth: number;
-        let lineLeftCoordinate: number;
-        let newPositionRelative: number;
-        let lineHeight: number;
-        let lineTopCoordinate: number;
+        const dataArray:Array<number> = [];
         if (this.state.direction === 'horizontal') {
-            lineWidth = this.line.getWidth;
-            lineLeftCoordinate = this.line.getLeftCoordinate;
-            newPositionRelative = (evt.clientX - lineLeftCoordinate) / lineWidth;
+            dataArray.push(this.line.getWidth);
+            dataArray.push(this.line.getLeftCoordinate);
+            dataArray.push(evt.clientX);
         } else {
-            lineHeight = this.line.getHeight;
-            lineTopCoordinate = this.line.getTopCoordinate;
-            newPositionRelative = (evt.clientY - lineTopCoordinate) / lineHeight;
+            dataArray.push(this.line.getHeight);
+            dataArray.push(this.line.getTopCoordinate);
+            dataArray.push(evt.clientY);
         }
-        newPositionRelative = newPositionRelative > 1 ? 1 : newPositionRelative;
-        newPositionRelative = newPositionRelative < 0 ? 0 : newPositionRelative;
-        return newPositionRelative;
+        return dataArray;
     }
 
     changePosition(data: notifyData): void {
