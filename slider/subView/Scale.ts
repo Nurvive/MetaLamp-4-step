@@ -1,11 +1,11 @@
 export default class Scale {
-    parent: HTMLElement
+    parent: HTMLElement;
 
-    direction: string
+    direction: string;
 
-    template: string
+    template: string;
 
-    element: HTMLElement
+    element: HTMLElement;
 
     constructor(parent: HTMLElement, direction: string, min: number, max: number) {
         this.parent = parent;
@@ -42,9 +42,7 @@ export default class Scale {
     }
 
     removeScale(): void {
-        if (this.element.parentNode !== null) {
-            this.element.parentNode.removeChild(this.element);
-        }
+        this.element.remove();
     }
 
     get getWidth(): number {
