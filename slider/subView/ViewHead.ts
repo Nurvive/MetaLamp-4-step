@@ -1,15 +1,15 @@
 import HeadBubble from './HeadBubble';
 
 export default class ViewHead {
-    parent: HTMLElement
+    parent: HTMLElement;
 
-    direction: string
+    direction: string;
 
-    template: string
+    template: string;
 
-    element: HTMLElement
+    element: HTMLElement;
 
-    bubble: HTMLElement
+    bubble: HTMLElement;
 
     constructor(parent: HTMLElement, direction: string,
         value: number, bubbleValue: number) {
@@ -23,17 +23,14 @@ export default class ViewHead {
             </div>`;
         this.parent.insertAdjacentHTML('afterbegin', this.template);
         this.element = this.parent.querySelector('.slider__head') as HTMLElement;
-        if (this.bubble) {
-            this.element.append(this.bubble);
-        }
+        this.element.append(this.bubble);
         this.updatePosition(value);
         this.updateBubble(bubbleValue);
     }
 
-    removeHead(): void {
-        if (this.element.parentNode !== null) {
-            this.element.parentNode.removeChild(this.element);
-        }
+    removeHead(): boolean {
+        this.element.remove();
+        return true;
     }
 
     updatePosition(newPos: number): void {
@@ -44,10 +41,12 @@ export default class ViewHead {
         }
     }
 
-    updateBubble(value: number): void {
+    updateBubble(value: number): boolean {
         if (this.bubble) {
             this.bubble.innerHTML = String(value);
+            return true;
         }
+        return false;
     }
 
     showBubble(): void {
