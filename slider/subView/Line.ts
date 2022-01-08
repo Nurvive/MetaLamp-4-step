@@ -1,15 +1,15 @@
 export default class Line {
-    parent: HTMLElement
+    parent: HTMLElement;
 
-    direction: string
+    direction: string;
 
-    template: string
+    template: string;
 
-    element: HTMLElement
+    element: HTMLElement;
 
-    progressBar: HTMLElement
+    progressBar: HTMLElement;
 
-    type: string
+    type: string;
 
     constructor(parent: HTMLElement, direction: string, type: string) {
         this.parent = parent;
@@ -42,9 +42,7 @@ export default class Line {
     }
 
     removeLine(): void {
-        if (this.element.parentNode !== null) {
-            this.element.parentNode.removeChild(this.element);
-        }
+        this.element.remove();
     }
 
     get getWidth(): number {
