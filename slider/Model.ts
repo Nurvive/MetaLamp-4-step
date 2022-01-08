@@ -55,6 +55,8 @@ export class Model extends Observer {
         let halfHeadWidth = 0;
         if (data.valueArr !== undefined) {
             halfHeadWidth = data.valueArr[5];
+        } else {
+            throw new Error('Ожидался массив значений для Model');
         }
         let lineWidth: number;
         let lineHeight: number;
@@ -69,30 +71,26 @@ export class Model extends Observer {
         let updatedProperty: string;
         if (data.target === 'valueTo') {
             updatedProperty = 'valueTo';
-            if (data.valueArr !== undefined) {
-                lineWidth = data.valueArr[2];
-                lineLeftCoordinate = data.valueArr[3];
-                HeadLeftCoordinate = data.valueArr[0];
-                shift = data.valueArr[1] - HeadLeftCoordinate;
-                newPosition = (data.valueArr[4] - shift - lineLeftCoordinate + halfHeadWidth)
-                    / lineWidth;
-            }
+            lineWidth = data.valueArr[2];
+            lineLeftCoordinate = data.valueArr[3];
+            HeadLeftCoordinate = data.valueArr[0];
+            shift = data.valueArr[1] - HeadLeftCoordinate;
+            newPosition = (data.valueArr[4] - shift - lineLeftCoordinate + halfHeadWidth)
+                / lineWidth;
             newPosition = Model.moreThan0LessThan1(newPosition);
             updatedValue = this.calcValue(newPosition);
             updatedValue = this.validValueTo(updatedValue);
         } else if (data.target === 'value') {
-            if (data.valueArr !== undefined) {
-                if (this.state.direction === 'horizontal') {
-                    lineWidth = data.valueArr[0];
-                    lineLeftCoordinate = data.valueArr[1];
-                    newPositionRelative = (data.valueArr[2] - lineLeftCoordinate) / lineWidth;
-                } else {
-                    lineHeight = data.valueArr[0];
-                    lineTopCoordinate = data.valueArr[1];
-                    newPositionRelative = (data.valueArr[2] - lineTopCoordinate) / lineHeight;
-                }
-                newPositionRelative = Model.moreThan0LessThan1(newPositionRelative);
+            if (this.state.direction === 'horizontal') {
+                lineWidth = data.valueArr[0];
+                lineLeftCoordinate = data.valueArr[1];
+                newPositionRelative = (data.valueArr[2] - lineLeftCoordinate) / lineWidth;
+            } else {
+                lineHeight = data.valueArr[0];
+                lineTopCoordinate = data.valueArr[1];
+                newPositionRelative = (data.valueArr[2] - lineTopCoordinate) / lineHeight;
             }
+            newPositionRelative = Model.moreThan0LessThan1(newPositionRelative);
             updatedValue = this.calcValue(newPositionRelative);
             if (this.state.type === 'single') {
                 updatedProperty = 'valueTo';
@@ -104,14 +102,12 @@ export class Model extends Observer {
             updatedValue = updatedProperty === 'valueFrom' ? this.validValueFrom(updatedValue) : this.validValueTo(updatedValue);
         } else {
             updatedProperty = 'valueFrom';
-            if (data.valueArr !== undefined) {
-                lineHeight = data.valueArr[2];
-                lineTopCoordinate = data.valueArr[3];
-                HeadTopCoordinate = data.valueArr[0];
-                shift = data.valueArr[1] - HeadTopCoordinate;
-                newPosition = (data.valueArr[4] - shift - lineTopCoordinate + halfHeadWidth)
-                    / lineHeight;
-            }
+            lineHeight = data.valueArr[2];
+            lineTopCoordinate = data.valueArr[3];
+            HeadTopCoordinate = data.valueArr[0];
+            shift = data.valueArr[1] - HeadTopCoordinate;
+            newPosition = (data.valueArr[4] - shift - lineTopCoordinate + halfHeadWidth)
+                / lineHeight;
             newPosition = Model.moreThan0LessThan1(newPosition);
             updatedValue = this.calcValue(newPosition);
             updatedValue = this.validValueFrom(updatedValue);
@@ -156,8 +152,8 @@ export class Model extends Observer {
 
     calcValueByStep(value: number): number {
         let newValue: number = value;
+        if (this.state.step === undefined) throw new Error('Значение step не определено');
         const stepsInValue: number = newValue / this.state.step;
-
         if (stepsInValue % 1 >= 0.5) {
             newValue = this.state.step * Math.ceil(stepsInValue);
         } else {
@@ -256,7 +252,8 @@ export class Model extends Observer {
         });
         this.notify({
             valueN: this.state.valueTo,
-            target: 'valueTo'
+            target: 'valueTo',
+            onlyState: true
         });
     }
 
@@ -268,7 +265,8 @@ export class Model extends Observer {
         });
         this.notify({
             valueN: this.state.valueFrom,
-            target: 'valueFrom'
+            target: 'valueFrom',
+            onlyState: true
         });
     }
 
