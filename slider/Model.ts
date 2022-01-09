@@ -28,8 +28,6 @@ export class Model extends Observer {
 
     state: state;
 
-    value: number;
-
     constructor(elem: HTMLElement) {
         super();
         this.elem = elem;
@@ -43,7 +41,6 @@ export class Model extends Observer {
             valueFrom: 5,
             direction: 'horizontal'
         };
-        this.value = 0;
     }
 
     init(options: Record<string, unknown>): void {
