@@ -1,4 +1,3 @@
-import 'jquery/dist/jquery.min';
 import './styles.scss';
 import './jquery.slider';
 
