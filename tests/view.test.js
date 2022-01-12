@@ -1,4 +1,5 @@
 import {View} from '../slider/View';
+/* eslint-disable dot-notation */
 
 describe('Class View: ', () => {
     const settings = {
@@ -26,30 +27,26 @@ describe('Class View: ', () => {
         expect(view)
             .toBeDefined();
     });
-    // test('func init is OK', () => {
-    //     view.init(settings);
-    // });
     test('func setup is OK', () => {
         delete view.head2;
         expect(() => {
-            view
-                .setup();
+            view['setup']();
         })
             .toThrow('Head2 не существует');
     });
     test('func calcHeadStartPosition is OK', () => {
-        expect(view.calcHeadStartPosition(0))
+        expect(view['calcHeadStartPosition'](0))
             .toBe(0);
-        expect(view.calcHeadStartPosition(100))
+        expect(view['calcHeadStartPosition'](100))
             .toBe(1);
         view.state.max = 90;
         view.state.min = 5;
-        expect(view.calcHeadStartPosition(50))
+        expect(view['calcHeadStartPosition'](50))
             .toBe(0.5294117647058824);
     });
     test('func getEvent is OK', () => {
         let evt = new MouseEvent('mousedown');
-        expect(View.getEvent(evt))
+        expect(View['getEvent'](evt))
             .toEqual(evt);
         const touchObj = {
             identifier: Date.now(),
@@ -69,7 +66,7 @@ describe('Class View: ', () => {
             changedTouches: [touchObj],
             shiftKey: true
         });
-        expect(View.getEvent(evt))
+        expect(View['getEvent'](evt))
             .toBeTruthy();
     });
     test('func swipeStart is OK', () => {
@@ -79,7 +76,7 @@ describe('Class View: ', () => {
             enumerable: true
         });
         let array = [view.head.element.getBoundingClientRect().left, evt.clientX];
-        expect(view.swipeStart(evt))
+        expect(view['swipeStart'](evt))
             .toEqual(array);
         evt = new MouseEvent('mousedown');
         Object.defineProperty(evt, 'target', {
@@ -87,11 +84,11 @@ describe('Class View: ', () => {
             enumerable: true
         });
         array = [view.head.element.getBoundingClientRect().left, evt.clientX];
-        expect(view.swipeStart(evt))
+        expect(view['swipeStart'](evt))
             .toEqual(array);
         view.state.direction = 'vertical';
         array = [view.head.element.getBoundingClientRect().top, evt.clientY];
-        expect(view.swipeStart(evt))
+        expect(view['swipeStart'](evt))
             .toEqual(array);
     });
     test('func swipeAction is OK', () => {
@@ -101,41 +98,41 @@ describe('Class View: ', () => {
             enumerable: true
         });
         let array = [view.head.element.getBoundingClientRect().left, evt.clientX];
-        expect(view.swipeAction(evt, array, 'valueTo'))
+        expect(view['swipeAction'](evt, array, 'valueTo'))
             .toEqual(array);
         view.state.direction = 'vertical';
         array = [view.head.element.getBoundingClientRect().top, evt.clientY];
-        expect(view.swipeAction(evt, array, 'valueTo'))
+        expect(view['swipeAction'](evt, array, 'valueTo'))
             .toEqual(array);
     });
     test('func swipeHandler is OK', () => {
         let evt = new MouseEvent('mousedown');
         let array = [view.head.element.getBoundingClientRect().left, evt.clientX];
-        expect(view.swipeHandler(evt))
+        expect(view['swipeHandler'](evt))
             .toEqual(array);
     });
     test('func swipeEnd is OK', () => {
-        expect(view.swipeEnd())
+        expect(view['swipeEnd']())
             .toBeTruthy();
     });
     test('func onLineClick is OK', () => {
         let evt = new MouseEvent('mousedown');
         let array = [view.line.getWidth, view.line.getLeftCoordinate, evt.clientX];
-        expect(view.onLineClick(evt))
+        expect(view['onLineClick'](evt))
             .toEqual(array);
         view.state.direction = 'vertical';
         array = [view.line.getHeight, view.line.getTopCoordinate, evt.clientY];
-        expect(view.onLineClick(evt))
+        expect(view['onLineClick'](evt))
             .toEqual(array);
     });
     test('func lineClickData is OK', () => {
         let evt = new MouseEvent('mousedown');
         let array = [view.line.getWidth, view.line.getLeftCoordinate, evt.clientX];
-        expect(view.lineClickData(evt))
+        expect(view['lineClickData'](evt))
             .toEqual(array);
         view.state.direction = 'vertical';
         array = [view.line.getHeight, view.line.getTopCoordinate, evt.clientY];
-        expect(view.lineClickData(evt))
+        expect(view['lineClickData'](evt))
             .toEqual(array);
     });
     test('func changePosition is OK', () => {
