@@ -213,7 +213,7 @@ export class Model extends Observer {
         this.state.step = value;
     }
 
-    changeMax(value: number): void {
+    set changeMax(value: number) {
         if (value < this.state.min || value <= this.state.valueFrom) {
             throw new Error('Максимум не может быть меньше минимума');
         }
@@ -223,11 +223,11 @@ export class Model extends Observer {
             onlyState: true
         });
         if (value < this.state.valueTo) {
-            this.changeTo(value);
+            this.changeTo = value;
         }
     }
 
-    changeMin(value: number): void {
+    set changeMin(value: number) {
         if (value > this.state.max || value >= this.state.valueTo) {
             throw new Error('Минимум не может быть больше максимума');
         }
@@ -237,11 +237,11 @@ export class Model extends Observer {
             onlyState: true
         });
         if (value > this.state.valueFrom) {
-            this.changeFrom(value);
+            this.changeFrom = value;
         }
     }
 
-    changeTo(value: number): void {
+    set changeTo(value: number) {
         this.updateState({
             target: 'valueTo',
             valueN: this.validValueTo(value),
@@ -254,7 +254,7 @@ export class Model extends Observer {
         });
     }
 
-    changeFrom(value: number): void {
+    set changeFrom(value: number) {
         this.updateState({
             target: 'valueFrom',
             valueN: this.validValueFrom(value),
