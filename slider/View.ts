@@ -2,22 +2,8 @@ import {Observer} from './Observer';
 import ViewHead from './subView/ViewHead';
 import Scale from './subView/Scale';
 import Line from './subView/Line';
-import {notifyData} from './Model';
-
-interface state {
-    min: number;
-    max: number;
-    step: number;
-    direction: string;
-    type: string;
-    valueFrom: number;
-    valueTo: number;
-    bubble: boolean;
-    onChangeTo: (value: number) => void;
-    onChangeFrom: (value: number) => void;
-
-    [key: string]: string | number | boolean | undefined | ((value: number) => void);
-}
+import {state} from './types/types';
+import {notifyData} from './types/types';
 
 export class View extends Observer {
     private readonly elem: HTMLElement;

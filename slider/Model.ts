@@ -1,27 +1,6 @@
 import {Observer} from './Observer';
-
-interface state {
-    min: number;
-    max: number;
-    step: number;
-    direction: string;
-    type: string;
-    valueFrom: number;
-    valueTo: number;
-    bubble: boolean;
-
-    [key: string]: string | number | boolean | undefined;
-
-}
-
-export interface notifyData {
-    valueN?: number;
-    valueS?: string;
-    valueB?: boolean;
-    valueArr?: Array<number>;
-    target: string;
-    onlyState?: boolean;
-}
+import {state} from './types/types';
+import {notifyData} from './types/types';
 
 export class Model extends Observer {
     private elem: HTMLElement;
@@ -39,7 +18,13 @@ export class Model extends Observer {
             type: 'single',
             valueTo: 100,
             valueFrom: 5,
-            direction: 'horizontal'
+            direction: 'horizontal',
+            // eslint-disable-next-line
+            onChangeTo: function () {
+            },
+            // eslint-disable-next-line
+            onChangeFrom: function () {
+            }
         };
     }
 
