@@ -14,6 +14,7 @@ export default class Scale {
             ? '<div class="slider__scale"></div>'
             : '<div class="slider__scale slider__scale_vertical"></div>';
         this.parent.insertAdjacentHTML('beforeend', this.template);
+        // Здесь приведение через "as" оправдано, так как элемент точно создается строчкой выше
         this.element = this.parent.querySelector('.slider__scale') as HTMLElement;
         this.init(min, max);
     }

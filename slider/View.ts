@@ -258,6 +258,7 @@ export class View extends Observer {
 
     private swipeStart = (e: MouseEvent | TouchEvent): Array<number> => {
         const evt: MouseEvent | Touch = View.getEvent(e);
+        // Здесь нужен каст через 'as', так как TS не знает, что target это html объект
         const target = evt.target as Element;
         const updatedHead: string = target.hasAttribute('data-valueFrom') ? 'valueFrom' : 'valueTo';
         const dataArray: Array<number> = [];

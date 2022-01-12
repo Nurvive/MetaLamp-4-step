@@ -22,6 +22,7 @@ export default class ViewHead {
             : `<div class='slider__head slider__head_vertical'>
             </div>`;
         this.parent.insertAdjacentHTML('afterbegin', this.template);
+        // Здесь приведение через "as" оправдано, так как элемент точно создается строчкой выше
         this.element = this.parent.querySelector('.slider__head') as HTMLElement;
         this.element.append(this.bubble);
         this.updatePosition(value);
