@@ -1,4 +1,4 @@
-import {notifyData} from './Model';
+import {notifyData} from './types/types';
 
 export class Observer {
     observers: Array<(data: notifyData) => void>

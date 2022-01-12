@@ -1,6 +1,7 @@
 import {Observer} from './Observer';
 import {state} from './types/types';
 import {notifyData} from './types/types';
+import {stateContent} from './types/types';
 
 export class Model extends Observer {
     private elem: HTMLElement;
@@ -28,7 +29,7 @@ export class Model extends Observer {
         };
     }
 
-    init(options: Record<string, unknown>): void {
+    init(options: Record<string, stateContent>): void {
         Object.assign(this.state, options);
     }
 
