@@ -127,7 +127,7 @@ describe('Class Model: ', () => {
             valueN: 10,
             onlyState: true
         };
-        model['updateState'](data);
+        model.updateState(data);
         expect(model.state.min)
             .toBe(10);
         data = {
@@ -135,7 +135,7 @@ describe('Class Model: ', () => {
             valueB: false,
             onlyState: true
         };
-        model['updateState'](data);
+        model.updateState(data);
         expect(model.state.bubble)
             .toBe(false);
         data = {
@@ -143,7 +143,7 @@ describe('Class Model: ', () => {
             valueS: 'vertical',
             onlyState: true
         };
-        model['updateState'](data);
+        model.updateState(data);
         expect(model.state.direction)
             .toBe('vertical');
         data = {
@@ -151,7 +151,7 @@ describe('Class Model: ', () => {
             target: 'direction',
             valueS: 'horizontal'
         };
-        model['updateState'](data);
+        model.updateState(data);
         expect(model.state.direction)
             .toBe('vertical');
     });
