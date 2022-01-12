@@ -49,23 +49,23 @@ export class Slider {
     }
 
     changeTo(value: number): boolean {
-        this.model.changeTo(value);
+        this.model.changeTo = value;
         return true;
     }
 
     changeFrom(value: number): boolean {
-        this.model.changeFrom(value);
+        this.model.changeFrom = value;
         return true;
     }
 
     changeMax(value: number): boolean {
-        this.model.changeMax(value);
+        this.model.changeMax = value;
         this.view.changeMax(value);
         return true;
     }
 
     changeMin(value: number): boolean {
-        this.model.changeMin(value);
+        this.model.changeMin = value;
         this.view.changeMin(value);
         return true;
     }
