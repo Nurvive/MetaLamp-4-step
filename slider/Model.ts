@@ -204,6 +204,17 @@ export class Model extends Observer {
         });
     }
 
+    updateState(data: notifyData): void {
+        if (!data.onlyState) return;
+        if (typeof this.state[data.target] === 'string') {
+            this.state[data.target] = data.valueS;
+        } else if (typeof this.state[data.target] === 'number') {
+            this.state[data.target] = data.valueN;
+        } else {
+            this.state[data.target] = data.valueB;
+        }
+    }
+
     private static moreThan0LessThan1(value: number) : number {
         let newValue = value;
         newValue = newValue > 1 ? 1 : newValue;
@@ -273,16 +284,5 @@ export class Model extends Observer {
             }
         }
         return value;
-    }
-
-    private updateState(data: notifyData): void {
-        if (!data.onlyState) return;
-        if (typeof this.state[data.target] === 'string') {
-            this.state[data.target] = data.valueS;
-        } else if (typeof this.state[data.target] === 'number') {
-            this.state[data.target] = data.valueN;
-        } else {
-            this.state[data.target] = data.valueB;
-        }
     }
 }
