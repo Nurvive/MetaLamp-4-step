@@ -19,9 +19,9 @@ describe('Class View: ', () => {
         }
     };
     const node = document.createElement('div');
-    const view = new View(node);
+    let view;
     beforeEach(() => {
-        view.init(settings);
+        view = new View(node, settings);
     });
     test('should be', () => {
         expect(view)
@@ -107,9 +107,8 @@ describe('Class View: ', () => {
     });
     test('func swipeHandler is OK', () => {
         let evt = new MouseEvent('mousedown');
-        let array = [view.head.element.getBoundingClientRect().left, evt.clientX];
         expect(view['swipeHandler'](evt))
-            .toEqual(array);
+            .toEqual([]);
     });
     test('func swipeEnd is OK', () => {
         expect(view['swipeEnd']())

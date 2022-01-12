@@ -3,6 +3,7 @@ import ViewHead from './subView/ViewHead';
 import Scale from './subView/Scale';
 import Line from './subView/Line';
 import {state} from './types/types';
+import {stateContent} from './types/types';
 import {notifyData} from './types/types';
 
 export class View extends Observer {
@@ -20,7 +21,7 @@ export class View extends Observer {
 
     private swipeHandler: (event: (MouseEvent | TouchEvent)) => Array<number>;
 
-    constructor(elem: HTMLElement) {
+    constructor(elem: HTMLElement, options: Record<string, stateContent>) {
         super();
         this.elem = elem;
         this.swipeHandler = () => [];
@@ -40,25 +41,19 @@ export class View extends Observer {
             onChangeFrom: function () {
             }
         };
-        this.head = null as unknown as ViewHead;
-        this.scale = null as unknown as Scale;
-        this.line = null as unknown as Line;
-    }
-
-    init(options: Record<string, unknown>): void {
         Object.assign(this.state, options);
         this.line = new Line(this.elem, this.state.direction, this.state.type);
         this.scale = new Scale(this.line.element,
             this.state.direction, this.state.min, this.state.max);
+        const headStartPos = this.calcHeadStartPosition(this.state.valueTo);
+        this.head = new ViewHead(this.line.element,
+            this.state.direction, headStartPos, this.state.valueTo);
         if (this.state.type === 'double') {
             const head2StartPos: number = this.calcHeadStartPosition(this.state.valueFrom);
             this.head2 = new ViewHead(this.line.element,
                 this.state.direction, head2StartPos, this.state.valueFrom);
             this.head2.element.setAttribute('data-valueFrom', 'true');
         }
-        const headStartPos = this.calcHeadStartPosition(this.state.valueTo);
-        this.head = new ViewHead(this.line.element,
-            this.state.direction, headStartPos, this.state.valueTo);
         if (this.state.bubble) {
             this.head.showBubble();
             if (this.state.type === 'double') {
@@ -136,7 +131,7 @@ export class View extends Observer {
         this.head2?.removeHead();
         this.scale.removeScale();
         this.line.removeLine();
-        this.init({});
+        this.reInit();
         this.notify({
             target: 'direction',
             valueS: value,
@@ -155,7 +150,7 @@ export class View extends Observer {
         delete this.head2;
         this.scale.removeScale();
         this.line.removeLine();
-        this.init({});
+        this.reInit();
         this.notify({
             target: 'type',
             valueS: value,
@@ -181,7 +176,7 @@ export class View extends Observer {
         this.head2?.removeHead();
         this.scale.removeScale();
         this.line.removeLine();
-        this.init({});
+        this.reInit();
     }
 
     set changeMin(value: number) {
@@ -197,7 +192,7 @@ export class View extends Observer {
         this.head2?.removeHead();
         this.scale.removeScale();
         this.line.removeLine();
-        this.init({});
+        this.reInit();
     }
 
     updateState(data: notifyData): void {
@@ -209,6 +204,31 @@ export class View extends Observer {
         } else {
             this.state[data.target] = data.valueB;
         }
+    }
+
+    private reInit(): void {
+        this.line = new Line(this.elem, this.state.direction, this.state.type);
+        this.scale = new Scale(this.line.element,
+            this.state.direction, this.state.min, this.state.max);
+        if (this.state.type === 'double') {
+            const head2StartPos: number = this.calcHeadStartPosition(this.state.valueFrom);
+            this.head2 = new ViewHead(this.line.element,
+                this.state.direction, head2StartPos, this.state.valueFrom);
+            this.head2.element.setAttribute('data-valueFrom', 'true');
+        }
+        const headStartPos = this.calcHeadStartPosition(this.state.valueTo);
+        this.head = new ViewHead(this.line.element,
+            this.state.direction, headStartPos, this.state.valueTo);
+        if (this.state.bubble) {
+            this.head.showBubble();
+            if (this.state.type === 'double') {
+                if (this.head2 !== undefined) {
+                    this.head2.showBubble();
+                }
+            }
+        }
+        this.line.progressValue(this.head.element, this.head2?.element);
+        this.setup();
     }
 
     private setup(): void {
