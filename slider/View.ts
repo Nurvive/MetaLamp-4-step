@@ -244,7 +244,7 @@ export class View extends Observer {
         });
     }
 
-    changeOrientation(value: string): void {
+    set changeOrientation(value: string) {
         this.updateState({
             target: 'direction',
             valueS: value,
@@ -262,7 +262,7 @@ export class View extends Observer {
         });
     }
 
-    changeType(value: string): void {
+    set changeType(value: string) {
         this.updateState({
             target: 'type',
             valueS: value,
@@ -286,7 +286,7 @@ export class View extends Observer {
         this.state.step = value;
     }
 
-    changeMax(value: number): void {
+    set changeMax(value: number) {
         if (value < this.state.min || value <= this.state.valueFrom) {
             throw new Error('Максимум не может быть меньше минимума');
         }
@@ -302,7 +302,7 @@ export class View extends Observer {
         this.init({});
     }
 
-    changeMin(value: number): void {
+    set changeMin(value: number) {
         if (value > this.state.max || value >= this.state.valueTo) {
             throw new Error('Минимум не может быть больше максимума');
         }
