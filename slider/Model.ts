@@ -24,9 +24,9 @@ export interface notifyData {
 }
 
 export class Model extends Observer {
-    elem: HTMLElement;
+    private elem: HTMLElement;
 
-    state: state;
+    private readonly state: state;
 
     constructor(elem: HTMLElement) {
         super();
