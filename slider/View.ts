@@ -20,9 +20,9 @@ interface state {
 }
 
 export class View extends Observer {
-    elem: HTMLElement;
+    private readonly elem: HTMLElement;
 
-    state: state;
+    private readonly state: state;
 
     head: ViewHead;
 
@@ -32,7 +32,7 @@ export class View extends Observer {
 
     head2?: ViewHead;
 
-    swipeHandler: (event: (MouseEvent | TouchEvent)) => Array<number>;
+    private swipeHandler: (event: (MouseEvent | TouchEvent)) => Array<number>;
 
     constructor(elem: HTMLElement) {
         super();
