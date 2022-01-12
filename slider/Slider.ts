@@ -16,7 +16,7 @@ export class Slider {
         this.model = new Model(this.elem);
         this.model.init(settings);
         this.view = new View(this.elem);
-        this.view.init(this.model.state);
+        this.view.init(settings);
         this.presenter = new Presenter(this.elem, this.model, this.view);
     }
 
