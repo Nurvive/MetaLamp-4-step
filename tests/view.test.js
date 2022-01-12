@@ -176,28 +176,28 @@ describe('Class View: ', () => {
             .toThrow('Head2 не существует');
     });
     test('func changeMax is OK', () => {
-        view.changeMax(50);
+        view.changeMax = 50;
         expect(view.state.max)
             .toBe(50);
-        view.changeMax(150);
+        view.changeMax = 150;
         expect(view.state.max)
             .toBe(150);
         expect(() => {
             view
-                .changeMax(-1);
+                .changeMax = -1;
         })
             .toThrow('Максимум не может быть меньше минимума');
     });
     test('func changeMin is OK', () => {
-        view.changeMin(50);
+        view.changeMin = 50;
         expect(view.state.min)
             .toBe(50);
-        view.changeMin(-1);
+        view.changeMin = -1;
         expect(view.state.min)
             .toBe(-1);
         expect(() => {
             view
-                .changeMin(150);
+                .changeMin = 150;
         })
             .toThrow('Минимум не может быть больше максимума');
     });
@@ -213,12 +213,12 @@ describe('Class View: ', () => {
             .toBeTruthy();
     });
     test('func changeOrientation is OK', () => {
-        view.changeOrientation('vertical');
+        view.changeOrientation = 'vertical';
         expect(view.state.direction)
             .toBe('vertical');
     });
     test('func changeType is OK', () => {
-        view.changeType('double');
+        view.changeType = 'double';
         expect(view.state.type)
             .toBe('double');
     });
