@@ -1,5 +1,5 @@
 import {Model} from '../slider/Model';
-
+/* eslint-disable dot-notation */
 describe('Class Model: ', () => {
     const settings = {
         bubble: true,
@@ -27,79 +27,79 @@ describe('Class Model: ', () => {
             .toBeDefined();
     });
     test('func moreThan0LessThan1 is OK', () => {
-        expect(Model.moreThan0LessThan1(1))
+        expect(Model['moreThan0LessThan1'](1))
             .toBe(1);
-        expect(Model.moreThan0LessThan1(0))
+        expect(Model['moreThan0LessThan1'](0))
             .toBe(0);
-        expect(Model.moreThan0LessThan1(0.42))
+        expect(Model['moreThan0LessThan1'](0.42))
             .toBe(0.42);
-        expect(Model.moreThan0LessThan1(2))
+        expect(Model['moreThan0LessThan1'](2))
             .toBe(1);
-        expect(Model.moreThan0LessThan1(-1))
+        expect(Model['moreThan0LessThan1'](-1))
             .toBe(0);
     });
     test('func getValueRelative is OK', () => {
-        expect(Model.getValueRelative(66, 0, 100))
+        expect(Model['getValueRelative'](66, 0, 100))
             .toBe(0.66);
-        expect(Model.getValueRelative(100, 0, 100))
+        expect(Model['getValueRelative'](100, 0, 100))
             .toBe(1);
-        expect(Model.getValueRelative(0, 0, 100))
+        expect(Model['getValueRelative'](0, 0, 100))
             .toBe(0);
     });
     test('func calcValueByStep is OK', () => {
-        expect(model.calcValueByStep(90.1697998046875))
+        expect(model['calcValueByStep'](90.1697998046875))
             .toBe(90);
-        expect(model.calcValueByStep(0))
+        expect(model['calcValueByStep'](0))
             .toBe(0);
-        expect(model.calcValueByStep(100))
+        expect(model['calcValueByStep'](100))
             .toBe(100);
-        expect(model.calcValueByStep(43.852091471354164))
+        expect(model['calcValueByStep'](43.852091471354164))
             .toBe(44);
         delete model.state.step;
-        expect(() => model.calcValueByStep(0)).toThrow('Значение step не определено');
+        expect(() => model['calcValueByStep'](0)).toThrow('Значение step не определено');
         model.state.step = 1.5;
-        expect(model.calcValueByStep(91.64896647135417)).toBe(91.5);
+        expect(model['calcValueByStep'](91.64896647135417)).toBe(91.5);
     });
     test('func calcValue is OK', () => {
-        expect(model.calcValue(0))
+        expect(model['calcValue'](0))
             .toBe(0);
-        expect(model.calcValue(0.6867500813802083))
+        expect(model['calcValue'](0.6867500813802083))
             .toBe(69);
-        expect(model.calcValue(0.22612508138020834))
+        expect(model['calcValue'](0.22612508138020834))
             .toBe(23);
-        expect(model.calcValue(0.20977091471354167))
+        expect(model['calcValue'](0.20977091471354167))
             .toBe(21);
     });
     test('func single validValueTo is OK', () => {
-        expect(model.validValueTo(91))
+        expect(model['validValueTo'](91))
             .toBe(91);
-        expect(model.validValueTo(101))
+        expect(model['validValueTo'](101))
             .toBe(100);
-        expect(model.validValueTo(-1))
+        expect(model['validValueTo'](-1))
             .toBe(0);
     });
     test('func double validValueTo is OK', () => {
         model.state.type = 'double';
-        expect(model.validValueTo(91))
+        expect(model['validValueTo'](91))
             .toBe(91);
-        expect(model.validValueTo(101))
+        expect(model['validValueTo'](101))
             .toBe(100);
-        expect(model.validValueTo(3))
+        expect(model['validValueTo'](3))
             .toBe(6);
-        expect(model.validValueTo(5))
+        expect(model['validValueTo'](5))
             .toBe(6);
     });
     test('func validValueFrom is OK', () => {
         model.state.type = 'double';
-        expect(model.validValueFrom(91))
+        expect(model['validValueFrom'](91))
             .toBe(91);
-        expect(model.validValueFrom(100))
+        expect(model['validValueFrom'](100))
             .toBe(99);
-        expect(model.validValueFrom(-1))
+        expect(model['validValueFrom'](-1))
             .toBe(0);
     });
     test('func single validValueFrom is OK', () => {
-        expect(model.validValueFrom(91))
+        expect(model['validValueFrom'](91))
             .toBe(0);
     });
     test('setter changeOrientation is OK', () => {
@@ -127,7 +127,7 @@ describe('Class Model: ', () => {
             valueN: 10,
             onlyState: true
         };
-        model.updateState(data);
+        model['updateState'](data);
         expect(model.state.min)
             .toBe(10);
         data = {
@@ -135,7 +135,7 @@ describe('Class Model: ', () => {
             valueB: false,
             onlyState: true
         };
-        model.updateState(data);
+        model['updateState'](data);
         expect(model.state.bubble)
             .toBe(false);
         data = {
@@ -143,7 +143,7 @@ describe('Class Model: ', () => {
             valueS: 'vertical',
             onlyState: true
         };
-        model.updateState(data);
+        model['updateState'](data);
         expect(model.state.direction)
             .toBe('vertical');
         data = {
@@ -151,33 +151,33 @@ describe('Class Model: ', () => {
             target: 'direction',
             valueS: 'horizontal'
         };
-        model.updateState(data);
+        model['updateState'](data);
         expect(model.state.direction)
             .toBe('vertical');
     });
     test('func changeMax is OK', () => {
-        model.changeMax(50);
+        model.changeMax = 50;
         expect(model.state.max)
             .toBe(50);
-        model.changeMax(150);
+        model.changeMax = 150;
         expect(model.state.max)
             .toBe(150);
         expect(() => {
             model
-                .changeMax(-1);
+                .changeMax = -1;
         })
             .toThrow('Максимум не может быть меньше минимума');
     });
     test('func changeMin is OK', () => {
-        model.changeMin(50);
+        model.changeMin = 50;
         expect(model.state.min)
             .toBe(50);
-        model.changeMin(-1);
+        model.changeMin = -1;
         expect(model.state.min)
             .toBe(-1);
         expect(() => {
             model
-                .changeMin(150);
+                .changeMin = 150;
         })
             .toThrow('Минимум не может быть больше максимума');
     });
