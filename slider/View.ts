@@ -85,110 +85,6 @@ export class View extends Observer {
         this.setup();
     }
 
-    setup(): void {
-        if (this.state.type === 'double') {
-            if (this.head2 !== undefined) {
-                this.head2.element.addEventListener('mousedown', this.swipeStart);
-                this.head2.element.addEventListener('touchstart', this.swipeStart);
-            } else {
-                throw new Error('Head2 не существует');
-            }
-        }
-        this.head.element.addEventListener('mousedown', this.swipeStart);
-        this.head.element.addEventListener('touchstart', this.swipeStart);
-        this.scale.element.addEventListener('click', this.onLineClick.bind(this));
-    }
-
-    calcHeadStartPosition(value: number): number {
-        return (value - this.state.min) / (this.state.max - this.state.min);
-    }
-
-    static getEvent(event: MouseEvent | TouchEvent): Touch | MouseEvent {
-        if (event instanceof TouchEvent) {
-            return event.touches[0];
-        }
-        return event;
-    }
-
-    swipeStart = (e: MouseEvent | TouchEvent): Array<number> => {
-        const evt: MouseEvent | Touch = View.getEvent(e);
-        const target = evt.target as Element;
-        const updatedHead: string = target.hasAttribute('data-valueFrom') ? 'valueFrom' : 'valueTo';
-        const dataArray: Array<number> = [];
-        if (this.state.direction === 'horizontal') {
-            dataArray.push(target.getBoundingClientRect().left);
-            dataArray.push(evt.clientX);
-        } else {
-            dataArray.push(target.getBoundingClientRect().top);
-            dataArray.push(evt.clientY);
-        }
-        this.swipeHandler = (event: MouseEvent | TouchEvent): Array<number> => {
-            return this.swipeAction(event, dataArray, updatedHead);
-        };
-        document.addEventListener('touchmove', this.swipeHandler, {passive: false});
-        document.addEventListener('mousemove', this.swipeHandler);
-        document.addEventListener('touchend', this.swipeEnd);
-        document.addEventListener('mouseup', this.swipeEnd);
-        return dataArray;
-    };
-
-    swipeAction = (event: MouseEvent | TouchEvent, dataArray: Array<number>, updatedHead: string):
-        Array<number> => {
-        event.preventDefault();
-        const evtSwipe: MouseEvent | Touch = View.getEvent(event);
-        if (this.state.direction === 'horizontal') {
-            dataArray.push(this.line.getWidth);
-            dataArray.push(this.line.getLeftCoordinate);
-            dataArray.push(evtSwipe.clientX);
-        } else {
-            dataArray.push(this.line.getHeight);
-            dataArray.push(this.line.getTopCoordinate);
-            dataArray.push(evtSwipe.clientY);
-        }
-        dataArray.push(this.head.getWidth / 2);
-        this.notify({
-            valueArr: dataArray.slice(),
-            target: updatedHead,
-            onlyState: false
-        });
-        dataArray.splice(2, dataArray.length - 2);
-        return dataArray;
-    };
-
-    swipeEnd = (): boolean => {
-        document.removeEventListener('touchmove', this.swipeHandler);
-        document.removeEventListener('mousemove', this.swipeHandler);
-        document.removeEventListener('touchend', this.swipeEnd);
-        document.removeEventListener('mouseup', this.swipeEnd);
-        return true;
-    };
-
-    onLineClick(event: MouseEvent): Array<number> {
-        const dataArray: Array<number> = this.lineClickData(event);
-
-        this.notify({
-            target: 'value',
-            valueArr: dataArray.slice(),
-            onlyState: false
-        });
-        return dataArray;
-    }
-
-    lineClickData(event: MouseEvent | TouchEvent): Array<number> {
-        const evt: MouseEvent | Touch = View.getEvent(event);
-        const dataArray: Array<number> = [];
-        if (this.state.direction === 'horizontal') {
-            dataArray.push(this.line.getWidth);
-            dataArray.push(this.line.getLeftCoordinate);
-            dataArray.push(evt.clientX);
-        } else {
-            dataArray.push(this.line.getHeight);
-            dataArray.push(this.line.getTopCoordinate);
-            dataArray.push(evt.clientY);
-        }
-        return dataArray;
-    }
-
     changePosition(data: notifyData): void {
         if (data.onlyState) return;
         let position = 0;
@@ -327,5 +223,110 @@ export class View extends Observer {
         } else {
             this.state[data.target] = data.valueB;
         }
+    }
+
+    private setup(): void {
+        if (this.state.type === 'double') {
+            if (this.head2 !== undefined) {
+                this.head2.element.addEventListener('mousedown', this.swipeStart);
+                this.head2.element.addEventListener('touchstart', this.swipeStart);
+            } else {
+                throw new Error('Head2 не существует');
+            }
+        }
+        this.head.element.addEventListener('mousedown', this.swipeStart);
+        this.head.element.addEventListener('touchstart', this.swipeStart);
+        this.scale.element.addEventListener('click', this.onLineClick.bind(this));
+    }
+
+    private calcHeadStartPosition(value: number): number {
+        return (value - this.state.min) / (this.state.max - this.state.min);
+    }
+
+    private static getEvent(event: MouseEvent | TouchEvent): Touch | MouseEvent {
+        if (event instanceof TouchEvent) {
+            return event.touches[0];
+        }
+        return event;
+    }
+
+    private swipeStart = (e: MouseEvent | TouchEvent): Array<number> => {
+        const evt: MouseEvent | Touch = View.getEvent(e);
+        const target = evt.target as Element;
+        const updatedHead: string = target.hasAttribute('data-valueFrom') ? 'valueFrom' : 'valueTo';
+        const dataArray: Array<number> = [];
+        if (this.state.direction === 'horizontal') {
+            dataArray.push(target.getBoundingClientRect().left);
+            dataArray.push(evt.clientX);
+        } else {
+            dataArray.push(target.getBoundingClientRect().top);
+            dataArray.push(evt.clientY);
+        }
+        this.swipeHandler = (event: MouseEvent | TouchEvent): Array<number> => {
+            return this.swipeAction(event, dataArray, updatedHead);
+        };
+        document.addEventListener('touchmove', this.swipeHandler, {passive: false});
+        document.addEventListener('mousemove', this.swipeHandler);
+        document.addEventListener('touchend', this.swipeEnd);
+        document.addEventListener('mouseup', this.swipeEnd);
+        return dataArray;
+    };
+
+    private swipeAction = (event: MouseEvent | TouchEvent, dataArray: Array<number>,
+        updatedHead: string):
+        Array<number> => {
+        event.preventDefault();
+        const evtSwipe: MouseEvent | Touch = View.getEvent(event);
+        if (this.state.direction === 'horizontal') {
+            dataArray.push(this.line.getWidth);
+            dataArray.push(this.line.getLeftCoordinate);
+            dataArray.push(evtSwipe.clientX);
+        } else {
+            dataArray.push(this.line.getHeight);
+            dataArray.push(this.line.getTopCoordinate);
+            dataArray.push(evtSwipe.clientY);
+        }
+        dataArray.push(this.head.getWidth / 2);
+        this.notify({
+            valueArr: dataArray.slice(),
+            target: updatedHead,
+            onlyState: false
+        });
+        dataArray.splice(2, dataArray.length - 2);
+        return dataArray;
+    };
+
+    private swipeEnd = (): boolean => {
+        document.removeEventListener('touchmove', this.swipeHandler);
+        document.removeEventListener('mousemove', this.swipeHandler);
+        document.removeEventListener('touchend', this.swipeEnd);
+        document.removeEventListener('mouseup', this.swipeEnd);
+        return true;
+    };
+
+    private onLineClick(event: MouseEvent): Array<number> {
+        const dataArray: Array<number> = this.lineClickData(event);
+
+        this.notify({
+            target: 'value',
+            valueArr: dataArray.slice(),
+            onlyState: false
+        });
+        return dataArray;
+    }
+
+    private lineClickData(event: MouseEvent | TouchEvent): Array<number> {
+        const evt: MouseEvent | Touch = View.getEvent(event);
+        const dataArray: Array<number> = [];
+        if (this.state.direction === 'horizontal') {
+            dataArray.push(this.line.getWidth);
+            dataArray.push(this.line.getLeftCoordinate);
+            dataArray.push(evt.clientX);
+        } else {
+            dataArray.push(this.line.getHeight);
+            dataArray.push(this.line.getTopCoordinate);
+            dataArray.push(evt.clientY);
+        }
+        return dataArray;
     }
 }
