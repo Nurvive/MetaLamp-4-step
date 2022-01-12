@@ -31,13 +31,13 @@ export class Slider {
     }
 
     changeOrientation(value: string): boolean {
-        this.view.changeOrientation(value);
+        this.view.changeOrientation = value;
         this.model.changeOrientation = value;
         return true;
     }
 
     changeType(value: string): boolean {
-        this.view.changeType(value);
+        this.view.changeType = value;
         this.model.changeType = value;
         return true;
     }
@@ -60,13 +60,13 @@ export class Slider {
 
     changeMax(value: number): boolean {
         this.model.changeMax = value;
-        this.view.changeMax(value);
+        this.view.changeMax = value;
         return true;
     }
 
     changeMin(value: number): boolean {
         this.model.changeMin = value;
-        this.view.changeMin(value);
+        this.view.changeMin = value;
         return true;
     }
 }
