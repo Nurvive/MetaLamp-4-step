@@ -129,83 +129,20 @@ export class Model extends Observer {
         });
     }
 
-    static moreThan0LessThan1(value: number) : number {
-        let newValue = value;
-        newValue = newValue > 1 ? 1 : newValue;
-        newValue = newValue < 0 ? 0 : newValue;
-        return newValue;
-    }
-
-    static getValueRelative(value: number, min: number, max: number): number {
-        return (value - min) / (max - min);
-    }
-
-    calcValue(value: number): number {
-        let newValue: number = value;
-        newValue *= (this.state.max - this.state.min);
-
-        return this.state.min + this.calcValueByStep(newValue);
-    }
-
-    calcValueByStep(value: number): number {
-        let newValue: number = value;
-        if (this.state.step === undefined) throw new Error('Значение step не определено');
-        const stepsInValue: number = newValue / this.state.step;
-        if (stepsInValue % 1 >= 0.5) {
-            newValue = this.state.step * Math.ceil(stepsInValue);
-        } else {
-            newValue = this.state.step * Math.floor(stepsInValue);
-        }
-        const popRes: string | undefined = this.state.step.toString()
-            .split('.')
-            .pop();
-        let accuracy = 0;
-        if (popRes !== undefined) {
-            accuracy = this.state.step.toString()
-                .includes('.') ? (popRes.length) : 0;
-        }
-        return Number(newValue.toFixed(accuracy));
-    }
-
-    validValueTo(valueTo: number): number {
-        let value: number = valueTo;
-
-        if (this.state.type === 'single') {
-            if (value > this.state.max) {
-                value = this.state.max;
-            } else if (value < this.state.min) {
-                value = this.state.min;
-            }
-        } else if (this.state.type === 'double') {
-            if (value > this.state.max) {
-                value = this.state.max;
-            } else if (value <= this.state.valueFrom) {
-                value = this.state.valueFrom + this.state.step;
-            }
-        }
-        return value;
-    }
-
-    validValueFrom(valueFrom: number): number {
-        let value: number = valueFrom;
-        if (this.state.type === 'single') {
-            value = 0;
-        } else if (this.state.type === 'double') {
-            if (value < this.state.min) {
-                value = this.state.min;
-            } else if (value >= this.state.valueTo) {
-                value = this.state.valueTo - this.state.step;
-            }
-        }
-        return value;
-    }
-
     set changeOrientation(value: string) {
-        this.state.direction = value;
+        this.updateState({
+            target: 'direction',
+            valueS: value,
+            onlyState: true
+        });
     }
 
     set changeType(value: string) {
-        this.state.type = value;
+        this.updateState({
+            target: 'type',
+            valueS: value,
+            onlyState: true
+        });
     }
 
     set changeStep(value: number) {
@@ -267,7 +204,78 @@ export class Model extends Observer {
         });
     }
 
-    updateState(data: notifyData): void {
+    private static moreThan0LessThan1(value: number) : number {
+        let newValue = value;
+        newValue = newValue > 1 ? 1 : newValue;
+        newValue = newValue < 0 ? 0 : newValue;
+        return newValue;
+    }
+
+    private static getValueRelative(value: number, min: number, max: number): number {
+        return (value - min) / (max - min);
+    }
+
+    private calcValue(value: number): number {
+        let newValue: number = value;
+        newValue *= (this.state.max - this.state.min);
+
+        return this.state.min + this.calcValueByStep(newValue);
+    }
+
+    private calcValueByStep(value: number): number {
+        let newValue: number = value;
+        if (this.state.step === undefined) throw new Error('Значение step не определено');
+        const stepsInValue: number = newValue / this.state.step;
+        if (stepsInValue % 1 >= 0.5) {
+            newValue = this.state.step * Math.ceil(stepsInValue);
+        } else {
+            newValue = this.state.step * Math.floor(stepsInValue);
+        }
+        const popRes: string | undefined = this.state.step.toString()
+            .split('.')
+            .pop();
+        let accuracy = 0;
+        if (popRes !== undefined) {
+            accuracy = this.state.step.toString()
+                .includes('.') ? (popRes.length) : 0;
+        }
+        return Number(newValue.toFixed(accuracy));
+    }
+
+    private validValueTo(valueTo: number): number {
+        let value: number = valueTo;
+
+        if (this.state.type === 'single') {
+            if (value > this.state.max) {
+                value = this.state.max;
+            } else if (value < this.state.min) {
+                value = this.state.min;
+            }
+        } else if (this.state.type === 'double') {
+            if (value > this.state.max) {
+                value = this.state.max;
+            } else if (value <= this.state.valueFrom) {
+                value = this.state.valueFrom + this.state.step;
+            }
+        }
+        return value;
+    }
+
+    private validValueFrom(valueFrom: number): number {
+        let value: number = valueFrom;
+        if (this.state.type === 'single') {
+            value = 0;
+        } else if (this.state.type === 'double') {
+            if (value < this.state.min) {
+                value = this.state.min;
+            } else if (value >= this.state.valueTo) {
+                value = this.state.valueTo - this.state.step;
+            }
+        }
+        return value;
+    }
+
+    private updateState(data: notifyData): void {
         if (!data.onlyState) return;
         if (typeof this.state[data.target] === 'string') {
             this.state[data.target] = data.valueS;
