@@ -175,6 +175,13 @@ export class Model extends Observer {
             target: 'valueTo',
             onlyState: true
         });
+        let position = Model.getValueRelative(value, this.state.min, this.state.max);
+        position = Model.moreThan0LessThan1(position);
+        this.notify({
+            valueN: position,
+            target: 'valueTo',
+            onlyState: false
+        });
     }
 
     set changeFrom(value: number) {
@@ -187,6 +194,13 @@ export class Model extends Observer {
             valueN: this.state.valueFrom,
             target: 'valueFrom',
             onlyState: true
+        });
+        let position = Model.getValueRelative(value, this.state.min, this.state.max);
+        position = Model.moreThan0LessThan1(position);
+        this.notify({
+            valueN: position,
+            target: 'valueFrom',
+            onlyState: false
         });
     }
 
