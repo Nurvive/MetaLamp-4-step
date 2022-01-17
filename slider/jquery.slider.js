@@ -1,7 +1,7 @@
 import {Slider} from './Slider';
 
 (function ($) {
-    const sliders : Slider[] = [];
+    const sliders = [];
     const methods = {
         init: function (options) {
             const settings = $.extend({
@@ -21,15 +21,12 @@ import {Slider} from './Slider';
                 }
             }, options);
 
-            return this.each(() => {
+            return this.each(function () {
                 const ths = $(this);
                 if (settings.step > settings.max - settings.min) throw new Error('Шаг не может быть больше разницы максимума и минимума');
                 if (settings.valueTo > settings.max) throw new Error('Текущее значение не может быть больше максимума');
                 if (settings.valueFrom < settings.min) throw new Error('Текущее значение не может быть меньше минимума');
-                console.log(ths);
-                console.log(ths[0]);
-                console.log(this);
-                sliders.push(new Slider(this, settings));
+                sliders.push(new Slider(ths[0], settings));
             });
         },
         hideBubble: function () {
