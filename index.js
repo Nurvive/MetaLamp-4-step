@@ -1,5 +1,5 @@
 import './styles.scss';
-import './jquery.slider';
+import './slider/jquery.slider';
 
 $().ready(function () {
     const $bubbleButton = $('input[data-type="bubble"]');
