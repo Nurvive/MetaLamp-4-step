@@ -23,6 +23,6 @@
     "test": "jest",
     "dev": "parcel index.html",
     "build": "parcel build index.html",
-    "lint": "eslint slider/**/*.ts tests/**/*.js"
+    "lint": "eslint slider/**/*.* tests/**/*.js"
   }
 }
