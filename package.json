@@ -4,8 +4,10 @@
     "@babel/preset-env": "^7.16.7",
     "@babel/preset-typescript": "^7.16.7",
     "@parcel/babel-preset-env": "^2.2.0",
+    "@parcel/transformer-pug": "^2.2.0",
     "@parcel/transformer-sass": "^2.2.0",
     "@types/jest": "^27.4.0",
+    "@types/jquery": "^3.5.13",
     "@typescript-eslint/eslint-plugin": "^4.32.0",
     "@typescript-eslint/parser": "^4.32.0",
     "babel-jest": "^27.4.6",
@@ -21,8 +23,8 @@
   },
   "scripts": {
     "test": "jest",
-    "dev": "parcel index.html",
-    "build": "parcel build index.html",
+    "dev": "parcel index.pug --no-cache",
+    "build": "parcel build index.pug",
     "lint": "eslint slider/**/*.* tests/**/*.js"
   }
 }
