@@ -1,4 +1,4 @@
-export default class Scale {
+class Scale {
     parent: HTMLElement;
 
     direction: string;
@@ -62,3 +62,5 @@ export default class Scale {
         return this.element.getBoundingClientRect().top;
     }
 }
+
+export default Scale;

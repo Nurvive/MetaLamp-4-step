@@ -1,4 +1,4 @@
-export default class Line {
+class Line {
     parent: HTMLElement;
 
     direction: string;
@@ -62,3 +62,5 @@ export default class Line {
         return this.element.getBoundingClientRect().top;
     }
 }
+
+export default Line;

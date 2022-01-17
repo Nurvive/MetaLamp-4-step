@@ -1,4 +1,4 @@
-export default class HeadBubble {
+class HeadBubble {
     element: HTMLElement
 
     constructor() {
@@ -7,3 +7,5 @@ export default class HeadBubble {
         this.element.setAttribute('data-type', 'bubble');
     }
 }
+
+export default HeadBubble;

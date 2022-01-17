@@ -1,6 +1,6 @@
 import {notifyData} from './types/types';
 
-export class Observer {
+class Observer {
     observers: Array<(data: notifyData) => void>
 
     constructor() {
@@ -19,3 +19,5 @@ export class Observer {
         this.observers.forEach((x) => x(data));
     }
 }
+
+export {Observer};

@@ -1,6 +1,6 @@
 import HeadBubble from './HeadBubble';
 
-export default class ViewHead {
+class ViewHead {
     parent: HTMLElement;
 
     direction: string;
@@ -66,3 +66,5 @@ export default class ViewHead {
         return this.element.getBoundingClientRect().height;
     }
 }
+
+export default ViewHead;

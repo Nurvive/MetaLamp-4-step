@@ -3,7 +3,7 @@ import {state} from './types/types';
 import {notifyData} from './types/types';
 import {stateContent} from './types/types';
 
-export class Model extends Observer {
+class Model extends Observer {
     private elem: HTMLElement;
 
     private readonly state: state;
@@ -286,3 +286,5 @@ export class Model extends Observer {
         return value;
     }
 }
+
+export {Model};

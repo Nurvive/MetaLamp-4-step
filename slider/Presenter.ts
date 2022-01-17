@@ -1,10 +1,10 @@
 import {Model} from './Model';
 import {View} from './View';
 
-export class Presenter {
+class Presenter {
     model: Model;
 
-    view: View
+    view: View;
 
     constructor(elem: HTMLElement, model: Model, view: View) {
         this.model = model;
@@ -15,3 +15,5 @@ export class Presenter {
         this.model.subscribe(this.view.changePosition.bind(this.view));
     }
 }
+
+export {Presenter};

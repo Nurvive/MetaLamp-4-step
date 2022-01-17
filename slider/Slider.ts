@@ -3,7 +3,7 @@ import {Presenter} from './Presenter';
 import {Model} from './Model';
 import {stateContent} from './types/types';
 
-export class Slider {
+class Slider {
     view: View;
 
     elem: HTMLElement;
@@ -70,3 +70,5 @@ export class Slider {
         return true;
     }
 }
+
+export {Slider};
