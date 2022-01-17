@@ -22,6 +22,7 @@
   "scripts": {
     "test": "jest",
     "dev": "parcel index.html",
-    "build": "parcel build index.html"
+    "build": "parcel build index.html",
+    "lint": "eslint slider/**/*.ts tests/**/*.js"
   }
 }
