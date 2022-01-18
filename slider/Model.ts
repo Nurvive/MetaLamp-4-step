@@ -35,65 +35,22 @@ class Model extends Observer {
 
     calcPosition(data: notifyData): void {
         if (data.onlyState) return;
-        let halfHeadWidth = 0;
-        if (data.valueArr !== undefined) {
-            halfHeadWidth = data.valueArr[5];
-        } else {
-            throw new Error('Ожидался массив значений для Model');
-        }
-        let lineWidth: number;
-        let lineHeight: number;
-        let lineLeftCoordinate: number;
-        let lineTopCoordinate: number;
-        let HeadLeftCoordinate: number;
-        let HeadTopCoordinate: number;
-        let shift: number;
-        let newPosition = 0;
-        let newPositionRelative = 0;
-        let updatedValue = 0;
+        let updatedValue: number;
         let updatedProperty: string;
         if (data.target === 'valueTo') {
             updatedProperty = 'valueTo';
-            lineWidth = data.valueArr[2];
-            lineLeftCoordinate = data.valueArr[3];
-            HeadLeftCoordinate = data.valueArr[0];
-            shift = data.valueArr[1] - HeadLeftCoordinate;
-            newPosition = (data.valueArr[4] - shift - lineLeftCoordinate + halfHeadWidth)
-                / lineWidth;
-            newPosition = Model.moreThan0LessThan1(newPosition);
-            updatedValue = this.calcValue(newPosition);
-            updatedValue = this.validValueTo(updatedValue);
+            updatedValue = this.calcUpdatedValue(data);
         } else if (data.target === 'value') {
-            if (this.state.direction === 'horizontal') {
-                lineWidth = data.valueArr[0];
-                lineLeftCoordinate = data.valueArr[1];
-                newPositionRelative = (data.valueArr[2] - lineLeftCoordinate) / lineWidth;
-            } else {
-                lineHeight = data.valueArr[0];
-                lineTopCoordinate = data.valueArr[1];
-                newPositionRelative = (data.valueArr[2] - lineTopCoordinate) / lineHeight;
-            }
-            newPositionRelative = Model.moreThan0LessThan1(newPositionRelative);
-            updatedValue = this.calcValue(newPositionRelative);
+            updatedValue = this.calcUpdatedValueRelative(data);
             if (this.state.type === 'single') {
                 updatedProperty = 'valueTo';
             } else {
-                const isValueTo = () => (updatedValue - this.state.valueFrom)
-                    / (this.state.valueTo - this.state.valueFrom) >= 0.5;
-                updatedProperty = isValueTo() ? 'valueTo' : 'valueFrom';
+                updatedProperty = this.isValueTo(updatedValue) ? 'valueTo' : 'valueFrom';
             }
             updatedValue = updatedProperty === 'valueFrom' ? this.validValueFrom(updatedValue) : this.validValueTo(updatedValue);
         } else {
             updatedProperty = 'valueFrom';
-            lineHeight = data.valueArr[2];
-            lineTopCoordinate = data.valueArr[3];
-            HeadTopCoordinate = data.valueArr[0];
-            shift = data.valueArr[1] - HeadTopCoordinate;
-            newPosition = (data.valueArr[4] - shift - lineTopCoordinate + halfHeadWidth)
-                / lineHeight;
-            newPosition = Model.moreThan0LessThan1(newPosition);
-            updatedValue = this.calcValue(newPosition);
-            updatedValue = this.validValueFrom(updatedValue);
+            updatedValue = this.calcUpdatedValue(data);
         }
 
         this.updateState({
@@ -215,7 +172,7 @@ class Model extends Observer {
         }
     }
 
-    private static moreThan0LessThan1(value: number) : number {
+    private static moreThan0LessThan1(value: number): number {
         let newValue = value;
         newValue = newValue > 1 ? 1 : newValue;
         newValue = newValue < 0 ? 0 : newValue;
@@ -285,6 +242,38 @@ class Model extends Observer {
         }
         return value;
     }
+
+    private calcUpdatedValue(data: notifyData) {
+        let halfHeadWidth = 0;
+        if (data.valueArr !== undefined) {
+            halfHeadWidth = data.valueArr[5];
+        } else {
+            throw new Error('Ожидался массив значений для Model');
+        }
+        const lineParameter = data.valueArr[2];
+        const lineCoordinate = data.valueArr[3];
+        const HeadCoordinate = data.valueArr[0];
+        const shift = data.valueArr[1] - HeadCoordinate;
+        let newPosition = (data.valueArr[4] - shift - lineCoordinate + halfHeadWidth)
+            / lineParameter;
+        newPosition = Model.moreThan0LessThan1(newPosition);
+        const updatedValue = this.calcValue(newPosition);
+        return this.validValueTo(updatedValue);
+    }
+
+    private calcUpdatedValueRelative(data: notifyData) {
+        if (data.valueArr === undefined) {
+            throw new Error('Ожидался массив значений для Model');
+        }
+        const lineParameter = data.valueArr[0];
+        const lineCoordinate = data.valueArr[1];
+        let newPositionRelative = (data.valueArr[2] - lineCoordinate) / lineParameter;
+        newPositionRelative = Model.moreThan0LessThan1(newPositionRelative);
+        return this.calcValue(newPositionRelative);
+    }
+
+    private isValueTo = (updatedValue: number) => (updatedValue - this.state.valueFrom)
+        / (this.state.valueTo - this.state.valueFrom) >= 0.5;
 }
 
 export {Model};
