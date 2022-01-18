@@ -39,7 +39,7 @@ class Model extends Observer {
         let updatedProperty: string;
         if (data.target === 'valueTo') {
             updatedProperty = 'valueTo';
-            updatedValue = this.calcUpdatedValue(data);
+            updatedValue = this.calcUpdatedValue(data, updatedProperty);
         } else if (data.target === 'value') {
             updatedValue = this.calcUpdatedValueRelative(data);
             if (this.state.type === 'single') {
@@ -50,7 +50,7 @@ class Model extends Observer {
             updatedValue = updatedProperty === 'valueFrom' ? this.validValueFrom(updatedValue) : this.validValueTo(updatedValue);
         } else {
             updatedProperty = 'valueFrom';
-            updatedValue = this.calcUpdatedValue(data);
+            updatedValue = this.calcUpdatedValue(data, updatedProperty);
         }
 
         this.updateState({
@@ -243,7 +243,7 @@ class Model extends Observer {
         return value;
     }
 
-    private calcUpdatedValue(data: notifyData) {
+    private calcUpdatedValue(data: notifyData, updatedProperty: string): number {
         let halfHeadWidth = 0;
         if (data.valueArr !== undefined) {
             halfHeadWidth = data.valueArr[5];
@@ -258,10 +258,10 @@ class Model extends Observer {
             / lineParameter;
         newPosition = Model.moreThan0LessThan1(newPosition);
         const updatedValue = this.calcValue(newPosition);
-        return this.validValueTo(updatedValue);
+        return updatedProperty === 'valueTo' ? this.validValueTo(updatedValue) : this.validValueFrom(updatedValue);
     }
 
-    private calcUpdatedValueRelative(data: notifyData) {
+    private calcUpdatedValueRelative(data: notifyData): number {
         if (data.valueArr === undefined) {
             throw new Error('Ожидался массив значений для Model');
         }
@@ -272,7 +272,7 @@ class Model extends Observer {
         return this.calcValue(newPositionRelative);
     }
 
-    private isValueTo = (updatedValue: number) => (updatedValue - this.state.valueFrom)
+    private isValueTo = (updatedValue: number): boolean => (updatedValue - this.state.valueFrom)
         / (this.state.valueTo - this.state.valueFrom) >= 0.5;
 }
 
