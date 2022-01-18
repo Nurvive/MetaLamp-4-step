@@ -17,6 +17,7 @@ class Slider {
         this.model = new Model(this.elem);
         this.model.init(settings);
         this.view = new View(this.elem, settings);
+        this.view.init();
         this.presenter = new Presenter(this.elem, this.model, this.view);
     }
 

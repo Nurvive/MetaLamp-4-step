@@ -48,6 +48,9 @@ class View extends Observer {
         const headStartPos = this.calcHeadStartPosition(this.state.valueTo);
         this.head = new ViewHead(this.line.element,
             this.state.direction, headStartPos, this.state.valueTo);
+    }
+
+    init(): void {
         if (this.state.type === 'double') {
             const head2StartPos: number = this.calcHeadStartPosition(this.state.valueFrom);
             this.head2 = new ViewHead(this.line.element,
