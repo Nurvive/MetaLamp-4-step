@@ -72,7 +72,7 @@ import {Slider} from './Slider';
                     slider = x;
                 }
             });
-            if (value.isNan) throw new Error('step должно быть числом');
+            if (Number.isNaN(value)) throw new Error('step должно быть числом');
             slider.changeStep(value);
         },
         changeTo: function (value) {
@@ -82,7 +82,7 @@ import {Slider} from './Slider';
                     slider = x;
                 }
             });
-            if (value.isNan) throw new Error('valueTo должно быть числом');
+            if (Number.isNaN(value)) throw new Error('valueTo должно быть числом');
             slider.changeTo(value);
         },
         changeFrom: function (value) {
@@ -92,7 +92,7 @@ import {Slider} from './Slider';
                     slider = x;
                 }
             });
-            if (value.isNan) throw new Error('valueFrom должно быть числом');
+            if (Number.isNaN(value)) throw new Error('valueFrom должно быть числом');
             slider.changeFrom(value);
         },
         changeMax: function (value) {
@@ -102,7 +102,7 @@ import {Slider} from './Slider';
                     slider = x;
                 }
             });
-            if (value.isNan) throw new Error('valueFrom должно быть числом');
+            if (Number.isNaN(value)) throw new Error('valueFrom должно быть числом');
             slider.changeMax(value);
         },
         changeMin: function (value) {
@@ -112,7 +112,7 @@ import {Slider} from './Slider';
                     slider = x;
                 }
             });
-            if (value.isNan) throw new Error('valueFrom должно быть числом');
+            if (Number.isNaN(value)) throw new Error('valueFrom должно быть числом');
             slider.changeMin(value);
         }
 
