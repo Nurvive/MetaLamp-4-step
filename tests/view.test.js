@@ -22,6 +22,7 @@ describe('Class View: ', () => {
     let view;
     beforeEach(() => {
         view = new View(node, settings);
+        view.init();
     });
     test('should be', () => {
         expect(view)
