@@ -1,4 +1,4 @@
-mixin slider-template(count='', checkedButtons=[false,false,false])
+mixin slider-template({count='', checkedButtons=[false,false,false]} = {})
     div(style="margin-bottom: 1rem;")
         label
             input(type="number" data-type=`${'min' + count}`)
@@ -17,15 +17,15 @@ mixin slider-template(count='', checkedButtons=[false,false,false])
             span from
     div(style="margin-bottom: 1rem;")
         label
-            -var ch1 = checkedButtons[0]
+            -const ch1 = checkedButtons[0]
             input(type="checkbox" data-type=`${'vertical' + count}` checked = ch1)
             span vertical
         label
-            -var ch2 = checkedButtons[1]
+            -const ch2 = checkedButtons[1]
             input(type="checkbox" data-type=`${'range' + count}` checked = ch2)
             span range
         label
-            -var ch3 = checkedButtons[2]
+            -const ch3 = checkedButtons[2]
             input(type="checkbox" data-type=`${'bubble' + count}` checked = ch3)
             span bubble
     div.slider(id=`${'slider' + count}`)

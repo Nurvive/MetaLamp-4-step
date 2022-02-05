@@ -15,7 +15,7 @@ $(function () {
         direction: 'horizontal',
         max: 100,
         min: 0,
-        step: 1.5,
+        step: 1,
         type: 'double',
         valueTo: 100,
         valueFrom: 0,
