@@ -13,10 +13,8 @@ import {Slider} from './Slider';
                 valueTo: 100,
                 valueFrom: 5,
                 direction: 'horizontal',
-                // eslint-disable-next-line
                 onChangeTo: function () {
                 },
-                // eslint-disable-next-line
                 onChangeFrom: function () {
                 }
             }, options);
@@ -117,7 +115,7 @@ import {Slider} from './Slider';
         }
 
     };
-    // eslint-disable-next-line
+    // eslint-disable-next-line no-param-reassign
     $.fn.Slider = function (method) {
         if (methods[method]) {
             return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));

@@ -20,10 +20,8 @@ class Model extends Observer {
             valueTo: 100,
             valueFrom: 5,
             direction: 'horizontal',
-            // eslint-disable-next-line
             onChangeTo: function () {
             },
-            // eslint-disable-next-line
             onChangeFrom: function () {
             }
         };

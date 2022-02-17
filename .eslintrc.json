@@ -40,6 +40,8 @@
         "object-curly-spacing": [
             "error",
             "never"
-        ]
+        ],
+        "no-empty-function": "off",
+        "@typescript-eslint/no-empty-function": 0
     }
 }
