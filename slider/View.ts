@@ -243,7 +243,7 @@ class View extends Observer {
         }
         this.head.element.addEventListener('mousedown', this.swipeStart);
         this.head.element.addEventListener('touchstart', this.swipeStart);
-        this.scale.element.addEventListener('click', this.onLineClick.bind(this));
+        this.scale.element.addEventListener('click', this.onLineClick);
     }
 
     private calcHeadStartPosition(value: number): number {
@@ -278,7 +278,7 @@ class View extends Observer {
         document.addEventListener('touchend', this.swipeEnd);
         document.addEventListener('mouseup', this.swipeEnd);
         return dataArray;
-    };
+    }
 
     private swipeAction = (event: MouseEvent | TouchEvent, dataArray: Array<number>,
         updatedHead: string):
@@ -312,7 +312,7 @@ class View extends Observer {
         return true;
     };
 
-    private onLineClick(event: MouseEvent): Array<number> {
+    private onLineClick = (event: MouseEvent): Array<number> => {
         const dataArray: Array<number> = this.lineClickData(event);
 
         this.notify({
