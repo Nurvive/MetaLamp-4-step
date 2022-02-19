@@ -19,12 +19,12 @@ class View extends Observer {
 
     head2?: ViewHead;
 
-    private swipeHandler: (event: (MouseEvent | TouchEvent)) => Array<number>;
+    private handleSwipe: (event: (MouseEvent | TouchEvent)) => Array<number>;
 
     constructor(elem: HTMLElement, options: Record<string, stateContent>) {
         super();
         this.elem = elem;
-        this.swipeHandler = () => [];
+        this.handleSwipe = () => [];
         this.state = {
             bubble: true,
             max: 100,
@@ -235,15 +235,15 @@ class View extends Observer {
     private setup(): void {
         if (this.state.type === 'double') {
             if (this.head2 !== undefined) {
-                this.head2.element.addEventListener('mousedown', this.swipeStart);
-                this.head2.element.addEventListener('touchstart', this.swipeStart);
+                this.head2.element.addEventListener('mousedown', this.handleHeadStart);
+                this.head2.element.addEventListener('touchstart', this.handleHeadStart);
             } else {
                 throw new Error('Head2 не существует');
             }
         }
-        this.head.element.addEventListener('mousedown', this.swipeStart);
-        this.head.element.addEventListener('touchstart', this.swipeStart);
-        this.scale.element.addEventListener('click', this.onLineClick);
+        this.head.element.addEventListener('mousedown', this.handleHeadStart);
+        this.head.element.addEventListener('touchstart', this.handleHeadStart);
+        this.scale.element.addEventListener('click', this.handleScaleClick);
     }
 
     private calcHeadStartPosition(value: number): number {
@@ -257,7 +257,7 @@ class View extends Observer {
         return event;
     }
 
-    private swipeStart = (e: MouseEvent | TouchEvent): Array<number> => {
+    private handleHeadStart = (e: MouseEvent | TouchEvent): Array<number> => {
         const evt: MouseEvent | Touch = View.getEvent(e);
         // Здесь нужен каст через 'as', так как TS не знает, что target это html объект
         const target = evt.target as Element;
@@ -270,13 +270,13 @@ class View extends Observer {
             dataArray.push(target.getBoundingClientRect().top);
             dataArray.push(evt.clientY);
         }
-        this.swipeHandler = (event: MouseEvent | TouchEvent): Array<number> => {
+        this.handleSwipe = (event: MouseEvent | TouchEvent): Array<number> => {
             return this.swipeAction(event, dataArray, updatedHead);
         };
-        document.addEventListener('touchmove', this.swipeHandler, {passive: false});
-        document.addEventListener('mousemove', this.swipeHandler);
-        document.addEventListener('touchend', this.swipeEnd);
-        document.addEventListener('mouseup', this.swipeEnd);
+        document.addEventListener('touchmove', this.handleSwipe, {passive: false});
+        document.addEventListener('mousemove', this.handleSwipe);
+        document.addEventListener('touchend', this.handleSwipeEnd);
+        document.addEventListener('mouseup', this.handleSwipeEnd);
         return dataArray;
     }
 
@@ -304,16 +304,16 @@ class View extends Observer {
         return dataArray;
     };
 
-    private swipeEnd = (): boolean => {
-        document.removeEventListener('touchmove', this.swipeHandler);
-        document.removeEventListener('mousemove', this.swipeHandler);
-        document.removeEventListener('touchend', this.swipeEnd);
-        document.removeEventListener('mouseup', this.swipeEnd);
+    private handleSwipeEnd = (): boolean => {
+        document.removeEventListener('touchmove', this.handleSwipe);
+        document.removeEventListener('mousemove', this.handleSwipe);
+        document.removeEventListener('touchend', this.handleSwipeEnd);
+        document.removeEventListener('mouseup', this.handleSwipeEnd);
         return true;
     };
 
-    private onLineClick = (event: MouseEvent): Array<number> => {
-        const dataArray: Array<number> = this.lineClickData(event);
+    private handleScaleClick = (event: MouseEvent): Array<number> => {
+        const dataArray: Array<number> = this.scaleClickData(event);
 
         this.notify({
             target: 'value',
@@ -323,7 +323,7 @@ class View extends Observer {
         return dataArray;
     }
 
-    private lineClickData(event: MouseEvent | TouchEvent): Array<number> {
+    private scaleClickData(event: MouseEvent | TouchEvent): Array<number> {
         const evt: MouseEvent | Touch = View.getEvent(event);
         const dataArray: Array<number> = [];
         if (this.state.direction === 'horizontal') {

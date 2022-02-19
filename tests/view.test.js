@@ -75,7 +75,7 @@ describe('Class View: ', () => {
             enumerable: true
         });
         let array = [view.head.element.getBoundingClientRect().left, evt.clientX];
-        expect(view['swipeStart'](evt))
+        expect(view['handleHeadStart'](evt))
             .toEqual(array);
         evt = new MouseEvent('mousedown');
         Object.defineProperty(evt, 'target', {
@@ -83,11 +83,11 @@ describe('Class View: ', () => {
             enumerable: true
         });
         array = [view.head.element.getBoundingClientRect().left, evt.clientX];
-        expect(view['swipeStart'](evt))
+        expect(view['handleHeadStart'](evt))
             .toEqual(array);
         view.state.direction = 'vertical';
         array = [view.head.element.getBoundingClientRect().top, evt.clientY];
-        expect(view['swipeStart'](evt))
+        expect(view['handleHeadStart'](evt))
             .toEqual(array);
     });
     test('func swipeAction is OK', () => {
@@ -106,31 +106,31 @@ describe('Class View: ', () => {
     });
     test('func swipeHandler is OK', () => {
         let evt = new MouseEvent('mousedown');
-        expect(view['swipeHandler'](evt))
+        expect(view['handleSwipe'](evt))
             .toEqual([]);
     });
     test('func swipeEnd is OK', () => {
-        expect(view['swipeEnd']())
+        expect(view['handleSwipeEnd']())
             .toBeTruthy();
     });
     test('func onLineClick is OK', () => {
         let evt = new MouseEvent('mousedown');
         let array = [view.line.getWidth, view.line.getLeftCoordinate, evt.clientX];
-        expect(view['onLineClick'](evt))
+        expect(view['handleScaleClick'](evt))
             .toEqual(array);
         view.state.direction = 'vertical';
         array = [view.line.getHeight, view.line.getTopCoordinate, evt.clientY];
-        expect(view['onLineClick'](evt))
+        expect(view['handleScaleClick'](evt))
             .toEqual(array);
     });
     test('func lineClickData is OK', () => {
         let evt = new MouseEvent('mousedown');
         let array = [view.line.getWidth, view.line.getLeftCoordinate, evt.clientX];
-        expect(view['lineClickData'](evt))
+        expect(view['scaleClickData'](evt))
             .toEqual(array);
         view.state.direction = 'vertical';
         array = [view.line.getHeight, view.line.getTopCoordinate, evt.clientY];
-        expect(view['lineClickData'](evt))
+        expect(view['scaleClickData'](evt))
             .toEqual(array);
     });
     test('func changePosition is OK', () => {
