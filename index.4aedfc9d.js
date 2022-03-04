@@ -142,12 +142,12 @@
       this[globalName] = mainExports;
     }
   }
-})({"jDqFg":[function(require,module,exports) {
+})({"8biNq":[function(require,module,exports) {
 var HMR_HOST = null;
 var HMR_PORT = null;
 var HMR_SECURE = false;
 var HMR_ENV_HASH = "4a236f9275d0a351";
-module.bundle.HMR_BUNDLE_ID = "46e4916b59c1f714";
+module.bundle.HMR_BUNDLE_ID = "632a0c384aedfc9d";
 "use strict";
 function _toConsumableArray(arr) {
     return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
@@ -518,9 +518,11 @@ function hmrAcceptRun(bundle, id) {
     acceptedAssets[id] = true;
 }
 
-},{}],"gK55r":[function(require,module,exports) {
-var _stylesScss = require("./styles.scss");
-var _jquerySlider = require("./slider/jquery.slider");
+},{}],"77Uu2":[function(require,module,exports) {
+var _indexScss = require("./index.scss");
+var _sliderScss = require("../blocks/slider/slider.scss");
+var _sliderTemplateScss = require("../blocks/slider-template/slider-template.scss");
+var _jquerySlider = require("../slider/jquery.slider");
 $(function() {
     const $bubbleButton = $('input[data-type="bubble"]');
     const $verticalButton = $('input[data-type="vertical"]');
@@ -668,7 +670,7 @@ $(function() {
     });
 });
 
-},{"./styles.scss":"e3nJz","./slider/jquery.slider":"4YYzy"}],"e3nJz":[function() {},{}],"4YYzy":[function(require,module,exports) {
+},{"./index.scss":"epF34","../slider/jquery.slider":"4YYzy","../blocks/slider/slider.scss":"gLHpF","../blocks/slider-template/slider-template.scss":"e6PCz"}],"epF34":[function() {},{}],"4YYzy":[function(require,module,exports) {
 var _slider = require("./Slider");
 (function($) {
     const sliders = [];
@@ -1548,6 +1550,6 @@ class Model extends _observer.Observer {
     }
 }
 
-},{"./Observer":"8aDi9","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}]},["jDqFg","gK55r"], "gK55r", "parcelRequire94c2")
+},{"./Observer":"8aDi9","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"gLHpF":[function() {},{}],"e6PCz":[function() {},{}]},["8biNq","77Uu2"], "77Uu2", "parcelRequire94c2")
 
-//# sourceMappingURL=index.59c1f714.js.map
+//# sourceMappingURL=index.4aedfc9d.js.map
