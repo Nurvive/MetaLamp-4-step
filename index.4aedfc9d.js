@@ -670,7 +670,7 @@ $(function() {
     });
 });
 
-},{"./index.scss":"epF34","../slider/jquery.slider":"4YYzy","../blocks/slider/slider.scss":"gLHpF","../blocks/slider-template/slider-template.scss":"e6PCz"}],"epF34":[function() {},{}],"4YYzy":[function(require,module,exports) {
+},{"./index.scss":"epF34","../blocks/slider/slider.scss":"gLHpF","../blocks/slider-template/slider-template.scss":"e6PCz","../slider/jquery.slider":"4YYzy"}],"epF34":[function() {},{}],"gLHpF":[function() {},{}],"e6PCz":[function() {},{}],"4YYzy":[function(require,module,exports) {
 var _slider = require("./Slider");
 (function($) {
     const sliders = [];
@@ -786,8 +786,7 @@ var _model = require("./Model");
 class Slider {
     constructor(elem, settings){
         this.elem = elem;
-        this.model = new _model.Model(this.elem);
-        this.model.init(settings);
+        this.model = new _model.Model(this.elem, settings);
         this.view = new _view.View(this.elem, settings);
         this.view.init();
         this.presenter = new _presenter.Presenter(this.elem, this.model, this.view);
@@ -913,21 +912,8 @@ class View extends _observer.Observer {
         this.elem = elem;
         this.handleSwipe = ()=>[]
         ;
-        this.state = {
-            bubble: true,
-            max: 100,
-            min: 0,
-            step: 1,
-            type: 'single',
-            valueTo: 100,
-            valueFrom: 5,
-            direction: 'horizontal',
-            onChangeTo: function() {
-            },
-            onChangeFrom: function() {
-            }
-        };
-        Object.assign(this.state, options);
+        this.state = Object.assign({
+        }, options);
         this.line = new _lineDefault.default(this.elem, this.state.direction, this.state.type);
         this.scale = new _scaleDefault.default(this.line.element, this.state.direction, this.state.min, this.state.max);
         const headStartPos = this.calcHeadStartPosition(this.state.valueTo);
@@ -1345,28 +1331,13 @@ parcelHelpers.export(exports, "Model", ()=>Model
 );
 var _observer = require("./Observer");
 class Model extends _observer.Observer {
-    constructor(elem){
+    constructor(elem, options){
         super();
         this.isValueTo = (updatedValue)=>(updatedValue - this.state.valueFrom) / (this.state.valueTo - this.state.valueFrom) >= 0.5
         ;
         this.elem = elem;
-        this.state = {
-            bubble: true,
-            max: 100,
-            min: 0,
-            step: 1,
-            type: 'single',
-            valueTo: 100,
-            valueFrom: 5,
-            direction: 'horizontal',
-            onChangeTo: function() {
-            },
-            onChangeFrom: function() {
-            }
-        };
-    }
-    init(options) {
-        Object.assign(this.state, options);
+        this.state = Object.assign({
+        }, options);
     }
     calcPosition(data) {
         if (data.onlyState) return;
@@ -1410,6 +1381,8 @@ class Model extends _observer.Observer {
         });
     }
     set changeType(value) {
+        if (this.state.min > this.state.valueFrom) this.changeFrom = this.state.min;
+        if (this.state.valueFrom > this.state.valueTo) this.changeFrom = this.state.valueTo;
         this.updateState({
             target: 'type',
             valueS: value,
@@ -1436,7 +1409,7 @@ class Model extends _observer.Observer {
             valueN: value,
             onlyState: true
         });
-        if (value > this.state.valueFrom) this.changeFrom = value;
+        if (this.state.type === 'double' && value > this.state.valueFrom) this.changeFrom = value;
     }
     set changeTo(value) {
         this.updateState({
@@ -1458,6 +1431,7 @@ class Model extends _observer.Observer {
         });
     }
     set changeFrom(value) {
+        if (this.state.type === 'single') return;
         this.updateState({
             target: 'valueFrom',
             valueN: this.validValueFrom(value),
@@ -1550,6 +1524,6 @@ class Model extends _observer.Observer {
     }
 }
 
-},{"./Observer":"8aDi9","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"gLHpF":[function() {},{}],"e6PCz":[function() {},{}]},["8biNq","77Uu2"], "77Uu2", "parcelRequire94c2")
+},{"./Observer":"8aDi9","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}]},["8biNq","77Uu2"], "77Uu2", "parcelRequire94c2")
 
 //# sourceMappingURL=index.4aedfc9d.js.map
