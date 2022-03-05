@@ -1,34 +1,16 @@
 import {Observer} from './Observer';
 import {state} from './types/types';
 import {notifyData} from './types/types';
-import {stateContent} from './types/types';
 
 class Model extends Observer {
     private elem: HTMLElement;
 
     private readonly state: state;
 
-    constructor(elem: HTMLElement) {
+    constructor(elem: HTMLElement, options: state) {
         super();
         this.elem = elem;
-        this.state = {
-            bubble: true,
-            max: 100,
-            min: 0,
-            step: 1,
-            type: 'single',
-            valueTo: 100,
-            valueFrom: 5,
-            direction: 'horizontal',
-            onChangeTo: function () {
-            },
-            onChangeFrom: function () {
-            }
-        };
-    }
-
-    init(options: Record<string, stateContent>): void {
-        Object.assign(this.state, options);
+        this.state = Object.assign({}, options);
     }
 
     calcPosition(data: notifyData): void {
@@ -79,6 +61,12 @@ class Model extends Observer {
     }
 
     set changeType(value: string) {
+        if (this.state.min > this.state.valueFrom) {
+            this.changeFrom = this.state.min;
+        }
+        if (this.state.valueFrom > this.state.valueTo) {
+            this.changeFrom = this.state.valueTo;
+        }
         this.updateState({
             target: 'type',
             valueS: value,
@@ -114,7 +102,7 @@ class Model extends Observer {
             valueN: value,
             onlyState: true
         });
-        if (value > this.state.valueFrom) {
+        if (this.state.type === 'double' && value > this.state.valueFrom) {
             this.changeFrom = value;
         }
     }
@@ -140,6 +128,7 @@ class Model extends Observer {
     }
 
     set changeFrom(value: number) {
+        if (this.state.type === 'single') return;
         this.updateState({
             target: 'valueFrom',
             valueN: this.validValueFrom(value),

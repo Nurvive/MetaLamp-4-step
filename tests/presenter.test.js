@@ -18,8 +18,7 @@ describe('Class Presenter: ', () => {
         }
     };
     const node = document.createElement('div');
-    const model = new Model(node);
-    model.init(settings);
+    const model = new Model(node, settings);
     const view = new View(node, settings);
     const presenter = new Presenter(node, model, view);
     test('should be', () => {

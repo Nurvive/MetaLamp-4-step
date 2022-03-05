@@ -3,7 +3,6 @@ import ViewHead from './subView/ViewHead';
 import Scale from './subView/Scale';
 import Line from './subView/Line';
 import {state} from './types/types';
-import {stateContent} from './types/types';
 import {notifyData} from './types/types';
 
 class View extends Observer {
@@ -21,25 +20,11 @@ class View extends Observer {
 
     private handleSwipe: (event: (MouseEvent | TouchEvent)) => Array<number>;
 
-    constructor(elem: HTMLElement, options: Record<string, stateContent>) {
+    constructor(elem: HTMLElement, options: state) {
         super();
         this.elem = elem;
         this.handleSwipe = () => [];
-        this.state = {
-            bubble: true,
-            max: 100,
-            min: 0,
-            step: 1,
-            type: 'single',
-            valueTo: 100,
-            valueFrom: 5,
-            direction: 'horizontal',
-            onChangeTo: function () {
-            },
-            onChangeFrom: function () {
-            }
-        };
-        Object.assign(this.state, options);
+        this.state = Object.assign({}, options);
         this.line = new Line(this.elem, this.state.direction, this.state.type);
         this.scale = new Scale(this.line.element,
             this.state.direction, this.state.min, this.state.max);

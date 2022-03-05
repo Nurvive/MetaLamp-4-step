@@ -16,9 +16,9 @@ describe('Class Model: ', () => {
         }
     };
     const node = document.createElement('div');
-    const model = new Model(node);
+    let model = new Model(node, settings);
     beforeEach(() => {
-        model.init(settings);
+        model = new Model(node, settings);
     });
     test('should be', () => {
         expect(model)

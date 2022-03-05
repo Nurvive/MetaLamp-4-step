@@ -1,7 +1,7 @@
 import {View} from './View';
 import {Presenter} from './Presenter';
 import {Model} from './Model';
-import {stateContent} from './types/types';
+import {state} from './types/types';
 
 class Slider {
     view: View;
@@ -12,10 +12,9 @@ class Slider {
 
     model: Model;
 
-    constructor(elem: HTMLElement, settings: Record<string, stateContent>) {
+    constructor(elem: HTMLElement, settings: state) {
         this.elem = elem;
-        this.model = new Model(this.elem);
-        this.model.init(settings);
+        this.model = new Model(this.elem, settings);
         this.view = new View(this.elem, settings);
         this.view.init();
         this.presenter = new Presenter(this.elem, this.model, this.view);
