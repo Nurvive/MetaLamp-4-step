@@ -1,6 +1,6 @@
 export type stateContent = number | string | boolean | undefined |((value: number) => void);
 
-export interface state {
+export interface State {
     min: number;
     max: number;
     step: number;
@@ -15,7 +15,7 @@ export interface state {
     [key: string]: stateContent;
 }
 
-export interface notifyData {
+export interface NotifyData {
     valueN?: number;
     valueS?: string;
     valueB?: boolean;

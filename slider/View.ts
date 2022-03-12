@@ -2,13 +2,13 @@ import {Observer} from './Observer';
 import ViewHead from './subView/ViewHead';
 import Scale from './subView/Scale';
 import Line from './subView/Line';
-import {state} from './types/types';
-import {notifyData} from './types/types';
+import {State} from './types/types';
+import {NotifyData} from './types/types';
 
 class View extends Observer {
     private readonly elem: HTMLElement;
 
-    private readonly state: state;
+    private readonly state: State;
 
     head: ViewHead;
 
@@ -20,7 +20,7 @@ class View extends Observer {
 
     private handleSwipe: (event: (MouseEvent | TouchEvent)) => Array<number>;
 
-    constructor(elem: HTMLElement, options: state) {
+    constructor(elem: HTMLElement, options: State) {
         super();
         this.elem = elem;
         this.handleSwipe = () => [];
@@ -52,7 +52,7 @@ class View extends Observer {
         this.setup();
     }
 
-    changePosition(data: notifyData): void {
+    changePosition(data: NotifyData): void {
         if (data.onlyState) return;
         let position = 0;
         if (data.valueN !== undefined) {
@@ -181,7 +181,7 @@ class View extends Observer {
         this.reInit();
     }
 
-    updateState(data: notifyData): void {
+    updateState(data: NotifyData): void {
         if (!data.onlyState) return;
         if (typeof this.state[data.target] === 'string') {
             this.state[data.target] = data.valueS;

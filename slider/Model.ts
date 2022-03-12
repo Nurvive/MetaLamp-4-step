@@ -1,19 +1,19 @@
 import {Observer} from './Observer';
-import {state} from './types/types';
-import {notifyData} from './types/types';
+import {State} from './types/types';
+import {NotifyData} from './types/types';
 
 class Model extends Observer {
     private elem: HTMLElement;
 
-    private readonly state: state;
+    private readonly state: State;
 
-    constructor(elem: HTMLElement, options: state) {
+    constructor(elem: HTMLElement, options: State) {
         super();
         this.elem = elem;
         this.state = Object.assign({}, options);
     }
 
-    calcPosition(data: notifyData): void {
+    calcPosition(data: NotifyData): void {
         if (data.onlyState) return;
         let updatedValue: number;
         let updatedProperty: string;
@@ -148,7 +148,7 @@ class Model extends Observer {
         });
     }
 
-    updateState(data: notifyData): void {
+    updateState(data: NotifyData): void {
         if (!data.onlyState) return;
         if (typeof this.state[data.target] === 'string') {
             this.state[data.target] = data.valueS;
@@ -230,7 +230,7 @@ class Model extends Observer {
         return value;
     }
 
-    private calcUpdatedValue(data: notifyData, updatedProperty: string): number {
+    private calcUpdatedValue(data: NotifyData, updatedProperty: string): number {
         let halfHeadWidth = 0;
         if (data.valueArr !== undefined) {
             halfHeadWidth = data.valueArr[5];
@@ -248,7 +248,7 @@ class Model extends Observer {
         return updatedProperty === 'valueTo' ? this.validValueTo(updatedValue) : this.validValueFrom(updatedValue);
     }
 
-    private calcUpdatedValueRelative(data: notifyData): number {
+    private calcUpdatedValueRelative(data: NotifyData): number {
         if (data.valueArr === undefined) {
             throw new Error('Ожидался массив значений для Model');
         }
