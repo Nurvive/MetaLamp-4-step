@@ -3,8 +3,6 @@ class Line {
 
     direction: string;
 
-    template: string;
-
     element: HTMLElement;
 
     progressBar: HTMLElement;
@@ -15,11 +13,17 @@ class Line {
         this.parent = parent;
         this.direction = direction;
         this.type = type;
-        this.template = this.direction === 'horizontal' ? '<div class="slider__line"><span class="slider__line-progress"></span></div>' : '<div class="slider__line slider__line_vertical"><span class="slider__line-progress slider__line-progress_vertical"></span></div>';
-        this.parent.insertAdjacentHTML('beforeend', this.template);
-        // Здесь приведение через "as" оправдано, так как элемент точно создается строчкой выше
-        this.element = this.parent.querySelector('.slider__line') as HTMLElement;
-        this.progressBar = this.element.querySelector('.slider__line-progress') as HTMLElement;
+        this.element = document.createElement('div');
+        this.progressBar = document.createElement('span');
+        if (this.direction === 'horizontal') {
+            this.element.classList.add('slider__line');
+            this.progressBar.classList.add('slider__line-progress');
+        } else {
+            this.element.classList.add('slider__line', 'slider__line_vertical');
+            this.progressBar.classList.add('slider__line-progress', 'slider__line-progress_vertical');
+        }
+        this.element.append(this.progressBar);
+        this.parent.append(this.element);
     }
 
     set setType(type: string) {

@@ -5,26 +5,21 @@ class ViewHead {
 
     direction: string;
 
-    template: string;
-
     element: HTMLElement;
 
-    bubble: HTMLElement;
+    bubble: HeadBubble;
 
     constructor(parent: HTMLElement, direction: string,
         value: number, bubbleValue: number) {
         this.parent = parent;
         this.direction = direction;
-        this.bubble = (new HeadBubble()).element;
-        this.template = this.direction === 'horizontal'
-            ? `<div class='slider__head'>
-            </div>`
-            : `<div class='slider__head slider__head_vertical'>
-            </div>`;
-        this.parent.insertAdjacentHTML('afterbegin', this.template);
-        // Здесь приведение через "as" оправдано, так как элемент точно создается строчкой выше
-        this.element = this.parent.querySelector('.slider__head') as HTMLElement;
-        this.element.append(this.bubble);
+        this.element = document.createElement('div');
+        this.element.classList.add('slider__head');
+        this.direction === 'horizontal'
+            ? this.element.classList.add('slider__head')
+            : this.element.classList.add('slider__head', 'slider__head_vertical');
+        this.bubble = new HeadBubble(this.element);
+        this.parent.append(this.element);
         this.updatePosition(value);
         this.updateBubble(bubbleValue);
     }
@@ -44,18 +39,18 @@ class ViewHead {
 
     updateBubble(value: number): boolean {
         if (this.bubble) {
-            this.bubble.innerHTML = String(value);
+            this.bubble.update(value);
             return true;
         }
         return false;
     }
 
     showBubble(): void {
-        this.bubble.style.display = 'block';
+        this.bubble.show();
     }
 
     hideBubble(): void {
-        this.bubble.style.display = 'none';
+        this.bubble.hide();
     }
 
     get getWidth(): number {

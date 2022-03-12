@@ -64,6 +64,10 @@
             cursor: initial;
             border-radius: 8px;
             z-index: 3;
+
+            &_active {
+                display: block;
+            }
         }
     }
 

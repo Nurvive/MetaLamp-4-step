@@ -3,19 +3,16 @@ class Scale {
 
     direction: string;
 
-    template: string;
-
     element: HTMLElement;
 
     constructor(parent: HTMLElement, direction: string, min: number, max: number) {
         this.parent = parent;
         this.direction = direction;
-        this.template = this.direction === 'horizontal'
-            ? '<div class="slider__scale"></div>'
-            : '<div class="slider__scale slider__scale_vertical"></div>';
-        this.parent.insertAdjacentHTML('beforeend', this.template);
-        // Здесь приведение через "as" оправдано, так как элемент точно создается строчкой выше
-        this.element = this.parent.querySelector('.slider__scale') as HTMLElement;
+        this.element = document.createElement('div');
+        this.direction === 'horizontal'
+            ? this.element.classList.add('slider__scale')
+            : this.element.classList.add('slider__scale', 'slider__scale_vertical');
+        this.parent.append(this.element);
         this.init(min, max);
     }
 
