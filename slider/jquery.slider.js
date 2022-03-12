@@ -21,7 +21,7 @@ import {Slider} from './Slider';
 
             return this.each(function () {
                 const ths = $(this);
-                if (settings.step > settings.max - settings.min) throw new Error('Шаг не может быть больше разницы максимума и минимума');
+                if (settings.step > settings.max - settings.min || settings.step === 0) throw new Error('Шаг не может быть больше разницы максимума и минимума или равен нулю');
                 if (settings.valueTo > settings.max) throw new Error('Текущее значение не может быть больше максимума');
                 if (settings.valueFrom < settings.min) throw new Error('Текущее значение не может быть меньше минимума');
                 sliders.push(new Slider(ths[0], settings));
