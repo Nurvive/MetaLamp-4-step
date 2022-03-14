@@ -27,10 +27,14 @@ class Scale {
                 }
                 const numbers = this.element.querySelectorAll('.slider__scale-number');
                 const number = numbers[numbers.length - 1];
-
-                i === 0
-                    ? number.innerHTML = String(min)
-                    : number.innerHTML = String(min + (i / 25) * step);
+                if (i === 0) {
+                    number.innerHTML = String(min);
+                } else {
+                    const dashValue = min + (i / 25) * step;
+                    number.innerHTML = Number.isInteger(dashValue)
+                        ? String(dashValue)
+                        : dashValue.toFixed(2);
+                }
             } else if (this.direction === 'horizontal') {
                 this.element.insertAdjacentHTML('beforeend', `<div class='slider__dash slider__dash_small' style='left: ${i}%;'></div>`);
             } else {
