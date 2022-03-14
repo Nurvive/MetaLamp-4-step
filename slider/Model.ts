@@ -121,7 +121,7 @@ class Model extends Observer {
             target: 'valueTo',
             onlyState: true
         });
-        let position = Model.getValueRelative(value, this.state.min, this.state.max);
+        let position = Model.getValueRelative(this.state.valueTo, this.state.min, this.state.max);
         position = Model.moreThan0LessThan1(position);
         this.notify({
             valueN: position,
@@ -142,7 +142,7 @@ class Model extends Observer {
             target: 'valueFrom',
             onlyState: true
         });
-        let position = Model.getValueRelative(value, this.state.min, this.state.max);
+        let position = Model.getValueRelative(this.state.valueFrom, this.state.min, this.state.max);
         position = Model.moreThan0LessThan1(position);
         this.notify({
             valueN: position,
