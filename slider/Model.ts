@@ -61,17 +61,17 @@ class Model extends Observer {
     }
 
     set changeType(value: string) {
+        this.updateState({
+            target: 'type',
+            valueS: value,
+            onlyState: true
+        });
         if (this.state.min > this.state.valueFrom) {
             this.changeFrom = this.state.min;
         }
         if (this.state.valueFrom > this.state.valueTo) {
             this.changeFrom = this.state.valueTo;
         }
-        this.updateState({
-            target: 'type',
-            valueS: value,
-            onlyState: true
-        });
     }
 
     set changeStep(value: number) {

@@ -118,11 +118,6 @@ class View extends Observer {
         this.scale.removeScale();
         this.line.removeLine();
         this.reInit();
-        this.notify({
-            target: 'direction',
-            valueS: value,
-            onlyState: true
-        });
     }
 
     set changeType(value: string) {
@@ -137,11 +132,6 @@ class View extends Observer {
         this.scale.removeScale();
         this.line.removeLine();
         this.reInit();
-        this.notify({
-            target: 'type',
-            valueS: value,
-            onlyState: true
-        });
     }
 
     set changeStep(value: number) {
