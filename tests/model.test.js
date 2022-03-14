@@ -1,4 +1,4 @@
-import {Model} from '../slider/Model';
+import {Model} from '../src/slider/Model';
 /* eslint-disable dot-notation */
 describe('Class Model: ', () => {
     const settings = {

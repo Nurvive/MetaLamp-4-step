@@ -24,9 +24,9 @@
     },
     "scripts": {
         "test": "jest",
-        "dev": "parcel ./index/index.pug --no-cache",
-        "build": "parcel build ./index/index.pug --public-url .",
-        "lint": "eslint index/**/*.ts blocks/**/*.ts slider/**/*.* tests/**/*.js",
+        "dev": "parcel src/index/index.pug --no-cache",
+        "build": "parcel build src/index/index.pug --public-url .",
+        "lint": "eslint src/index/**/*.ts src/blocks/**/*.ts src/slider/**/*.* tests/**/*.js",
         "deploy": "gh-pages -d dist"
     }
 }

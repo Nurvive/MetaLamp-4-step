@@ -1,4 +1,4 @@
-import {Observer} from '../slider/Observer';
+import {Observer} from '../src/slider/Observer';
 
 describe('Class Observer: ', () => {
     let observer;

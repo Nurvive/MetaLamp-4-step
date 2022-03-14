@@ -1,4 +1,4 @@
-import Scale from '../../slider/subView/Scale';
+import Scale from '../../src/slider/subView/Scale';
 
 describe('class Scale: ', () => {
     const node = document.createElement('div');

@@ -1,4 +1,4 @@
-import Line from '../../slider/subView/Line';
+import Line from '../../src/slider/subView/Line';
 
 describe('class Line: ', () => {
     const node = document.createElement('div');

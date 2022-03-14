@@ -1,4 +1,4 @@
-import ViewHead from '../../slider/subView/ViewHead';
+import ViewHead from '../../src/slider/subView/ViewHead';
 
 describe('class ViewHead: ', () => {
     const node = document.createElement('div');

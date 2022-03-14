@@ -75,7 +75,7 @@ class Model extends Observer {
     }
 
     set changeStep(value: number) {
-        const stepIsValid = (val:number, max: number, min: number): boolean => {
+        const stepIsValid = (val: number, max: number, min: number): boolean => {
             return val < max - min && val !== 0;
         };
         if (!stepIsValid(value, this.state.max, this.state.min)) throw new Error('Шаг не может быть больше разницы максимума и минимума или равен нулю');
@@ -173,14 +173,13 @@ class Model extends Observer {
         return (value - min) / (max - min);
     }
 
-    private calcValue(value: number): number {
+    private calcValue(value: number, updatedProperty = 'valueTo'): number {
         let newValue: number = value;
         newValue *= (this.state.max - this.state.min);
-
-        return this.state.min + this.calcValueByStep(newValue);
+        return this.state.min + this.calcValueByStep(newValue, updatedProperty);
     }
 
-    private calcValueByStep(value: number): number {
+    private calcValueByStep(value: number, updatedProperty: string): number {
         let newValue: number = value;
         if (this.state.step === undefined) throw new Error('Значение step не определено');
         const stepsInValue: number = newValue / this.state.step;
@@ -188,6 +187,12 @@ class Model extends Observer {
             newValue = this.state.step * Math.ceil(stepsInValue);
         } else {
             newValue = this.state.step * Math.floor(stepsInValue);
+        }
+        if (updatedProperty === 'valueTo') {
+            const maxSteps: number = (this.state.max - this.state.min) / this.state.step;
+            if (stepsInValue === maxSteps) {
+                newValue = this.state.max;
+            }
         }
         const popRes: string | undefined = this.state.step.toString()
             .split('.')
@@ -202,7 +207,6 @@ class Model extends Observer {
 
     private validValueTo(valueTo: number): number {
         let value: number = valueTo;
-
         if (this.state.type === 'single') {
             if (value > this.state.max) {
                 value = this.state.max;
@@ -247,7 +251,7 @@ class Model extends Observer {
         let newPosition = (data.valueArr[4] - shift - lineCoordinate + halfHeadWidth)
             / lineParameter;
         newPosition = Model.moreThan0LessThan1(newPosition);
-        const updatedValue = this.calcValue(newPosition);
+        const updatedValue = this.calcValue(newPosition, updatedProperty);
         return updatedProperty === 'valueTo' ? this.validValueTo(updatedValue) : this.validValueFrom(updatedValue);
     }
 

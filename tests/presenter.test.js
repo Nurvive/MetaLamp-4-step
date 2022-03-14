@@ -1,6 +1,6 @@
-import {Presenter} from '../slider/Presenter';
-import {Model} from '../slider/Model';
-import {View} from '../slider/View';
+import {Presenter} from '../src/slider/Presenter';
+import {Model} from '../src/slider/Model';
+import {View} from '../src/slider/View';
 
 describe('Class Presenter: ', () => {
     const settings = {

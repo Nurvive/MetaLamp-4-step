@@ -1,4 +1,4 @@
-import {View} from '../slider/View';
+import {View} from '../src/slider/View';
 /* eslint-disable dot-notation */
 
 describe('Class View: ', () => {
