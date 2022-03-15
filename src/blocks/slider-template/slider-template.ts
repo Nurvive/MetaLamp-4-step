@@ -21,7 +21,7 @@ class SliderTemplate {
 
     private $minInput: JQuery;
 
-    private slider: any;
+    private slider: JQuery;
 
     constructor(element: HTMLElement, settings: State) {
         this.element = $(element);
@@ -59,35 +59,35 @@ class SliderTemplate {
 
     handleBubbleButtonClick = (e: JQuery.ClickEvent): void => {
         e.target.checked ? this.slider.Slider('showBubble') : this.slider.Slider('hideBubble');
-    }
+    };
 
     handleVerticalButtonClick = (e: JQuery.ClickEvent): void => {
         e.target.checked ? this.slider.Slider('changeOrientation', 'vertical') : this.slider.Slider('changeOrientation', 'horizontal');
-    }
+    };
 
     handleRangeButton = (e: JQuery.ClickEvent): void => {
         e.target.checked ? this.slider.Slider('changeType', 'double') : this.slider.Slider('changeType', 'single');
-    }
+    };
 
     handleStepInputChange = (e: JQuery.ChangeEvent): void => {
         this.slider.Slider('changeStep', parseFloat(e.target.value));
-    }
+    };
 
     handleToInputChange = (e: JQuery.ChangeEvent): void => {
         this.slider.Slider('changeTo', parseFloat(e.target.value));
-    }
+    };
 
     handleFromInputChange = (e: JQuery.ChangeEvent): void => {
         this.slider.Slider('changeFrom', parseFloat(e.target.value));
-    }
+    };
 
     handleMaxInputChange = (e: JQuery.ChangeEvent): void => {
         this.slider.Slider('changeMax', parseFloat(e.target.value));
-    }
+    };
 
     handleMinInputChange = (e: JQuery.ChangeEvent): void => {
         this.slider.Slider('changeMin', parseFloat(e.target.value));
-    }
+    };
 }
 
 export default SliderTemplate;
