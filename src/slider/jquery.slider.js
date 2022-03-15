@@ -103,6 +103,42 @@ import {Slider} from './Slider';
             if (Number.isNaN(value)) throw new Error('valueFrom должно быть числом');
             slider.changeMax(value);
         },
+        getMax: function () {
+            let slider;
+            sliders.forEach((x) => {
+                if (x.elem === this[0]) {
+                    slider = x;
+                }
+            });
+            return slider.getMax();
+        },
+        getMin: function () {
+            let slider;
+            sliders.forEach((x) => {
+                if (x.elem === this[0]) {
+                    slider = x;
+                }
+            });
+            return slider.getMin();
+        },
+        getValueTo: function () {
+            let slider;
+            sliders.forEach((x) => {
+                if (x.elem === this[0]) {
+                    slider = x;
+                }
+            });
+            return slider.getValueTo();
+        },
+        getValueFrom: function () {
+            let slider;
+            sliders.forEach((x) => {
+                if (x.elem === this[0]) {
+                    slider = x;
+                }
+            });
+            return slider.getValueFrom();
+        },
         changeMin: function (value) {
             let slider;
             sliders.forEach((x) => {

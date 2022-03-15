@@ -50,11 +50,18 @@ class SliderTemplate {
         this.$bubbleButton.on('click', this.handleBubbleButtonClick);
         this.$verticalButton.on('click', this.handleVerticalButtonClick);
         this.$rangeButton.on('click', this.handleRangeButton);
+        if (!this.$rangeButton.is(':checked')) {
+            this.$fromInput.parent().addClass('slider-template__label_hide');
+        }
         this.$stepInput.on('change', this.handleStepInputChange);
         this.$toInput.on('change', this.handleToInputChange);
+        this.$toInput.val(String(this.slider.Slider('getValueTo')));
         this.$fromInput.on('change', this.handleFromInputChange);
+        this.$fromInput.val(String(this.slider.Slider('getValueFrom')));
         this.$maxInput.on('change', this.handleMaxInputChange);
+        this.$maxInput.val(String(this.slider.Slider('getMax')));
         this.$minInput.on('change', this.handleMinInputChange);
+        this.$minInput.val(String(this.slider.Slider('getMin')));
     }
 
     handleBubbleButtonClick = (e: JQuery.ClickEvent): void => {
@@ -66,7 +73,13 @@ class SliderTemplate {
     };
 
     handleRangeButton = (e: JQuery.ClickEvent): void => {
-        e.target.checked ? this.slider.Slider('changeType', 'double') : this.slider.Slider('changeType', 'single');
+        if (e.target.checked) {
+            this.slider.Slider('changeType', 'double');
+            this.$fromInput.parent().removeClass('slider-template__label_hide');
+        } else {
+            this.slider.Slider('changeType', 'single');
+            this.$fromInput.parent().addClass('slider-template__label_hide');
+        }
     };
 
     handleStepInputChange = (e: JQuery.ChangeEvent): void => {

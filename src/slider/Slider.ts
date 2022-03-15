@@ -69,6 +69,22 @@ class Slider {
         this.view.changeMin = value;
         return true;
     }
+
+    getMax(): number {
+        return this.model.getMax;
+    }
+
+    getMin(): number {
+        return this.model.getMin;
+    }
+
+    getValueTo(): number {
+        return this.model.getValueTo;
+    }
+
+    getValueFrom(): number {
+        return this.model.getValueFrom;
+    }
 }
 
 export {Slider};

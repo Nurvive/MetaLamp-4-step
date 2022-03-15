@@ -96,6 +96,10 @@ class Model extends Observer {
         }
     }
 
+    get getMax(): number {
+        return this.state.max;
+    }
+
     set changeMin(value: number) {
         if (value > this.state.max || value >= this.state.valueTo) {
             throw new Error('Минимум не может быть больше максимума');
@@ -108,6 +112,10 @@ class Model extends Observer {
         if (this.state.type === 'double' && value > this.state.valueFrom) {
             this.changeFrom = value;
         }
+    }
+
+    get getMin(): number {
+        return this.state.min;
     }
 
     set changeTo(value: number) {
@@ -130,6 +138,10 @@ class Model extends Observer {
         });
     }
 
+    get getValueTo(): number {
+        return this.state.valueTo;
+    }
+
     set changeFrom(value: number) {
         if (this.state.type === 'single') return;
         this.updateState({
@@ -149,6 +161,10 @@ class Model extends Observer {
             target: 'valueFrom',
             onlyState: false
         });
+    }
+
+    get getValueFrom(): number {
+        return this.state.valueFrom;
     }
 
     updateState(data: NotifyData): void {
