@@ -1,5 +1,5 @@
 import './index.scss';
-import '../blocks/slider/slider.scss';
+import '../blocks/slider-block/slider-block.scss';
 import '../slider/jquery.slider';
 import '../blocks/slider-template/slider-template';
 import SliderTemplate from '../blocks/slider-template/slider-template';
