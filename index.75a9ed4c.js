@@ -142,12 +142,12 @@
       this[globalName] = mainExports;
     }
   }
-})({"8biNq":[function(require,module,exports) {
+})({"91j40":[function(require,module,exports) {
 var HMR_HOST = null;
 var HMR_PORT = null;
 var HMR_SECURE = false;
 var HMR_ENV_HASH = "4a236f9275d0a351";
-module.bundle.HMR_BUNDLE_ID = "632a0c384aedfc9d";
+module.bundle.HMR_BUNDLE_ID = "1fe0474775a9ed4c";
 "use strict";
 function _toConsumableArray(arr) {
     return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
@@ -518,10 +518,10 @@ function hmrAcceptRun(bundle, id) {
     acceptedAssets[id] = true;
 }
 
-},{}],"77Uu2":[function(require,module,exports) {
+},{}],"9Acdi":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 var _indexScss = require("./index.scss");
-var _sliderScss = require("../blocks/slider/slider.scss");
+var _sliderBlockScss = require("../blocks/slider-block/slider-block.scss");
 var _jquerySlider = require("../slider/jquery.slider");
 var _sliderTemplate = require("../blocks/slider-template/slider-template");
 var _sliderTemplateDefault = parcelHelpers.interopDefault(_sliderTemplate);
@@ -576,7 +576,7 @@ $(function() {
     });
 });
 
-},{"./index.scss":"epF34","../blocks/slider/slider.scss":"gLHpF","../slider/jquery.slider":"4YYzy","../blocks/slider-template/slider-template":"kvx81","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"epF34":[function() {},{}],"gLHpF":[function() {},{}],"4YYzy":[function(require,module,exports) {
+},{"./index.scss":"fFTfR","../blocks/slider-block/slider-block.scss":"2PFos","../slider/jquery.slider":"sYGOa","../blocks/slider-template/slider-template":"g4K4g","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"fFTfR":[function() {},{}],"2PFos":[function() {},{}],"sYGOa":[function(require,module,exports) {
 var _slider = require("./Slider");
 (function($) {
     const sliders = [];
@@ -664,6 +664,34 @@ var _slider = require("./Slider");
             if (Number.isNaN(value)) throw new Error('valueFrom должно быть числом');
             slider.changeMax(value);
         },
+        getMax: function() {
+            let slider;
+            sliders.forEach((x)=>{
+                if (x.elem === this[0]) slider = x;
+            });
+            return slider.getMax();
+        },
+        getMin: function() {
+            let slider;
+            sliders.forEach((x)=>{
+                if (x.elem === this[0]) slider = x;
+            });
+            return slider.getMin();
+        },
+        getValueTo: function() {
+            let slider;
+            sliders.forEach((x)=>{
+                if (x.elem === this[0]) slider = x;
+            });
+            return slider.getValueTo();
+        },
+        getValueFrom: function() {
+            let slider;
+            sliders.forEach((x)=>{
+                if (x.elem === this[0]) slider = x;
+            });
+            return slider.getValueFrom();
+        },
         changeMin: function(value) {
             let slider;
             sliders.forEach((x)=>{
@@ -681,7 +709,7 @@ var _slider = require("./Slider");
     };
 })(jQuery);
 
-},{"./Slider":"d09jn"}],"d09jn":[function(require,module,exports) {
+},{"./Slider":"grHzt"}],"grHzt":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Slider", ()=>Slider
@@ -738,9 +766,21 @@ class Slider {
         this.view.changeMin = value;
         return true;
     }
+    getMax() {
+        return this.model.getMax;
+    }
+    getMin() {
+        return this.model.getMin;
+    }
+    getValueTo() {
+        return this.model.getValueTo;
+    }
+    getValueFrom() {
+        return this.model.getValueFrom;
+    }
 }
 
-},{"./View":"coOH6","./Presenter":"flTlu","./Model":"4PgSj","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"coOH6":[function(require,module,exports) {
+},{"./View":"dRZ4R","./Presenter":"aecJh","./Model":"1W6vh","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"dRZ4R":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "View", ()=>View
@@ -1001,7 +1041,7 @@ class View extends _observer.Observer {
     }
 }
 
-},{"./Observer":"8aDi9","./subView/ViewHead":"44du6","./subView/Scale":"2eh7F","./subView/Line":"4DtBx","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"8aDi9":[function(require,module,exports) {
+},{"./Observer":"2YvSZ","./subView/ViewHead":"04QP2","./subView/Scale":"bGCIc","./subView/Line":"7Lk3Z","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"2YvSZ":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Observer", ()=>Observer
@@ -1053,7 +1093,7 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}],"44du6":[function(require,module,exports) {
+},{}],"04QP2":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _headBubble = require("./HeadBubble");
@@ -1079,11 +1119,7 @@ class ViewHead {
         else this.element.style.top = `${newPos * 100}%`;
     }
     updateBubble(value) {
-        if (this.bubble) {
-            this.bubble.update(value);
-            return true;
-        }
-        return false;
+        if (this.bubble) this.bubble.update(value);
     }
     showBubble() {
         this.bubble.show();
@@ -1100,7 +1136,7 @@ class ViewHead {
 }
 exports.default = ViewHead;
 
-},{"./HeadBubble":"iMM29","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"iMM29":[function(require,module,exports) {
+},{"./HeadBubble":"euY79","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"euY79":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 class HeadBubble {
@@ -1123,7 +1159,7 @@ class HeadBubble {
 }
 exports.default = HeadBubble;
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"2eh7F":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"bGCIc":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 class Scale {
@@ -1170,7 +1206,7 @@ class Scale {
 }
 exports.default = Scale;
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"4DtBx":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"7Lk3Z":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 class Line {
@@ -1224,7 +1260,7 @@ class Line {
 }
 exports.default = Line;
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"flTlu":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"aecJh":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Presenter", ()=>Presenter
@@ -1240,7 +1276,7 @@ class Presenter {
     }
 }
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"4PgSj":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"1W6vh":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Model", ()=>Model
@@ -1321,6 +1357,9 @@ class Model extends _observer.Observer {
         });
         if (value < this.state.valueTo) this.changeTo = value;
     }
+    get getMax() {
+        return this.state.max;
+    }
     set changeMin(value) {
         if (value > this.state.max || value >= this.state.valueTo) throw new Error('Минимум не может быть больше максимума');
         this.updateState({
@@ -1329,6 +1368,9 @@ class Model extends _observer.Observer {
             onlyState: true
         });
         if (this.state.type === 'double' && value > this.state.valueFrom) this.changeFrom = value;
+    }
+    get getMin() {
+        return this.state.min;
     }
     set changeTo(value) {
         this.updateState({
@@ -1349,6 +1391,9 @@ class Model extends _observer.Observer {
             onlyState: false
         });
     }
+    get getValueTo() {
+        return this.state.valueTo;
+    }
     set changeFrom(value) {
         if (this.state.type === 'single') return;
         this.updateState({
@@ -1368,6 +1413,9 @@ class Model extends _observer.Observer {
             target: 'valueFrom',
             onlyState: false
         });
+    }
+    get getValueFrom() {
+        return this.state.valueFrom;
     }
     updateState(data) {
         if (!data.onlyState) return;
@@ -1396,7 +1444,7 @@ class Model extends _observer.Observer {
         if (stepsInValue % 1 >= 0.5) newValue = this.state.step * Math.ceil(stepsInValue);
         else newValue = this.state.step * Math.floor(stepsInValue);
         if (updatedProperty === 'valueTo') {
-            const maxSteps = this.state.max / this.state.step;
+            const maxSteps = (this.state.max - this.state.min) / this.state.step;
             if (stepsInValue === maxSteps) newValue = this.state.max;
         }
         const popRes = this.state.step.toString().split('.').pop();
@@ -1447,7 +1495,7 @@ class Model extends _observer.Observer {
     }
 }
 
-},{"./Observer":"8aDi9","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"kvx81":[function(require,module,exports) {
+},{"./Observer":"2YvSZ","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"g4K4g":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _sliderTemplateScss = require("./slider-template.scss");
@@ -1461,7 +1509,13 @@ class SliderTemplate {
             e.target.checked ? this.slider.Slider('changeOrientation', 'vertical') : this.slider.Slider('changeOrientation', 'horizontal');
         };
         this.handleRangeButton = (e)=>{
-            e.target.checked ? this.slider.Slider('changeType', 'double') : this.slider.Slider('changeType', 'single');
+            if (e.target.checked) {
+                this.slider.Slider('changeType', 'double');
+                this.$fromInput.parent().removeClass('slider-template__label_hide');
+            } else {
+                this.slider.Slider('changeType', 'single');
+                this.$fromInput.parent().addClass('slider-template__label_hide');
+            }
         };
         this.handleStepInputChange = (e)=>{
             this.slider.Slider('changeStep', parseFloat(e.target.value));
@@ -1502,15 +1556,20 @@ class SliderTemplate {
         this.$bubbleButton.on('click', this.handleBubbleButtonClick);
         this.$verticalButton.on('click', this.handleVerticalButtonClick);
         this.$rangeButton.on('click', this.handleRangeButton);
+        if (!this.$rangeButton.is(':checked')) this.$fromInput.parent().addClass('slider-template__label_hide');
         this.$stepInput.on('change', this.handleStepInputChange);
         this.$toInput.on('change', this.handleToInputChange);
+        this.$toInput.val(String(this.slider.Slider('getValueTo')));
         this.$fromInput.on('change', this.handleFromInputChange);
+        this.$fromInput.val(String(this.slider.Slider('getValueFrom')));
         this.$maxInput.on('change', this.handleMaxInputChange);
+        this.$maxInput.val(String(this.slider.Slider('getMax')));
         this.$minInput.on('change', this.handleMinInputChange);
+        this.$minInput.val(String(this.slider.Slider('getMin')));
     }
 }
 exports.default = SliderTemplate;
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV","../../slider/jquery.slider.js":"4YYzy","./slider-template.scss":"e6PCz"}],"e6PCz":[function() {},{}]},["8biNq","77Uu2"], "77Uu2", "parcelRequire94c2")
+},{"./slider-template.scss":"cDKRu","../../slider/jquery.slider.js":"sYGOa","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"cDKRu":[function() {},{}]},["91j40","9Acdi"], "9Acdi", "parcelRequire94c2")
 
-//# sourceMappingURL=index.4aedfc9d.js.map
+//# sourceMappingURL=index.75a9ed4c.js.map

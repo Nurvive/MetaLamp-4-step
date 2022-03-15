@@ -120,4 +120,7 @@ body {
 .slider-template__inner {
   margin-bottom: 1rem;
 }
-/*# sourceMappingURL=index.da56c10b.css.map */
+.slider-template__label_hide {
+  display: none;
+}
+/*# sourceMappingURL=index.26e035fe.css.map */
