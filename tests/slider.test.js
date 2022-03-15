@@ -1,4 +1,5 @@
 import {Slider} from '../src/slider/Slider';
+import {Model} from '../src/slider/Model';
 
 describe('Class Slider: ', () => {
     const settings = {
@@ -16,7 +17,10 @@ describe('Class Slider: ', () => {
         }
     };
     const node = document.createElement('div');
-    const slider = new Slider(node, settings);
+    let slider;
+    beforeEach(() => {
+        slider = new Slider(node, settings);
+    });
     test('should be', () => {
         expect(slider)
             .toBeDefined();
@@ -40,6 +44,14 @@ describe('Class Slider: ', () => {
             .toBeDefined();
         expect(slider.changeFrom)
             .toBeDefined();
+        expect(slider.getMax)
+            .toBeDefined();
+        expect(slider.getMin)
+            .toBeDefined();
+        expect(slider.getValueTo)
+            .toBeDefined();
+        expect(slider.getValueFrom)
+            .toBeDefined();
     });
     test('functions should return true', () => {
         expect(slider.hideBubble())
@@ -60,5 +72,15 @@ describe('Class Slider: ', () => {
             .toBeTruthy();
         expect(slider.changeFrom(0))
             .toBeTruthy();
+    });
+    test('getters should return numbers', () => {
+        expect(slider.getMax())
+            .toBe(settings.max);
+        expect(slider.getMin())
+            .toBe(settings.min);
+        expect(slider.getValueTo())
+            .toBe(settings.valueTo);
+        expect(slider.getValueFrom())
+            .toBe(settings.valueFrom);
     });
 });

@@ -37,12 +37,10 @@ class ViewHead {
         }
     }
 
-    updateBubble(value: number): boolean {
+    updateBubble(value: number): void {
         if (this.bubble) {
             this.bubble.update(value);
-            return true;
         }
-        return false;
     }
 
     showBubble(): void {

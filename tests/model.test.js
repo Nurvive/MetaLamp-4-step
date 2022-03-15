@@ -54,9 +54,14 @@ describe('Class Model: ', () => {
         expect(model['calcValueByStep'](43.852091471354164))
             .toBe(44);
         delete model.state.step;
-        expect(() => model['calcValueByStep'](0)).toThrow('Значение step не определено');
+        expect(() => model['calcValueByStep'](0))
+            .toThrow('Значение step не определено');
         model.state.step = 1.5;
-        expect(model['calcValueByStep'](91.64896647135417)).toBe(91.5);
+        expect(model['calcValueByStep'](91.64896647135417))
+            .toBe(91.5);
+        model.state.step = 9;
+        expect(model['calcValueByStep'](100, 'valueTo'))
+            .toBe(model.state.max);
     });
     test('func calcValue is OK', () => {
         expect(model['calcValue'](0))
@@ -109,6 +114,15 @@ describe('Class Model: ', () => {
         model.changeType = 'double';
         expect(model.state.type)
             .toBe('double');
+        model.state.min = 20;
+        model.changeType = 'double';
+        expect(model.state.valueFrom)
+            .toBe(model.state.min);
+        model.state.min = 0;
+        model.state.valueTo = 2;
+        model.changeType = 'double';
+        expect(model.state.valueFrom)
+            .toBe(model.state.valueTo - model.state.step);
     });
     test('setter changeStep is OK', () => {
         model.changeStep = 5;
@@ -119,7 +133,7 @@ describe('Class Model: ', () => {
         })
             .toThrow('Шаг не может быть больше разницы максимума и минимума');
     });
-    test('func updateState is OK', () => {
+    test('setter updateState is OK', () => {
         let data = {
             target: 'min',
             valueN: 10,
@@ -153,7 +167,7 @@ describe('Class Model: ', () => {
         expect(model.state.direction)
             .toBe('vertical');
     });
-    test('func changeMax is OK', () => {
+    test('setter changeMax is OK', () => {
         model.changeMax = 50;
         expect(model.state.max)
             .toBe(50);
@@ -166,7 +180,7 @@ describe('Class Model: ', () => {
         })
             .toThrow('Максимум не может быть меньше минимума');
     });
-    test('func changeMin is OK', () => {
+    test('setter changeMin is OK', () => {
         model.changeMin = 50;
         expect(model.state.min)
             .toBe(50);
@@ -178,6 +192,11 @@ describe('Class Model: ', () => {
                 .changeMin = 150;
         })
             .toThrow('Минимум не может быть больше максимума');
+        model.state.type = 'double';
+        model.state.valueFrom = 15;
+        model.changeMin = 20;
+        expect(model.state.valueFrom)
+            .toBe(20);
     });
     test('func calcPosition is OK', () => {
         let data = {
@@ -251,6 +270,13 @@ describe('Class Model: ', () => {
             target: 'valueTo',
             valueArr: undefined
         };
-        expect(() => model.calcPosition(data)).toThrow('Ожидался массив значений для Model');
+        expect(() => model.calcPosition(data))
+            .toThrow('Ожидался массив значений для Model');
+    });
+    test('func calcUpdatedValueRelative is OK', () => {
+        expect(() => {
+            model['calcUpdatedValueRelative']({valueArr: undefined});
+        })
+            .toThrow('Ожидался массив значений для Model');
     });
 });

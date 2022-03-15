@@ -12,16 +12,6 @@ describe('class ViewHead: ', () => {
     test('func getWidth is OK', () => {
         expect(viewHead.getHeight).toBe(viewHead.element.getBoundingClientRect().width);
     });
-    test('func hideBubble is OK', () => {
-        viewHead.hideBubble();
-        expect(viewHead.bubble.style.display).toBe('none');
-    });
-    test('func updateBubble is OK', () => {
-        viewHead.updateBubble(40);
-        expect(viewHead.bubble.innerHTML).toBe('40');
-        viewHead.bubble = null;
-        expect(viewHead.updateBubble(20)).toBeFalsy();
-    });
     test('func updatePosition is OK', () => {
         viewHead.updatePosition(0.5);
         expect(viewHead.element.style.left).toBe('50%');
