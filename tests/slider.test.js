@@ -1,5 +1,4 @@
 import {Slider} from '../src/slider/Slider';
-import {Model} from '../src/slider/Model';
 
 describe('Class Slider: ', () => {
     const settings = {
