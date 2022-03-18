@@ -208,7 +208,9 @@ class Model extends Observer {
         if (updatedProperty === 'valueTo') {
             const maxSteps: number = (this.state.max - this.state.min) / this.state.step;
             if (stepsInValue === maxSteps) {
-                newValue = this.state.max;
+                newValue = this.state.min < 0
+                    ? this.state.max + Math.abs(this.state.min)
+                    : this.state.max;
             }
         }
         const popRes: string | undefined = this.state.step.toString()
