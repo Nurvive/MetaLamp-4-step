@@ -692,6 +692,13 @@ var _slider = require("./Slider");
             });
             return slider.getValueFrom();
         },
+        getStep: function() {
+            let slider;
+            sliders.forEach((x)=>{
+                if (x.elem === this[0]) slider = x;
+            });
+            return slider.getStep();
+        },
         changeMin: function(value) {
             let slider;
             sliders.forEach((x)=>{
@@ -778,6 +785,9 @@ class Slider {
     getValueFrom() {
         return this.model.getValueFrom;
     }
+    getStep() {
+        return this.model.getStep;
+    }
 }
 
 },{"./View":"dRZ4R","./Presenter":"aecJh","./Model":"1W6vh","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"dRZ4R":[function(require,module,exports) {
@@ -832,7 +842,7 @@ class View extends _observer.Observer {
             }
             dataArray.push(this.head.getWidth / 2);
             this.notify({
-                valueArr: dataArray.slice(),
+                valueArray: dataArray.slice(),
                 target: updatedHead,
                 onlyState: false
             });
@@ -850,7 +860,7 @@ class View extends _observer.Observer {
             const dataArray = this.scaleClickData(event);
             this.notify({
                 target: 'value',
-                valueArr: dataArray.slice(),
+                valueArray: dataArray.slice(),
                 onlyState: false
             });
             return dataArray;
@@ -883,7 +893,7 @@ class View extends _observer.Observer {
     changePosition(data) {
         if (data.onlyState) return;
         let position = 0;
-        if (data.valueN !== undefined) position = data.valueN;
+        if (data.valueNumber !== undefined) position = data.valueNumber;
         else throw new Error('Новое значение не определено');
         if (data.target === 'valueTo') {
             this.head.updatePosition(position);
@@ -902,35 +912,35 @@ class View extends _observer.Observer {
     hideBubble() {
         this.updateState({
             target: 'bubble',
-            valueB: false,
+            valueBoolean: false,
             onlyState: true
         });
         this.head.hideBubble();
         this.head2?.hideBubble();
         this.notify({
             target: 'bubble',
-            valueB: false,
+            valueBoolean: false,
             onlyState: true
         });
     }
     showBubble() {
         this.updateState({
             target: 'bubble',
-            valueB: true,
+            valueBoolean: true,
             onlyState: true
         });
         this.head.showBubble();
         this.head2?.showBubble();
         this.notify({
             target: 'bubble',
-            valueB: true,
+            valueBoolean: true,
             onlyState: true
         });
     }
     set changeOrientation(value) {
         this.updateState({
             target: 'direction',
-            valueS: value,
+            valueString: value,
             onlyState: true
         });
         this.head.removeHead();
@@ -942,7 +952,7 @@ class View extends _observer.Observer {
     set changeType(value) {
         this.updateState({
             target: 'type',
-            valueS: value,
+            valueString: value,
             onlyState: true
         });
         this.head.removeHead();
@@ -960,7 +970,7 @@ class View extends _observer.Observer {
         if (value < this.state.min || value <= this.state.valueFrom) throw new Error('Максимум не может быть меньше минимума');
         this.updateState({
             target: 'max',
-            valueN: value,
+            valueNumber: value,
             onlyState: true
         });
         this.head.removeHead();
@@ -973,7 +983,7 @@ class View extends _observer.Observer {
         if (value > this.state.max || value >= this.state.valueTo) throw new Error('Минимум не может быть больше максимума');
         this.updateState({
             target: 'min',
-            valueN: value,
+            valueNumber: value,
             onlyState: true
         });
         this.head.removeHead();
@@ -984,9 +994,9 @@ class View extends _observer.Observer {
     }
     updateState(data) {
         if (!data.onlyState) return;
-        if (typeof this.state[data.target] === 'string') this.state[data.target] = data.valueS;
-        else if (typeof this.state[data.target] === 'number') this.state[data.target] = data.valueN;
-        else this.state[data.target] = data.valueB;
+        if (typeof this.state[data.target] === 'string') this.state[data.target] = data.valueString;
+        else if (typeof this.state[data.target] === 'number') this.state[data.target] = data.valueNumber;
+        else this.state[data.target] = data.valueBoolean;
     }
     reInit() {
         this.line = new _lineDefault.default(this.elem, this.state.direction, this.state.type);
@@ -1141,20 +1151,23 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 class HeadBubble {
     constructor(parent){
+        this.parent = parent;
+        this.init();
+    }
+    init() {
         this.element = document.createElement('span');
         this.element.classList.add('slider__head-bubble');
         this.element.setAttribute('data-type', 'bubble');
-        this.parent = parent;
         this.parent.append(this.element);
     }
     update(value) {
-        this.element.textContent = String(value);
+        if (this.element) this.element.textContent = String(value);
     }
     show() {
-        this.element.classList.add('slider__head-bubble_active');
+        this.element?.classList.add('slider__head-bubble_active');
     }
     hide() {
-        this.element.classList.remove('slider__head-bubble_active');
+        this.element?.classList.remove('slider__head-bubble_active');
     }
 }
 exports.default = HeadBubble;
@@ -1174,9 +1187,24 @@ class Scale {
     init(min, max) {
         const step = (max - min) / 4;
         for(let i = 0; i <= 100; i += 5){
+            const dash = document.createElement('div');
+            dash.classList.add('slider__dash');
             if (i % 25 === 0) {
-                if (this.direction === 'horizontal') this.element.insertAdjacentHTML('beforeend', `<div class='slider__dash' style='left: ${i}%;'></div><div class='slider__scale-number' style='left: ${i}%;'></div>`);
-                else this.element.insertAdjacentHTML('beforeend', `<div class='slider__dash slider__dash_vertical' style='top: ${i}%;'></div><div class='slider__scale-number slider__scale-number_vertical' style='top: ${i}%;'></div>`);
+                const scaleNumber = document.createElement('div');
+                scaleNumber.classList.add('slider__scale-number');
+                if (this.direction === 'horizontal') {
+                    dash.style.left = `${i}%`;
+                    scaleNumber.style.left = `${i}%`;
+                    dash.append(scaleNumber);
+                    this.element.append(dash);
+                } else {
+                    dash.style.top = `${i}%`;
+                    dash.classList.add('slider__dash_vertical');
+                    scaleNumber.style.top = `${i}%`;
+                    scaleNumber.classList.add('slider__scale-number_vertical');
+                    dash.append(scaleNumber);
+                    this.element.append(dash);
+                }
                 const numbers = this.element.querySelectorAll('.slider__scale-number');
                 const number = numbers[numbers.length - 1];
                 if (i === 0) number.innerHTML = String(min);
@@ -1184,8 +1212,15 @@ class Scale {
                     const dashValue = min + i / 25 * step;
                     number.innerHTML = Number.isInteger(dashValue) ? String(dashValue) : dashValue.toFixed(2);
                 }
-            } else if (this.direction === 'horizontal') this.element.insertAdjacentHTML('beforeend', `<div class='slider__dash slider__dash_small' style='left: ${i}%;'></div>`);
-            else this.element.insertAdjacentHTML('beforeend', `<div class='slider__dash slider__dash_small-vertical' style='top: ${i}%;'></div>`);
+            } else if (this.direction === 'horizontal') {
+                dash.classList.add('slider__dash_small');
+                dash.style.left = `${i}%`;
+                this.element.append(dash);
+            } else {
+                dash.classList.add('slider__dash_small-vertical');
+                dash.style.top = `${i}%`;
+                this.element.append(dash);
+            }
         }
     }
     removeScale() {
@@ -1287,7 +1322,6 @@ class Model extends _observer.Observer {
         super();
         this.isValueTo = (updatedValue)=>(updatedValue - this.state.valueFrom) / (this.state.valueTo - this.state.valueFrom) >= 0.5
         ;
-        this.elem = elem;
         this.state = Object.assign({
         }, options);
     }
@@ -1309,33 +1343,33 @@ class Model extends _observer.Observer {
         }
         this.updateState({
             target: updatedProperty,
-            valueN: updatedValue,
+            valueNumber: updatedValue,
             onlyState: true
         });
         this.notify({
             target: updatedProperty,
-            valueN: updatedValue,
+            valueNumber: updatedValue,
             onlyState: true
         });
         let position = Model.getValueRelative(updatedValue, this.state.min, this.state.max);
         position = Model.moreThan0LessThan1(position);
         this.notify({
             target: updatedProperty,
-            valueN: position,
+            valueNumber: position,
             onlyState: false
         });
     }
     set changeOrientation(value) {
         this.updateState({
             target: 'direction',
-            valueS: value,
+            valueString: value,
             onlyState: true
         });
     }
     set changeType(value) {
         this.updateState({
             target: 'type',
-            valueS: value,
+            valueString: value,
             onlyState: true
         });
         if (this.state.min > this.state.valueFrom) this.changeFrom = this.state.min;
@@ -1348,11 +1382,14 @@ class Model extends _observer.Observer {
         if (!stepIsValid(value, this.state.max, this.state.min)) throw new Error('Шаг не может быть больше разницы максимума и минимума или равен нулю');
         this.state.step = value;
     }
+    get getStep() {
+        return this.state.step;
+    }
     set changeMax(value) {
         if (value < this.state.min || value <= this.state.valueFrom) throw new Error('Максимум не может быть меньше минимума');
         this.updateState({
             target: 'max',
-            valueN: value,
+            valueNumber: value,
             onlyState: true
         });
         if (value < this.state.valueTo) this.changeTo = value;
@@ -1364,7 +1401,7 @@ class Model extends _observer.Observer {
         if (value > this.state.max || value >= this.state.valueTo) throw new Error('Минимум не может быть больше максимума');
         this.updateState({
             target: 'min',
-            valueN: value,
+            valueNumber: value,
             onlyState: true
         });
         if (this.state.type === 'double' && value > this.state.valueFrom) this.changeFrom = value;
@@ -1375,18 +1412,18 @@ class Model extends _observer.Observer {
     set changeTo(value) {
         this.updateState({
             target: 'valueTo',
-            valueN: this.validValueTo(value),
+            valueNumber: this.validValueTo(value),
             onlyState: true
         });
         this.notify({
-            valueN: this.state.valueTo,
+            valueNumber: this.state.valueTo,
             target: 'valueTo',
             onlyState: true
         });
         let position = Model.getValueRelative(this.state.valueTo, this.state.min, this.state.max);
         position = Model.moreThan0LessThan1(position);
         this.notify({
-            valueN: position,
+            valueNumber: position,
             target: 'valueTo',
             onlyState: false
         });
@@ -1398,18 +1435,18 @@ class Model extends _observer.Observer {
         if (this.state.type === 'single') return;
         this.updateState({
             target: 'valueFrom',
-            valueN: this.validValueFrom(value),
+            valueNumber: this.validValueFrom(value),
             onlyState: true
         });
         this.notify({
-            valueN: this.state.valueFrom,
+            valueNumber: this.state.valueFrom,
             target: 'valueFrom',
             onlyState: true
         });
         let position = Model.getValueRelative(this.state.valueFrom, this.state.min, this.state.max);
         position = Model.moreThan0LessThan1(position);
         this.notify({
-            valueN: position,
+            valueNumber: position,
             target: 'valueFrom',
             onlyState: false
         });
@@ -1419,9 +1456,9 @@ class Model extends _observer.Observer {
     }
     updateState(data) {
         if (!data.onlyState) return;
-        if (typeof this.state[data.target] === 'string') this.state[data.target] = data.valueS;
-        else if (typeof this.state[data.target] === 'number') this.state[data.target] = data.valueN;
-        else this.state[data.target] = data.valueB;
+        if (typeof this.state[data.target] === 'string') this.state[data.target] = data.valueString;
+        else if (typeof this.state[data.target] === 'number') this.state[data.target] = data.valueNumber;
+        else this.state[data.target] = data.valueBoolean;
     }
     static moreThan0LessThan1(value) {
         let newValue = value;
@@ -1445,7 +1482,7 @@ class Model extends _observer.Observer {
         else newValue = this.state.step * Math.floor(stepsInValue);
         if (updatedProperty === 'valueTo') {
             const maxSteps = (this.state.max - this.state.min) / this.state.step;
-            if (stepsInValue === maxSteps) newValue = this.state.max;
+            if (stepsInValue === maxSteps) newValue = this.state.min < 0 ? this.state.max + Math.abs(this.state.min) : this.state.max;
         }
         const popRes = this.state.step.toString().split('.').pop();
         let accuracy = 0;
@@ -1474,22 +1511,22 @@ class Model extends _observer.Observer {
     }
     calcUpdatedValue(data, updatedProperty) {
         let halfHeadWidth = 0;
-        if (data.valueArr !== undefined) halfHeadWidth = data.valueArr[5];
+        if (data.valueArray !== undefined) halfHeadWidth = data.valueArray[5];
         else throw new Error('Ожидался массив значений для Model');
-        const lineParameter = data.valueArr[2];
-        const lineCoordinate = data.valueArr[3];
-        const HeadCoordinate = data.valueArr[0];
-        const shift = data.valueArr[1] - HeadCoordinate;
-        let newPosition = (data.valueArr[4] - shift - lineCoordinate + halfHeadWidth) / lineParameter;
+        const lineParameter = data.valueArray[2];
+        const lineCoordinate = data.valueArray[3];
+        const HeadCoordinate = data.valueArray[0];
+        const shift = data.valueArray[1] - HeadCoordinate;
+        let newPosition = (data.valueArray[4] - shift - lineCoordinate + halfHeadWidth) / lineParameter;
         newPosition = Model.moreThan0LessThan1(newPosition);
         const updatedValue = this.calcValue(newPosition, updatedProperty);
         return updatedProperty === 'valueTo' ? this.validValueTo(updatedValue) : this.validValueFrom(updatedValue);
     }
     calcUpdatedValueRelative(data) {
-        if (data.valueArr === undefined) throw new Error('Ожидался массив значений для Model');
-        const lineParameter = data.valueArr[0];
-        const lineCoordinate = data.valueArr[1];
-        let newPositionRelative = (data.valueArr[2] - lineCoordinate) / lineParameter;
+        if (data.valueArray === undefined) throw new Error('Ожидался массив значений для Model');
+        const lineParameter = data.valueArray[0];
+        const lineCoordinate = data.valueArray[1];
+        let newPositionRelative = (data.valueArray[2] - lineCoordinate) / lineParameter;
         newPositionRelative = Model.moreThan0LessThan1(newPositionRelative);
         return this.calcValue(newPositionRelative);
     }
@@ -1503,36 +1540,51 @@ var _jquerySliderJs = require("../../slider/jquery.slider.js");
 class SliderTemplate {
     constructor(element, settings){
         this.handleBubbleButtonClick = (e)=>{
-            e.target.checked ? this.slider.Slider('showBubble') : this.slider.Slider('hideBubble');
+            e.target.checked ? this.slider?.Slider('showBubble') : this.slider?.Slider('hideBubble');
         };
         this.handleVerticalButtonClick = (e)=>{
-            e.target.checked ? this.slider.Slider('changeOrientation', 'vertical') : this.slider.Slider('changeOrientation', 'horizontal');
+            e.target.checked ? this.slider?.Slider('changeOrientation', 'vertical') : this.slider?.Slider('changeOrientation', 'horizontal');
         };
-        this.handleRangeButton = (e)=>{
+        this.handleRangeButtonClick = (e)=>{
             if (e.target.checked) {
-                this.slider.Slider('changeType', 'double');
-                this.$fromInput.parent().removeClass('slider-template__label_hide');
+                this.slider?.Slider('changeType', 'double');
+                this.$fromInput?.parent().removeClass('slider-template__label_hide');
             } else {
-                this.slider.Slider('changeType', 'single');
-                this.$fromInput.parent().addClass('slider-template__label_hide');
+                this.slider?.Slider('changeType', 'single');
+                this.$fromInput?.parent().addClass('slider-template__label_hide');
             }
         };
         this.handleStepInputChange = (e)=>{
-            this.slider.Slider('changeStep', parseFloat(e.target.value));
+            try {
+                this.slider?.Slider('changeStep', parseFloat(e.target.value));
+            } catch (error) {
+                e.target.value = this.slider?.Slider('getStep');
+            }
         };
         this.handleToInputChange = (e)=>{
-            this.slider.Slider('changeTo', parseFloat(e.target.value));
+            this.slider?.Slider('changeTo', parseFloat(e.target.value));
         };
         this.handleFromInputChange = (e)=>{
-            this.slider.Slider('changeFrom', parseFloat(e.target.value));
+            this.slider?.Slider('changeFrom', parseFloat(e.target.value));
         };
         this.handleMaxInputChange = (e)=>{
-            this.slider.Slider('changeMax', parseFloat(e.target.value));
+            try {
+                this.slider?.Slider('changeMax', parseFloat(e.target.value));
+            } catch (error) {
+                e.target.value = this.slider?.Slider('getMax');
+            }
         };
         this.handleMinInputChange = (e)=>{
-            this.slider.Slider('changeMin', parseFloat(e.target.value));
+            try {
+                this.slider?.Slider('changeMin', parseFloat(e.target.value));
+            } catch (error) {
+                e.target.value = this.slider?.Slider('getMin');
+            }
         };
         this.element = $(element);
+        this.init(settings);
+    }
+    init(settings) {
         this.$bubbleButton = $(this.element.find('input[data-type="bubble"]'));
         this.$verticalButton = $(this.element.find('input[data-type="vertical"]'));
         this.$rangeButton = $(this.element.find('input[data-type="range"]'));
@@ -1543,29 +1595,29 @@ class SliderTemplate {
         this.$minInput = $(this.element.find('input[data-type="min"]'));
         const options = Object.assign(settings, {
             onChangeTo: (value)=>{
-                this.$toInput.val(value);
+                this.$toInput?.val(value);
             },
             onChangeFrom: (value)=>{
-                this.$fromInput.val(value);
+                this.$fromInput?.val(value);
             }
         });
         this.slider = $(this.element.find('.slider')).Slider(options);
-        this.init();
+        this.setup();
     }
-    init() {
-        this.$bubbleButton.on('click', this.handleBubbleButtonClick);
-        this.$verticalButton.on('click', this.handleVerticalButtonClick);
-        this.$rangeButton.on('click', this.handleRangeButton);
-        if (!this.$rangeButton.is(':checked')) this.$fromInput.parent().addClass('slider-template__label_hide');
-        this.$stepInput.on('change', this.handleStepInputChange);
-        this.$toInput.on('change', this.handleToInputChange);
-        this.$toInput.val(String(this.slider.Slider('getValueTo')));
-        this.$fromInput.on('change', this.handleFromInputChange);
-        this.$fromInput.val(String(this.slider.Slider('getValueFrom')));
-        this.$maxInput.on('change', this.handleMaxInputChange);
-        this.$maxInput.val(String(this.slider.Slider('getMax')));
-        this.$minInput.on('change', this.handleMinInputChange);
-        this.$minInput.val(String(this.slider.Slider('getMin')));
+    setup() {
+        this.$bubbleButton?.on('click', this.handleBubbleButtonClick);
+        this.$verticalButton?.on('click', this.handleVerticalButtonClick);
+        this.$rangeButton?.on('click', this.handleRangeButtonClick);
+        if (!this.$rangeButton?.is(':checked')) this.$fromInput?.parent().addClass('slider-template__label_hide');
+        this.$stepInput?.on('change', this.handleStepInputChange);
+        this.$toInput?.on('change', this.handleToInputChange);
+        this.$toInput?.val(String(this.slider?.Slider('getValueTo')));
+        this.$fromInput?.on('change', this.handleFromInputChange);
+        this.$fromInput?.val(String(this.slider?.Slider('getValueFrom')));
+        this.$maxInput?.on('change', this.handleMaxInputChange);
+        this.$maxInput?.val(String(this.slider?.Slider('getMax')));
+        this.$minInput?.on('change', this.handleMinInputChange);
+        this.$minInput?.val(String(this.slider?.Slider('getMin')));
     }
 }
 exports.default = SliderTemplate;
