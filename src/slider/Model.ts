@@ -32,19 +32,19 @@ class Model extends Observer {
 
         this.updateState({
             target: updatedProperty,
-            valueN: updatedValue,
+            valueNumber: updatedValue,
             onlyState: true
         });
         this.notify({
             target: updatedProperty,
-            valueN: updatedValue,
+            valueNumber: updatedValue,
             onlyState: true
         });
         let position = Model.getValueRelative(updatedValue, this.state.min, this.state.max);
         position = Model.moreThan0LessThan1(position);
         this.notify({
             target: updatedProperty,
-            valueN: position,
+            valueNumber: position,
             onlyState: false
         });
     }
@@ -52,7 +52,7 @@ class Model extends Observer {
     set changeOrientation(value: string) {
         this.updateState({
             target: 'direction',
-            valueS: value,
+            valueString: value,
             onlyState: true
         });
     }
@@ -60,7 +60,7 @@ class Model extends Observer {
     set changeType(value: string) {
         this.updateState({
             target: 'type',
-            valueS: value,
+            valueString: value,
             onlyState: true
         });
         if (this.state.min > this.state.valueFrom) {
@@ -85,7 +85,7 @@ class Model extends Observer {
         }
         this.updateState({
             target: 'max',
-            valueN: value,
+            valueNumber: value,
             onlyState: true
         });
         if (value < this.state.valueTo) {
@@ -103,7 +103,7 @@ class Model extends Observer {
         }
         this.updateState({
             target: 'min',
-            valueN: value,
+            valueNumber: value,
             onlyState: true
         });
         if (this.state.type === 'double' && value > this.state.valueFrom) {
@@ -118,18 +118,18 @@ class Model extends Observer {
     set changeTo(value: number) {
         this.updateState({
             target: 'valueTo',
-            valueN: this.validValueTo(value),
+            valueNumber: this.validValueTo(value),
             onlyState: true
         });
         this.notify({
-            valueN: this.state.valueTo,
+            valueNumber: this.state.valueTo,
             target: 'valueTo',
             onlyState: true
         });
         let position = Model.getValueRelative(this.state.valueTo, this.state.min, this.state.max);
         position = Model.moreThan0LessThan1(position);
         this.notify({
-            valueN: position,
+            valueNumber: position,
             target: 'valueTo',
             onlyState: false
         });
@@ -143,18 +143,18 @@ class Model extends Observer {
         if (this.state.type === 'single') return;
         this.updateState({
             target: 'valueFrom',
-            valueN: this.validValueFrom(value),
+            valueNumber: this.validValueFrom(value),
             onlyState: true
         });
         this.notify({
-            valueN: this.state.valueFrom,
+            valueNumber: this.state.valueFrom,
             target: 'valueFrom',
             onlyState: true
         });
         let position = Model.getValueRelative(this.state.valueFrom, this.state.min, this.state.max);
         position = Model.moreThan0LessThan1(position);
         this.notify({
-            valueN: position,
+            valueNumber: position,
             target: 'valueFrom',
             onlyState: false
         });
@@ -167,11 +167,11 @@ class Model extends Observer {
     updateState(data: NotifyData): void {
         if (!data.onlyState) return;
         if (typeof this.state[data.target] === 'string') {
-            this.state[data.target] = data.valueS;
+            this.state[data.target] = data.valueString;
         } else if (typeof this.state[data.target] === 'number') {
-            this.state[data.target] = data.valueN;
+            this.state[data.target] = data.valueNumber;
         } else {
-            this.state[data.target] = data.valueB;
+            this.state[data.target] = data.valueBoolean;
         }
     }
 
@@ -252,16 +252,16 @@ class Model extends Observer {
 
     private calcUpdatedValue(data: NotifyData, updatedProperty: string): number {
         let halfHeadWidth = 0;
-        if (data.valueArr !== undefined) {
-            halfHeadWidth = data.valueArr[5];
+        if (data.valueArray !== undefined) {
+            halfHeadWidth = data.valueArray[5];
         } else {
             throw new Error('Ожидался массив значений для Model');
         }
-        const lineParameter = data.valueArr[2];
-        const lineCoordinate = data.valueArr[3];
-        const HeadCoordinate = data.valueArr[0];
-        const shift = data.valueArr[1] - HeadCoordinate;
-        let newPosition = (data.valueArr[4] - shift - lineCoordinate + halfHeadWidth)
+        const lineParameter = data.valueArray[2];
+        const lineCoordinate = data.valueArray[3];
+        const HeadCoordinate = data.valueArray[0];
+        const shift = data.valueArray[1] - HeadCoordinate;
+        let newPosition = (data.valueArray[4] - shift - lineCoordinate + halfHeadWidth)
             / lineParameter;
         newPosition = Model.moreThan0LessThan1(newPosition);
         const updatedValue = this.calcValue(newPosition, updatedProperty);
@@ -269,12 +269,12 @@ class Model extends Observer {
     }
 
     private calcUpdatedValueRelative(data: NotifyData): number {
-        if (data.valueArr === undefined) {
+        if (data.valueArray === undefined) {
             throw new Error('Ожидался массив значений для Model');
         }
-        const lineParameter = data.valueArr[0];
-        const lineCoordinate = data.valueArr[1];
-        let newPositionRelative = (data.valueArr[2] - lineCoordinate) / lineParameter;
+        const lineParameter = data.valueArray[0];
+        const lineCoordinate = data.valueArray[1];
+        let newPositionRelative = (data.valueArray[2] - lineCoordinate) / lineParameter;
         newPositionRelative = Model.moreThan0LessThan1(newPositionRelative);
         return this.calcValue(newPositionRelative);
     }

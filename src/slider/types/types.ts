@@ -16,10 +16,10 @@ export interface State {
 }
 
 export interface NotifyData {
-    valueN?: number;
-    valueS?: string;
-    valueB?: boolean;
-    valueArr?: Array<number>;
+    valueNumber?: number;
+    valueString?: string;
+    valueBoolean?: boolean;
+    valueArray?: Array<number>;
     target: string;
     onlyState?: boolean;
 }

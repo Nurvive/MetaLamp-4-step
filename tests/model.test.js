@@ -275,7 +275,7 @@ describe('Class Model: ', () => {
     });
     test('func calcUpdatedValueRelative is OK', () => {
         expect(() => {
-            model['calcUpdatedValueRelative']({valueArr: undefined});
+            model['calcUpdatedValueRelative']({valueArray: undefined});
         })
             .toThrow('Ожидался массив значений для Model');
     });
