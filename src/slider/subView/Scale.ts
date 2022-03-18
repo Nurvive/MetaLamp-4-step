@@ -19,11 +19,23 @@ class Scale {
     init(min: number, max: number): void {
         const step = (max - min) / 4;
         for (let i = 0; i <= 100; i += 5) {
+            const dash = document.createElement('div');
+            dash.classList.add('slider__dash');
             if (i % 25 === 0) {
+                const scaleNumber = document.createElement('div');
+                scaleNumber.classList.add('slider__scale-number');
                 if (this.direction === 'horizontal') {
-                    this.element.insertAdjacentHTML('beforeend', `<div class='slider__dash' style='left: ${i}%;'></div><div class='slider__scale-number' style='left: ${i}%;'></div>`);
+                    dash.style.left = `${i}%`;
+                    scaleNumber.style.left = `${i}%`;
+                    dash.append(scaleNumber);
+                    this.element.append(dash);
                 } else {
-                    this.element.insertAdjacentHTML('beforeend', `<div class='slider__dash slider__dash_vertical' style='top: ${i}%;'></div><div class='slider__scale-number slider__scale-number_vertical' style='top: ${i}%;'></div>`);
+                    dash.style.top = `${i}%`;
+                    dash.classList.add('slider__dash_vertical');
+                    scaleNumber.style.top = `${i}%`;
+                    scaleNumber.classList.add('slider__scale-number_vertical');
+                    dash.append(scaleNumber);
+                    this.element.append(dash);
                 }
                 const numbers = this.element.querySelectorAll('.slider__scale-number');
                 const number = numbers[numbers.length - 1];
@@ -36,9 +48,13 @@ class Scale {
                         : dashValue.toFixed(2);
                 }
             } else if (this.direction === 'horizontal') {
-                this.element.insertAdjacentHTML('beforeend', `<div class='slider__dash slider__dash_small' style='left: ${i}%;'></div>`);
+                dash.classList.add('slider__dash_small');
+                dash.style.left = `${i}%`;
+                this.element.append(dash);
             } else {
-                this.element.insertAdjacentHTML('beforeend', `<div class='slider__dash slider__dash_small-vertical' style='top: ${i}%;'></div>`);
+                dash.classList.add('slider__dash_small-vertical');
+                dash.style.top = `${i}%`;
+                this.element.append(dash);
             }
         }
     }
