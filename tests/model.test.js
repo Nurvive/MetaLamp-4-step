@@ -136,7 +136,7 @@ describe('Class Model: ', () => {
     test('setter updateState is OK', () => {
         let data = {
             target: 'min',
-            valueN: 10,
+            valueNumber: 10,
             onlyState: true
         };
         model.updateState(data);
@@ -144,7 +144,7 @@ describe('Class Model: ', () => {
             .toBe(10);
         data = {
             target: 'bubble',
-            valueB: false,
+            valueBoolean: false,
             onlyState: true
         };
         model.updateState(data);
@@ -152,7 +152,7 @@ describe('Class Model: ', () => {
             .toBe(false);
         data = {
             target: 'direction',
-            valueS: 'vertical',
+            valueString: 'vertical',
             onlyState: true
         };
         model.updateState(data);
@@ -161,7 +161,7 @@ describe('Class Model: ', () => {
         data = {
             onlyState: false,
             target: 'direction',
-            valueS: 'horizontal'
+            valueString: 'horizontal'
         };
         model.updateState(data);
         expect(model.state.direction)
@@ -202,7 +202,7 @@ describe('Class Model: ', () => {
         let data = {
             onlyState: false,
             target: 'valueTo',
-            valueArr: [874.4000244140625, 880, 300, 581, 874, 7]
+            valueArray: [874.4000244140625, 880, 300, 581, 874, 7]
         };
         model.calcPosition(data);
         expect(model.state.valueTo)
@@ -210,14 +210,14 @@ describe('Class Model: ', () => {
         data = {
             onlyState: false,
             target: 'value',
-            valueArr: [300, 581, 870]
+            valueArray: [300, 581, 870]
         };
         model.calcPosition(data);
         expect(model.state.valueTo)
             .toBe(96);
         model.changeType = 'double';
         data = {
-            valueArr: [576.4000244140625, 580, 300, 581, 644, 7],
+            valueArray: [576.4000244140625, 580, 300, 581, 644, 7],
             target: 'valueFrom',
             onlyState: false
         };
@@ -226,7 +226,7 @@ describe('Class Model: ', () => {
             .toBe(22);
         data = {
             target: 'value',
-            valueArr: [300, 581, 695],
+            valueArray: [300, 581, 695],
             onlyState: false
         };
         model.calcPosition(data);
@@ -235,13 +235,13 @@ describe('Class Model: ', () => {
         data = {
             onlyState: false,
             target: 'value',
-            valueArr: [300, 581, 855]
+            valueArray: [300, 581, 855]
         };
         model.calcPosition(data);
         expect(model.state.valueTo)
             .toBe(91);
         data = {
-            valueArr: [847.5718994140625, 852, 300, 581, 630, 7],
+            valueArray: [847.5718994140625, 852, 300, 581, 630, 7],
             onlyState: false,
             target: 'valueTo'
         };
@@ -252,7 +252,7 @@ describe('Class Model: ', () => {
         data = {
             onlyState: false,
             target: 'valueTo',
-            valueArr: [443.7749938964844, 451, 300, 207, 467, 7]
+            valueArray: [443.7749938964844, 451, 300, 207, 467, 7]
         };
         model.calcPosition(data);
         expect(model.state.valueTo)
@@ -260,7 +260,7 @@ describe('Class Model: ', () => {
         data = {
             onlyState: false,
             target: 'value',
-            valueArr: [300, 207, 257]
+            valueArray: [300, 207, 257]
         };
         model.calcPosition(data);
         expect(model.state.valueFrom)
@@ -268,14 +268,14 @@ describe('Class Model: ', () => {
         data = {
             onlyState: false,
             target: 'valueTo',
-            valueArr: undefined
+            valueArray: undefined
         };
         expect(() => model.calcPosition(data))
             .toThrow('Ожидался массив значений для Model');
     });
     test('func calcUpdatedValueRelative is OK', () => {
         expect(() => {
-            model['calcUpdatedValueRelative']({valueArray: undefined});
+            model['calcUpdatedValueRelative']({valueArrayay: undefined});
         })
             .toThrow('Ожидался массив значений для Model');
     });

@@ -137,7 +137,7 @@ describe('Class View: ', () => {
         let data = {
             onlyState: false,
             target: 'valueTo',
-            valueN: 0.93
+            valueNumber: 0.93
         };
         view.changePosition(data);
         expect(view.head.element.style.left)
@@ -145,7 +145,7 @@ describe('Class View: ', () => {
         data = {
             onlyState: false,
             target: 'valueFrom',
-            valueN: 0.18
+            valueNumber: 0.18
         };
         view.changePosition(data);
         expect(view.head2.element.style.left)
@@ -153,7 +153,7 @@ describe('Class View: ', () => {
         data = {
             onlyState: false,
             target: 'valueFrom',
-            valueN: undefined
+            valueNumber: undefined
         };
         expect(() => {
             view.changePosition(data);
@@ -162,7 +162,7 @@ describe('Class View: ', () => {
         data = {
             onlyState: false,
             target: 'valueFrom',
-            valueN: 0.18
+            valueNumber: 0.18
         };
         delete view.head2;
         expect(() => {
@@ -229,7 +229,7 @@ describe('Class View: ', () => {
     test('func updateState is OK', () => {
         let data = {
             target: 'min',
-            valueN: 10,
+            valueNumber: 10,
             onlyState: true
         };
         view.updateState(data);
@@ -237,7 +237,7 @@ describe('Class View: ', () => {
             .toBe(10);
         data = {
             target: 'bubble',
-            valueB: false,
+            valueBoolean: false,
             onlyState: true
         };
         view.updateState(data);
@@ -245,7 +245,7 @@ describe('Class View: ', () => {
             .toBe(false);
         data = {
             target: 'direction',
-            valueS: 'vertical',
+            valueString: 'vertical',
             onlyState: true
         };
         view.updateState(data);
@@ -254,7 +254,7 @@ describe('Class View: ', () => {
         data = {
             onlyState: false,
             target: 'direction',
-            valueS: 'horizontal'
+            valueString: 'horizontal'
         };
         view.updateState(data);
         expect(view.state.direction)
