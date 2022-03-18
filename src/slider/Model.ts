@@ -3,13 +3,10 @@ import {State} from './types/types';
 import {NotifyData} from './types/types';
 
 class Model extends Observer {
-    private elem: HTMLElement;
-
     private readonly state: State;
 
     constructor(elem: HTMLElement, options: State) {
         super();
-        this.elem = elem;
         this.state = Object.assign({}, options);
     }
 
