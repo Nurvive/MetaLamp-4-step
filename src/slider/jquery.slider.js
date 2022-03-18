@@ -139,6 +139,15 @@ import {Slider} from './Slider';
             });
             return slider.getValueFrom();
         },
+        getStep: function () {
+            let slider;
+            sliders.forEach((x) => {
+                if (x.elem === this[0]) {
+                    slider = x;
+                }
+            });
+            return slider.getStep();
+        },
         changeMin: function (value) {
             let slider;
             sliders.forEach((x) => {

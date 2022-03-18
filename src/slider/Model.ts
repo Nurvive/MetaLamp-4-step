@@ -79,6 +79,10 @@ class Model extends Observer {
         this.state.step = value;
     }
 
+    get getStep(): number {
+        return this.state.step;
+    }
+
     set changeMax(value: number) {
         if (value < this.state.min || value <= this.state.valueFrom) {
             throw new Error('Максимум не может быть меньше минимума');

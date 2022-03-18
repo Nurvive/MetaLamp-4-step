@@ -51,7 +51,8 @@ class SliderTemplate {
         this.$verticalButton.on('click', this.handleVerticalButtonClick);
         this.$rangeButton.on('click', this.handleRangeButtonClick);
         if (!this.$rangeButton.is(':checked')) {
-            this.$fromInput.parent().addClass('slider-template__label_hide');
+            this.$fromInput.parent()
+                .addClass('slider-template__label_hide');
         }
         this.$stepInput.on('change', this.handleStepInputChange);
         this.$toInput.on('change', this.handleToInputChange);
@@ -75,15 +76,21 @@ class SliderTemplate {
     handleRangeButtonClick = (e: JQuery.ClickEvent): void => {
         if (e.target.checked) {
             this.slider.Slider('changeType', 'double');
-            this.$fromInput.parent().removeClass('slider-template__label_hide');
+            this.$fromInput.parent()
+                .removeClass('slider-template__label_hide');
         } else {
             this.slider.Slider('changeType', 'single');
-            this.$fromInput.parent().addClass('slider-template__label_hide');
+            this.$fromInput.parent()
+                .addClass('slider-template__label_hide');
         }
     };
 
     handleStepInputChange = (e: JQuery.ChangeEvent): void => {
-        this.slider.Slider('changeStep', parseFloat(e.target.value));
+        try {
+            this.slider.Slider('changeStep', parseFloat(e.target.value));
+        } catch (error) {
+            e.target.value = this.slider.Slider('getStep');
+        }
     };
 
     handleToInputChange = (e: JQuery.ChangeEvent): void => {
@@ -95,11 +102,19 @@ class SliderTemplate {
     };
 
     handleMaxInputChange = (e: JQuery.ChangeEvent): void => {
-        this.slider.Slider('changeMax', parseFloat(e.target.value));
+        try {
+            this.slider.Slider('changeMax', parseFloat(e.target.value));
+        } catch (error) {
+            e.target.value = this.slider.Slider('getMax');
+        }
     };
 
     handleMinInputChange = (e: JQuery.ChangeEvent): void => {
-        this.slider.Slider('changeMin', parseFloat(e.target.value));
+        try {
+            this.slider.Slider('changeMin', parseFloat(e.target.value));
+        } catch (error) {
+            e.target.value = this.slider.Slider('getMin');
+        }
     };
 }
 

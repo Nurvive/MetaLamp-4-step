@@ -85,6 +85,10 @@ class Slider {
     getValueFrom(): number {
         return this.model.getValueFrom;
     }
+
+    getStep(): number {
+        return this.model.getStep;
+    }
 }
 
 export {Slider};
