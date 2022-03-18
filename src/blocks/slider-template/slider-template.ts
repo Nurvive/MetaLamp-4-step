@@ -49,7 +49,7 @@ class SliderTemplate {
     init(): void {
         this.$bubbleButton.on('click', this.handleBubbleButtonClick);
         this.$verticalButton.on('click', this.handleVerticalButtonClick);
-        this.$rangeButton.on('click', this.handleRangeButton);
+        this.$rangeButton.on('click', this.handleRangeButtonClick);
         if (!this.$rangeButton.is(':checked')) {
             this.$fromInput.parent().addClass('slider-template__label_hide');
         }
@@ -72,7 +72,7 @@ class SliderTemplate {
         e.target.checked ? this.slider.Slider('changeOrientation', 'vertical') : this.slider.Slider('changeOrientation', 'horizontal');
     };
 
-    handleRangeButton = (e: JQuery.ClickEvent): void => {
+    handleRangeButtonClick = (e: JQuery.ClickEvent): void => {
         if (e.target.checked) {
             this.slider.Slider('changeType', 'double');
             this.$fromInput.parent().removeClass('slider-template__label_hide');
