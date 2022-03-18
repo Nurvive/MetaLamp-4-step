@@ -20,15 +20,13 @@ mixin slider-template({checkedButtons=[false,false,false]} = {})
                 span from
         div.slider-template__inner
             label
-                -const ch1 = checkedButtons[0]
-                input(type="checkbox" data-type='vertical' checked = ch1)
+                -const [isChecked1, isChecked2, isChecked3] = checkedButtons
+                input(type="checkbox" data-type='vertical' checked = isChecked1)
                 span vertical
             label
-                -const ch2 = checkedButtons[1]
-                input(type="checkbox" data-type='range' checked = ch2)
+                input(type="checkbox" data-type='range' checked = isChecked2)
                 span range
             label
-                -const ch3 = checkedButtons[2]
-                input(type="checkbox" data-type='bubble' checked = ch3)
+                input(type="checkbox" data-type='bubble' checked = isChecked3)
                 span bubble
         +slider()
