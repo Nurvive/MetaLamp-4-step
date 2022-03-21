@@ -1,6 +1,7 @@
 import './slider-template.scss';
 import '../../slider/jquery.slider.js';
 import {State} from '../../slider/types/types';
+import {rootLogger} from 'ts-jest';
 
 class SliderTemplate {
     private readonly element: JQuery;

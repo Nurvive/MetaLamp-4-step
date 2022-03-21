@@ -73,9 +73,9 @@ class Model extends Observer {
 
     set changeStep(value: number) {
         const stepIsValid = (val: number, max: number, min: number): boolean => {
-            return val < max - min && val !== 0;
+            return val < max - min && val > 0;
         };
-        if (!stepIsValid(value, this.state.max, this.state.min)) throw new Error('Шаг не может быть больше разницы максимума и минимума или равен нулю');
+        if (!stepIsValid(value, this.state.max, this.state.min)) throw new Error('Шаг не может быть больше разницы максимума и минимума или меньше нуля');
         this.state.step = value;
     }
 
