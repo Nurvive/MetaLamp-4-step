@@ -15,10 +15,9 @@ describe('Class Model: ', () => {
         onChangeFrom: function () {
         }
     };
-    const node = document.createElement('div');
-    let model = new Model(node, settings);
+    let model = new Model(settings);
     beforeEach(() => {
-        model = new Model(node, settings);
+        model = new Model(settings);
     });
     test('should be', () => {
         expect(model)

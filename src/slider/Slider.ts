@@ -14,7 +14,7 @@ class Slider {
 
     constructor(elem: HTMLElement, settings: State) {
         this.elem = elem;
-        this.model = new Model(this.elem, settings);
+        this.model = new Model(settings);
         this.view = new View(this.elem, settings);
         this.view.init();
         this.presenter = new Presenter(this.elem, this.model, this.view);
