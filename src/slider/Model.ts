@@ -29,7 +29,7 @@ class Model extends Observer {
             updatedProperty = 'valueFrom';
             updatedValue = this.calcUpdatedValue(data, updatedProperty);
         }
-
+        updatedValue = Number(updatedValue.toFixed(2));
         this.updateState({
             target: updatedProperty,
             valueNumber: updatedValue,
