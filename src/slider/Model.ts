@@ -84,7 +84,7 @@ class Model extends Observer {
     }
 
     set changeMax(value: number) {
-        if (value < this.state.min || value <= this.state.valueFrom) {
+        if (value < this.state.min) {
             throw new Error('Максимум не может быть меньше минимума');
         }
         this.updateState({
@@ -147,7 +147,7 @@ class Model extends Observer {
         if (this.state.type === 'single') return;
         this.updateState({
             target: 'valueFrom',
-            valueNumber: this.validValueFrom(value),
+            valueNumber: Number(this.validValueFrom(value).toFixed(2)),
             onlyState: true
         });
         this.notify({

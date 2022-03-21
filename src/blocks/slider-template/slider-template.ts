@@ -1,7 +1,6 @@
 import './slider-template.scss';
 import '../../slider/jquery.slider.js';
 import {State} from '../../slider/types/types';
-import {rootLogger} from 'ts-jest';
 
 class SliderTemplate {
     private readonly element: JQuery;
@@ -60,6 +59,7 @@ class SliderTemplate {
                 .addClass('slider-template__label_hide');
         }
         this.$stepInput?.on('change', this.handleStepInputChange);
+        this.$stepInput?.val(String(this.slider?.Slider('getStep')));
         this.$toInput?.on('change', this.handleToInputChange);
         this.$toInput?.val(String(this.slider?.Slider('getValueTo')));
         this.$fromInput?.on('change', this.handleFromInputChange);
