@@ -5,7 +5,7 @@ import {NotifyData} from './types/types';
 class Model extends Observer {
     private readonly state: State;
 
-    constructor(elem: HTMLElement, options: State) {
+    constructor(options: State) {
         super();
         this.state = Object.assign({}, options);
     }
