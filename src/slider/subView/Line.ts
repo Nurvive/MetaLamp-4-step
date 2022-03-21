@@ -30,19 +30,19 @@ class Line {
         this.type = type;
     }
 
-    progressValue(To: HTMLElement, From: HTMLElement | undefined): void {
+    progressValue(to: HTMLElement, from: HTMLElement | undefined): void {
         if (this.direction === 'horizontal') {
             if (this.type === 'single') {
-                this.progressBar.style.width = To.style.left;
-            } else if (From !== undefined) {
-                this.progressBar.style.width = `${parseInt(To.style.left, 10) - parseInt(From.style.left, 10)}%`;
-                this.progressBar.style.left = From.style.left;
+                this.progressBar.style.width = to.style.left;
+            } else if (from !== undefined) {
+                this.progressBar.style.width = `${parseInt(to.style.left, 10) - parseInt(from.style.left, 10)}%`;
+                this.progressBar.style.left = from.style.left;
             }
         } else if (this.type === 'single') {
-            this.progressBar.style.height = To.style.top;
-        } else if (From !== undefined) {
-            this.progressBar.style.height = `${parseInt(To.style.top, 10) - parseInt(From.style.top, 10)}%`;
-            this.progressBar.style.top = From.style.top;
+            this.progressBar.style.height = to.style.top;
+        } else if (from !== undefined) {
+            this.progressBar.style.height = `${parseInt(to.style.top, 10) - parseInt(from.style.top, 10)}%`;
+            this.progressBar.style.top = from.style.top;
         }
     }
 
