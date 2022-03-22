@@ -598,7 +598,8 @@ var _slider = require("./Slider");
             }, options);
             return this.each(function() {
                 const ths = $(this);
-                if (settings.step > settings.max - settings.min || settings.step === 0) throw new Error('Шаг не может быть больше разницы максимума и минимума или равен нулю');
+                if (settings.step > settings.max - settings.min) throw new Error('Шаг не может быть больше разницы максимума и минимума');
+                if (settings.step <= 0) throw new Error('Шаг должен быть больше нуля');
                 if (settings.valueTo > settings.max) throw new Error('Текущее значение не может быть больше максимума');
                 if (settings.valueFrom < settings.min) throw new Error('Текущее значение не может быть меньше минимума');
                 sliders.push(new _slider.Slider(ths[0], settings));
@@ -727,7 +728,7 @@ var _model = require("./Model");
 class Slider {
     constructor(elem, settings){
         this.elem = elem;
-        this.model = new _model.Model(this.elem, settings);
+        this.model = new _model.Model(settings);
         this.view = new _view.View(this.elem, settings);
         this.view.init();
         this.presenter = new _presenter.Presenter(this.elem, this.model, this.view);
@@ -806,7 +807,7 @@ class View extends _observer.Observer {
     constructor(elem, options){
         super();
         this.handleHeadStart = (e)=>{
-            const evt = View.getEvent(e); // Здесь нужен каст через 'as', так как TS не знает, что target это html объект
+            const evt = View.getEvent(e.detail.data); // Здесь нужен каст через 'as', так как TS не знает, что target это html объект
             const target = evt.target;
             const updatedHead = target.hasAttribute('data-valueFrom') ? 'valueFrom' : 'valueTo';
             const dataArray = [];
@@ -967,7 +968,7 @@ class View extends _observer.Observer {
         this.state.step = value;
     }
     set changeMax(value) {
-        if (value < this.state.min || value <= this.state.valueFrom) throw new Error('Максимум не может быть меньше минимума');
+        if (value < this.state.min) throw new Error('Максимум не может быть меньше минимума');
         this.updateState({
             target: 'max',
             valueNumber: value,
@@ -1018,15 +1019,8 @@ class View extends _observer.Observer {
         this.setup();
     }
     setup() {
-        if (this.state.type === 'double') {
-            if (this.head2 !== undefined) {
-                this.head2.element.addEventListener('mousedown', this.handleHeadStart);
-                this.head2.element.addEventListener('touchstart', this.handleHeadStart);
-            } else throw new Error('Head2 не существует');
-        }
-        this.head.element.addEventListener('mousedown', this.handleHeadStart);
-        this.head.element.addEventListener('touchstart', this.handleHeadStart);
-        this.scale.element.addEventListener('click', this.handleScaleClick);
+        this.elem.addEventListener('headStart', this.handleHeadStart);
+        this.elem.addEventListener('scaleClick', this.handleScaleClick);
     }
     calcHeadStartPosition(value) {
         return (value - this.state.min) / (this.state.max - this.state.min);
@@ -1036,7 +1030,7 @@ class View extends _observer.Observer {
         return event;
     }
     scaleClickData(event) {
-        const evt = View.getEvent(event);
+        const evt = View.getEvent(event.detail.data);
         const dataArray = [];
         if (this.state.direction === 'horizontal') {
             dataArray.push(this.line.getWidth);
@@ -1110,15 +1104,28 @@ var _headBubble = require("./HeadBubble");
 var _headBubbleDefault = parcelHelpers.interopDefault(_headBubble);
 class ViewHead {
     constructor(parent, direction, value, bubbleValue){
+        this.handleHeadStart = (e)=>{
+            const headEvent = new CustomEvent('headStart', {
+                detail: {
+                    data: e
+                }
+            });
+            this.parent.dispatchEvent(headEvent);
+        };
         this.parent = parent;
         this.direction = direction;
         this.element = document.createElement('div');
-        this.element.classList.add('slider__head');
-        this.direction === 'horizontal' ? this.element.classList.add('slider__head') : this.element.classList.add('slider__head', 'slider__head_vertical');
         this.bubble = new _headBubbleDefault.default(this.element);
-        this.parent.append(this.element);
         this.updatePosition(value);
         this.updateBubble(bubbleValue);
+        this.init();
+    }
+    init() {
+        this.element.classList.add('slider__head');
+        this.direction === 'horizontal' ? this.element.classList.add('slider__head') : this.element.classList.add('slider__head', 'slider__head_vertical');
+        this.parent.append(this.element);
+        this.element.addEventListener('mousedown', this.handleHeadStart);
+        this.element.addEventListener('touchstart', this.handleHeadStart);
     }
     removeHead() {
         this.element.remove();
@@ -1177,14 +1184,22 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 class Scale {
     constructor(parent, direction, min, max){
+        this.handleScaleClick = (e)=>{
+            const headEvent = new CustomEvent('scaleClick', {
+                detail: {
+                    data: e
+                }
+            });
+            this.parent.dispatchEvent(headEvent);
+        };
         this.parent = parent;
         this.direction = direction;
         this.element = document.createElement('div');
-        this.direction === 'horizontal' ? this.element.classList.add('slider__scale') : this.element.classList.add('slider__scale', 'slider__scale_vertical');
-        this.parent.append(this.element);
         this.init(min, max);
     }
     init(min, max) {
+        this.direction === 'horizontal' ? this.element.classList.add('slider__scale') : this.element.classList.add('slider__scale', 'slider__scale_vertical');
+        this.parent.append(this.element);
         const step = (max - min) / 4;
         for(let i = 0; i <= 100; i += 5){
             const dash = document.createElement('div');
@@ -1222,6 +1237,7 @@ class Scale {
                 this.element.append(dash);
             }
         }
+        this.element.addEventListener('click', this.handleScaleClick);
     }
     removeScale() {
         this.element.remove();
@@ -1246,11 +1262,30 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 class Line {
     constructor(parent, direction, type){
+        this.handleHeadStart = (e)=>{
+            const headEvent = new CustomEvent('headStart', {
+                detail: {
+                    data: e.detail.data
+                }
+            });
+            this.parent.dispatchEvent(headEvent);
+        };
+        this.handleScaleClick = (e)=>{
+            const headEvent = new CustomEvent('scaleClick', {
+                detail: {
+                    data: e.detail.data
+                }
+            });
+            this.parent.dispatchEvent(headEvent);
+        };
         this.parent = parent;
         this.direction = direction;
         this.type = type;
         this.element = document.createElement('div');
         this.progressBar = document.createElement('span');
+        this.init();
+    }
+    init() {
         if (this.direction === 'horizontal') {
             this.element.classList.add('slider__line');
             this.progressBar.classList.add('slider__line-progress');
@@ -1260,21 +1295,23 @@ class Line {
         }
         this.element.append(this.progressBar);
         this.parent.append(this.element);
+        this.element.addEventListener('headStart', this.handleHeadStart);
+        this.element.addEventListener('scaleClick', this.handleScaleClick);
     }
     set setType(type) {
         this.type = type;
     }
-    progressValue(To, From) {
+    progressValue(to, from) {
         if (this.direction === 'horizontal') {
-            if (this.type === 'single') this.progressBar.style.width = To.style.left;
-            else if (From !== undefined) {
-                this.progressBar.style.width = `${parseInt(To.style.left, 10) - parseInt(From.style.left, 10)}%`;
-                this.progressBar.style.left = From.style.left;
+            if (this.type === 'single') this.progressBar.style.width = to.style.left;
+            else if (from !== undefined) {
+                this.progressBar.style.width = `${parseInt(to.style.left, 10) - parseInt(from.style.left, 10)}%`;
+                this.progressBar.style.left = from.style.left;
             }
-        } else if (this.type === 'single') this.progressBar.style.height = To.style.top;
-        else if (From !== undefined) {
-            this.progressBar.style.height = `${parseInt(To.style.top, 10) - parseInt(From.style.top, 10)}%`;
-            this.progressBar.style.top = From.style.top;
+        } else if (this.type === 'single') this.progressBar.style.height = to.style.top;
+        else if (from !== undefined) {
+            this.progressBar.style.height = `${parseInt(to.style.top, 10) - parseInt(from.style.top, 10)}%`;
+            this.progressBar.style.top = from.style.top;
         }
     }
     removeLine() {
@@ -1318,7 +1355,7 @@ parcelHelpers.export(exports, "Model", ()=>Model
 );
 var _observer = require("./Observer");
 class Model extends _observer.Observer {
-    constructor(elem, options){
+    constructor(options){
         super();
         this.isValueTo = (updatedValue)=>(updatedValue - this.state.valueFrom) / (this.state.valueTo - this.state.valueFrom) >= 0.5
         ;
@@ -1341,6 +1378,7 @@ class Model extends _observer.Observer {
             updatedProperty = 'valueFrom';
             updatedValue = this.calcUpdatedValue(data, updatedProperty);
         }
+        updatedValue = Number(updatedValue.toFixed(2));
         this.updateState({
             target: updatedProperty,
             valueNumber: updatedValue,
@@ -1377,16 +1415,16 @@ class Model extends _observer.Observer {
     }
     set changeStep(value) {
         const stepIsValid = (val, max, min)=>{
-            return val < max - min && val !== 0;
+            return val < max - min && val > 0;
         };
-        if (!stepIsValid(value, this.state.max, this.state.min)) throw new Error('Шаг не может быть больше разницы максимума и минимума или равен нулю');
+        if (!stepIsValid(value, this.state.max, this.state.min)) throw new Error('Шаг не может быть больше разницы максимума и минимума или меньше нуля');
         this.state.step = value;
     }
     get getStep() {
         return this.state.step;
     }
     set changeMax(value) {
-        if (value < this.state.min || value <= this.state.valueFrom) throw new Error('Максимум не может быть меньше минимума');
+        if (value < this.state.min) throw new Error('Максимум не может быть меньше минимума');
         this.updateState({
             target: 'max',
             valueNumber: value,
@@ -1435,7 +1473,7 @@ class Model extends _observer.Observer {
         if (this.state.type === 'single') return;
         this.updateState({
             target: 'valueFrom',
-            valueNumber: this.validValueFrom(value),
+            valueNumber: Number(this.validValueFrom(value).toFixed(2)),
             onlyState: true
         });
         this.notify({
@@ -1610,6 +1648,7 @@ class SliderTemplate {
         this.$rangeButton?.on('click', this.handleRangeButtonClick);
         if (!this.$rangeButton?.is(':checked')) this.$fromInput?.parent().addClass('slider-template__label_hide');
         this.$stepInput?.on('change', this.handleStepInputChange);
+        this.$stepInput?.val(String(this.slider?.Slider('getStep')));
         this.$toInput?.on('change', this.handleToInputChange);
         this.$toInput?.val(String(this.slider?.Slider('getValueTo')));
         this.$fromInput?.on('change', this.handleFromInputChange);
