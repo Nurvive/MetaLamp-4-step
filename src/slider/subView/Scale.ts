@@ -9,14 +9,14 @@ class Scale {
         this.parent = parent;
         this.direction = direction;
         this.element = document.createElement('div');
-        this.direction === 'horizontal'
-            ? this.element.classList.add('slider__scale')
-            : this.element.classList.add('slider__scale', 'slider__scale_vertical');
-        this.parent.append(this.element);
         this.init(min, max);
     }
 
     init(min: number, max: number): void {
+        this.direction === 'horizontal'
+            ? this.element.classList.add('slider__scale')
+            : this.element.classList.add('slider__scale', 'slider__scale_vertical');
+        this.parent.append(this.element);
         const step = (max - min) / 4;
         for (let i = 0; i <= 100; i += 5) {
             const dash = document.createElement('div');
@@ -57,7 +57,17 @@ class Scale {
                 this.element.append(dash);
             }
         }
+        this.element.addEventListener('click', this.handleScaleClick);
     }
+
+    handleScaleClick = (e: MouseEvent | TouchEvent): void => {
+        const headEvent = new CustomEvent('scaleClick', {
+            detail: {
+                data: e
+            }
+        });
+        this.parent.dispatchEvent(headEvent);
+    };
 
     removeScale(): void {
         this.element.remove();

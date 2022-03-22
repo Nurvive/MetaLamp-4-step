@@ -7,4 +7,8 @@ declare global {
         Slider(value: string, value2: string): void;
         Slider(value: string, value2: number): void;
     }
+    interface HTMLElementEventMap {
+        'headStart': CustomEvent<{data: MouseEvent | TouchEvent}>;
+        'scaleClick': CustomEvent<{data: MouseEvent | TouchEvent}>;
+    }
 }

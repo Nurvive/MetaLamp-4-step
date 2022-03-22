@@ -14,15 +14,30 @@ class ViewHead {
         this.parent = parent;
         this.direction = direction;
         this.element = document.createElement('div');
+        this.bubble = new HeadBubble(this.element);
+        this.updatePosition(value);
+        this.updateBubble(bubbleValue);
+        this.init();
+    }
+
+    init(): void {
         this.element.classList.add('slider__head');
         this.direction === 'horizontal'
             ? this.element.classList.add('slider__head')
             : this.element.classList.add('slider__head', 'slider__head_vertical');
-        this.bubble = new HeadBubble(this.element);
         this.parent.append(this.element);
-        this.updatePosition(value);
-        this.updateBubble(bubbleValue);
+        this.element.addEventListener('mousedown', this.handleHeadStart);
+        this.element.addEventListener('touchstart', this.handleHeadStart);
     }
+
+    handleHeadStart = (e: MouseEvent | TouchEvent): void => {
+        const headEvent = new CustomEvent('headStart', {
+            detail: {
+                data: e
+            }
+        });
+        this.parent.dispatchEvent(headEvent);
+    };
 
     removeHead(): boolean {
         this.element.remove();

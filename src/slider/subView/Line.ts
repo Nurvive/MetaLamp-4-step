@@ -15,6 +15,10 @@ class Line {
         this.type = type;
         this.element = document.createElement('div');
         this.progressBar = document.createElement('span');
+        this.init();
+    }
+
+    init(): void {
         if (this.direction === 'horizontal') {
             this.element.classList.add('slider__line');
             this.progressBar.classList.add('slider__line-progress');
@@ -24,7 +28,27 @@ class Line {
         }
         this.element.append(this.progressBar);
         this.parent.append(this.element);
+        this.element.addEventListener('headStart', this.handleHeadStart);
+        this.element.addEventListener('scaleClick', this.handleScaleClick);
     }
+
+    handleHeadStart = (e: CustomEvent): void => {
+        const headEvent = new CustomEvent('headStart', {
+            detail: {
+                data: e.detail.data
+            }
+        });
+        this.parent.dispatchEvent(headEvent);
+    };
+
+    handleScaleClick = (e: CustomEvent): void => {
+        const headEvent = new CustomEvent('scaleClick', {
+            detail: {
+                data: e.detail.data
+            }
+        });
+        this.parent.dispatchEvent(headEvent);
+    };
 
     set setType(type: string) {
         this.type = type;

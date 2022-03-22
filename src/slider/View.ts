@@ -208,17 +208,8 @@ class View extends Observer {
     }
 
     private setup(): void {
-        if (this.state.type === 'double') {
-            if (this.head2 !== undefined) {
-                this.head2.element.addEventListener('mousedown', this.handleHeadStart);
-                this.head2.element.addEventListener('touchstart', this.handleHeadStart);
-            } else {
-                throw new Error('Head2 не существует');
-            }
-        }
-        this.head.element.addEventListener('mousedown', this.handleHeadStart);
-        this.head.element.addEventListener('touchstart', this.handleHeadStart);
-        this.scale.element.addEventListener('click', this.handleScaleClick);
+        this.elem.addEventListener('headStart', this.handleHeadStart);
+        this.elem.addEventListener('scaleClick', this.handleScaleClick);
     }
 
     private calcHeadStartPosition(value: number): number {
@@ -232,8 +223,8 @@ class View extends Observer {
         return event;
     }
 
-    private handleHeadStart = (e: MouseEvent | TouchEvent): Array<number> => {
-        const evt: MouseEvent | Touch = View.getEvent(e);
+    private handleHeadStart = (e: CustomEvent): Array<number> => {
+        const evt: MouseEvent | Touch = View.getEvent(e.detail.data);
         // Здесь нужен каст через 'as', так как TS не знает, что target это html объект
         const target = evt.target as Element;
         const updatedHead: string = target.hasAttribute('data-valueFrom') ? 'valueFrom' : 'valueTo';
@@ -253,7 +244,7 @@ class View extends Observer {
         document.addEventListener('touchend', this.handleSwipeEnd);
         document.addEventListener('mouseup', this.handleSwipeEnd);
         return dataArray;
-    }
+    };
 
     private swipeAction = (event: MouseEvent | TouchEvent, dataArray: Array<number>,
         updatedHead: string):
@@ -287,7 +278,7 @@ class View extends Observer {
         return true;
     };
 
-    private handleScaleClick = (event: MouseEvent): Array<number> => {
+    private handleScaleClick = (event: CustomEvent): Array<number> => {
         const dataArray: Array<number> = this.scaleClickData(event);
 
         this.notify({
@@ -296,10 +287,10 @@ class View extends Observer {
             onlyState: false
         });
         return dataArray;
-    }
+    };
 
-    private scaleClickData(event: MouseEvent | TouchEvent): Array<number> {
-        const evt: MouseEvent | Touch = View.getEvent(event);
+    private scaleClickData(event: CustomEvent): Array<number> {
+        const evt: MouseEvent | Touch = View.getEvent(event.detail.data);
         const dataArray: Array<number> = [];
         if (this.state.direction === 'horizontal') {
             dataArray.push(this.line.getWidth);
