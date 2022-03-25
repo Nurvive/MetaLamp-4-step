@@ -147,7 +147,8 @@ class Model extends Observer {
         if (this.state.type === 'single') return;
         this.updateState({
             target: 'valueFrom',
-            valueNumber: Number(this.validValueFrom(value).toFixed(2)),
+            valueNumber: Number(this.validValueFrom(value)
+                .toFixed(2)),
             onlyState: true
         });
         this.notify({
@@ -257,17 +258,13 @@ class Model extends Observer {
     }
 
     private calcUpdatedValue(data: NotifyData, updatedProperty: string): number {
-        let halfHeadWidth = 0;
-        if (data.valueArray !== undefined) {
-            halfHeadWidth = data.valueArray[5];
-        } else {
+        if (data.valueArray === undefined) {
             throw new Error('Ожидался массив значений для Model');
         }
-        const lineParameter = data.valueArray[2];
-        const lineCoordinate = data.valueArray[3];
-        const HeadCoordinate = data.valueArray[0];
-        const shift = data.valueArray[1] - HeadCoordinate;
-        let newPosition = (data.valueArray[4] - shift - lineCoordinate + halfHeadWidth)
+        const [headCoordinate, clientCoordinate, lineParameter,
+            lineCoordinate, swipeClient, halfHeadWidth] = data.valueArray;
+        const shift = clientCoordinate - headCoordinate;
+        let newPosition = (swipeClient - shift - lineCoordinate + halfHeadWidth)
             / lineParameter;
         newPosition = Model.moreThan0LessThan1(newPosition);
         const updatedValue = this.calcValue(newPosition, updatedProperty);
@@ -278,9 +275,8 @@ class Model extends Observer {
         if (data.valueArray === undefined) {
             throw new Error('Ожидался массив значений для Model');
         }
-        const lineParameter = data.valueArray[0];
-        const lineCoordinate = data.valueArray[1];
-        let newPositionRelative = (data.valueArray[2] - lineCoordinate) / lineParameter;
+        const [lineParameter, lineCoordinate, clientCoordinate] = data.valueArray;
+        let newPositionRelative = (clientCoordinate - lineCoordinate) / lineParameter;
         newPositionRelative = Model.moreThan0LessThan1(newPositionRelative);
         return this.calcValue(newPositionRelative);
     }
