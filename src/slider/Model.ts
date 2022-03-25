@@ -226,35 +226,28 @@ class Model extends Observer {
     }
 
     private validValueTo(valueTo: number): number {
-        let value: number = valueTo;
-        if (this.state.type === 'single') {
-            if (value > this.state.max) {
-                value = this.state.max;
-            } else if (value < this.state.min) {
-                value = this.state.min;
-            }
-        } else if (this.state.type === 'double') {
-            if (value > this.state.max) {
-                value = this.state.max;
-            } else if (value <= this.state.valueFrom) {
-                value = this.state.valueFrom + this.state.step;
+        if (valueTo > this.state.max) {
+            return this.state.max;
+        }
+        if (valueTo < this.state.min) {
+            return this.state.min;
+        }
+        if (this.state.type === 'double') {
+            if (valueTo <= this.state.valueFrom) {
+                return this.state.valueFrom + this.state.step;
             }
         }
-        return value;
+        return valueTo;
     }
 
     private validValueFrom(valueFrom: number): number {
-        let value: number = valueFrom;
-        if (this.state.type === 'single') {
-            value = 0;
-        } else if (this.state.type === 'double') {
-            if (value < this.state.min) {
-                value = this.state.min;
-            } else if (value >= this.state.valueTo) {
-                value = this.state.valueTo - this.state.step;
-            }
+        if (valueFrom < this.state.min) {
+            return this.state.min;
         }
-        return value;
+        if (valueFrom >= this.state.valueTo) {
+            return this.state.valueTo - this.state.step;
+        }
+        return valueFrom;
     }
 
     private calcUpdatedValue(data: NotifyData, updatedProperty: string): number {
