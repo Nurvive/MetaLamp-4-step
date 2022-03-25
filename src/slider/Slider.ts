@@ -17,7 +17,7 @@ class Slider {
         this.model = new Model(settings);
         this.view = new View(this.elem, settings);
         this.view.init();
-        this.presenter = new Presenter(this.elem, this.model, this.view);
+        this.presenter = new Presenter(this.model, this.view);
     }
 
     hideBubble(): boolean {

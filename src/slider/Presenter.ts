@@ -6,7 +6,7 @@ class Presenter {
 
     view: View;
 
-    constructor(elem: HTMLElement, model: Model, view: View) {
+    constructor(model: Model, view: View) {
         this.model = model;
         this.view = view;
         this.view.subscribe(this.model.updateState.bind(this.model));
