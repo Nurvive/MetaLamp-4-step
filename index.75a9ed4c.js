@@ -731,7 +731,7 @@ class Slider {
         this.model = new _model.Model(settings);
         this.view = new _view.View(this.elem, settings);
         this.view.init();
-        this.presenter = new _presenter.Presenter(this.elem, this.model, this.view);
+        this.presenter = new _presenter.Presenter(this.model, this.view);
     }
     hideBubble() {
         this.view.hideBubble();
@@ -1338,7 +1338,7 @@ parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Presenter", ()=>Presenter
 );
 class Presenter {
-    constructor(elem, model, view){
+    constructor(model, view){
         this.model = model;
         this.view = view;
         this.view.subscribe(this.model.updateState.bind(this.model));
@@ -1528,43 +1528,31 @@ class Model extends _observer.Observer {
         return Number(newValue.toFixed(accuracy));
     }
     validValueTo(valueTo) {
-        let value = valueTo;
-        if (this.state.type === 'single') {
-            if (value > this.state.max) value = this.state.max;
-            else if (value < this.state.min) value = this.state.min;
-        } else if (this.state.type === 'double') {
-            if (value > this.state.max) value = this.state.max;
-            else if (value <= this.state.valueFrom) value = this.state.valueFrom + this.state.step;
+        if (valueTo > this.state.max) return this.state.max;
+        if (valueTo < this.state.min) return this.state.min;
+        if (this.state.type === 'double') {
+            if (valueTo <= this.state.valueFrom) return this.state.valueFrom + this.state.step;
         }
-        return value;
+        return valueTo;
     }
     validValueFrom(valueFrom) {
-        let value = valueFrom;
-        if (this.state.type === 'single') value = 0;
-        else if (this.state.type === 'double') {
-            if (value < this.state.min) value = this.state.min;
-            else if (value >= this.state.valueTo) value = this.state.valueTo - this.state.step;
-        }
-        return value;
+        if (valueFrom < this.state.min) return this.state.min;
+        if (valueFrom >= this.state.valueTo) return this.state.valueTo - this.state.step;
+        return valueFrom;
     }
     calcUpdatedValue(data, updatedProperty) {
-        let halfHeadWidth = 0;
-        if (data.valueArray !== undefined) halfHeadWidth = data.valueArray[5];
-        else throw new Error('Ожидался массив значений для Model');
-        const lineParameter = data.valueArray[2];
-        const lineCoordinate = data.valueArray[3];
-        const HeadCoordinate = data.valueArray[0];
-        const shift = data.valueArray[1] - HeadCoordinate;
-        let newPosition = (data.valueArray[4] - shift - lineCoordinate + halfHeadWidth) / lineParameter;
+        if (data.valueArray === undefined) throw new Error('Ожидался массив значений для Model');
+        const [headCoordinate, clientCoordinate, lineParameter, lineCoordinate, swipeClient, halfHeadWidth] = data.valueArray;
+        const shift = clientCoordinate - headCoordinate;
+        let newPosition = (swipeClient - shift - lineCoordinate + halfHeadWidth) / lineParameter;
         newPosition = Model.moreThan0LessThan1(newPosition);
         const updatedValue = this.calcValue(newPosition, updatedProperty);
         return updatedProperty === 'valueTo' ? this.validValueTo(updatedValue) : this.validValueFrom(updatedValue);
     }
     calcUpdatedValueRelative(data) {
         if (data.valueArray === undefined) throw new Error('Ожидался массив значений для Model');
-        const lineParameter = data.valueArray[0];
-        const lineCoordinate = data.valueArray[1];
-        let newPositionRelative = (data.valueArray[2] - lineCoordinate) / lineParameter;
+        const [lineParameter, lineCoordinate, clientCoordinate] = data.valueArray;
+        let newPositionRelative = (clientCoordinate - lineCoordinate) / lineParameter;
         newPositionRelative = Model.moreThan0LessThan1(newPositionRelative);
         return this.calcValue(newPositionRelative);
     }
