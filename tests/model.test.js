@@ -100,10 +100,6 @@ describe('Class Model: ', () => {
         expect(model['validValueFrom'](-1))
             .toBe(0);
     });
-    test('func single validValueFrom is OK', () => {
-        expect(model['validValueFrom'](91))
-            .toBe(0);
-    });
     test('setter changeOrientation is OK', () => {
         model.changeOrientation = 'vertical';
         expect(model.state.direction)

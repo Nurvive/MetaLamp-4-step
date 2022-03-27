@@ -18,9 +18,9 @@ describe('Class Presenter: ', () => {
         }
     };
     const node = document.createElement('div');
-    const model = new Model(node, settings);
+    const model = new Model(settings);
     const view = new View(node, settings);
-    const presenter = new Presenter(node, model, view);
+    const presenter = new Presenter(model, view);
     test('should be', () => {
         expect(presenter)
             .toBeDefined();
