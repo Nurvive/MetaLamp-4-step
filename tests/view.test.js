@@ -198,7 +198,7 @@ describe('Class View: ', () => {
             view
                 .changeMax = -1;
         })
-            .toThrow('Максимум не может быть меньше минимума');
+            .toThrow('Максимум не может быть меньше или равен минимуму');
     });
     test('func changeMin is OK', () => {
         view.changeMin = 50;
@@ -211,7 +211,7 @@ describe('Class View: ', () => {
             view
                 .changeMin = 150;
         })
-            .toThrow('Минимум не может быть больше максимума');
+            .toThrow('Минимум не может быть больше или равен максимуму');
     });
     test('func hideBubble is OK', () => {
         view.hideBubble();

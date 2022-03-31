@@ -173,7 +173,7 @@ describe('Class Model: ', () => {
             model
                 .changeMax = -1;
         })
-            .toThrow('Максимум не может быть меньше минимума');
+            .toThrow('Максимум не может быть меньше или равен минимуму');
     });
     test('setter changeMin is OK', () => {
         model.changeMin = 50;
@@ -186,7 +186,7 @@ describe('Class Model: ', () => {
             model
                 .changeMin = 150;
         })
-            .toThrow('Минимум не может быть больше максимума');
+            .toThrow('Минимум не может быть больше или равен максимуму');
         model.state.type = 'double';
         model.state.valueFrom = 15;
         model.changeMin = 20;
