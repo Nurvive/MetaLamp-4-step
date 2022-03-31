@@ -140,8 +140,8 @@ class View extends Observer {
     }
 
     set changeMax(value: number) {
-        if (value < this.state.min) {
-            throw new Error('Максимум не может быть меньше минимума');
+        if (value <= this.state.min) {
+            throw new Error('Максимум не может быть меньше или равен минимуму');
         }
         this.updateState({
             target: 'max',
@@ -156,8 +156,8 @@ class View extends Observer {
     }
 
     set changeMin(value: number) {
-        if (value > this.state.max || value >= this.state.valueTo) {
-            throw new Error('Минимум не может быть больше максимума');
+        if (value >= this.state.max || value >= this.state.valueTo) {
+            throw new Error('Минимум не может быть больше или равен максимуму');
         }
         this.updateState({
             target: 'min',
