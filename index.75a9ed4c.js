@@ -968,7 +968,7 @@ class View extends _observer.Observer {
         this.state.step = value;
     }
     set changeMax(value) {
-        if (value < this.state.min) throw new Error('Максимум не может быть меньше минимума');
+        if (value <= this.state.min) throw new Error('Максимум не может быть меньше или равен минимуму');
         this.updateState({
             target: 'max',
             valueNumber: value,
@@ -981,7 +981,7 @@ class View extends _observer.Observer {
         this.reInit();
     }
     set changeMin(value) {
-        if (value > this.state.max || value >= this.state.valueTo) throw new Error('Минимум не может быть больше максимума');
+        if (value >= this.state.max || value >= this.state.valueTo) throw new Error('Минимум не может быть больше или равен максимуму');
         this.updateState({
             target: 'min',
             valueNumber: value,
@@ -1424,7 +1424,7 @@ class Model extends _observer.Observer {
         return this.state.step;
     }
     set changeMax(value) {
-        if (value < this.state.min) throw new Error('Максимум не может быть меньше минимума');
+        if (value <= this.state.min) throw new Error('Максимум не может быть меньше или равен минимуму');
         this.updateState({
             target: 'max',
             valueNumber: value,
@@ -1436,7 +1436,7 @@ class Model extends _observer.Observer {
         return this.state.max;
     }
     set changeMin(value) {
-        if (value > this.state.max || value >= this.state.valueTo) throw new Error('Минимум не может быть больше максимума');
+        if (value >= this.state.max || value >= this.state.valueTo) throw new Error('Минимум не может быть больше или равен максимуму');
         this.updateState({
             target: 'min',
             valueNumber: value,
