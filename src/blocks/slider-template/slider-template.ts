@@ -29,14 +29,14 @@ class SliderTemplate {
     }
 
     init(settings: State): void {
-        this.$bubbleButton = $(this.element.find('input[data-type="bubble"]'));
-        this.$verticalButton = $(this.element.find('input[data-type="vertical"]'));
-        this.$rangeButton = $(this.element.find('input[data-type="range"]'));
-        this.$stepInput = $(this.element.find('input[data-type="step"]'));
-        this.$toInput = $(this.element.find('input[data-type="to"]'));
-        this.$fromInput = $(this.element.find('input[data-type="from"]'));
-        this.$maxInput = $(this.element.find('input[data-type="max"]'));
-        this.$minInput = $(this.element.find('input[data-type="min"]'));
+        this.$bubbleButton = $(this.element.find('.slider-template__inner-input-bubble'));
+        this.$verticalButton = $(this.element.find('.slider-template__inner-input-vertical'));
+        this.$rangeButton = $(this.element.find('.slider-template__inner-input-range'));
+        this.$stepInput = $(this.element.find('.slider-template__inner-input-step'));
+        this.$toInput = $(this.element.find('.slider-template__inner-input-to'));
+        this.$fromInput = $(this.element.find('.slider-template__inner-input-from'));
+        this.$maxInput = $(this.element.find('.slider-template__inner-input-max'));
+        this.$minInput = $(this.element.find('.slider-template__inner-input-min'));
         const options = Object.assign(settings, {
             onChangeTo: (value: number) => {
                 this.$toInput?.val(value);
