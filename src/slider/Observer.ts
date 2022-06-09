@@ -1,17 +1,19 @@
 import {NotifyData} from './types/types';
 
+type ObserverItem = (data: NotifyData) => void;
+
 class Observer {
-    observers: Array<(data: NotifyData) => void>
+    observers: Array<ObserverItem>
 
     constructor() {
         this.observers = [];
     }
 
-    subscribe(observer: (data: NotifyData) => void): void {
+    subscribe(observer: ObserverItem): void {
         this.observers.push(observer);
     }
 
-    unsubscribe(observer: (data: NotifyData) => void): void {
+    unsubscribe(observer: ObserverItem): void {
         this.observers = this.observers.filter((x) => x !== observer);
     }
 
