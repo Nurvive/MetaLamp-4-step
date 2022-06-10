@@ -21,7 +21,6 @@ interface NotifyData {
     valueBoolean?: boolean;
     valueArray?: Array<number>;
     target: string;
-    onlyState?: boolean;
 }
 
 export {NotifyData, State};

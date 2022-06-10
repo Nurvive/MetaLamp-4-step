@@ -11,7 +11,6 @@ class Model extends Observer {
     }
 
     calcPosition(data: NotifyData): void {
-        if (data.onlyState) return;
         let updatedValue: number;
         let updatedProperty: string;
         if (data.target === 'valueTo') {
@@ -32,36 +31,31 @@ class Model extends Observer {
         updatedValue = Number(updatedValue.toFixed(2));
         this.updateState({
             target: updatedProperty,
-            valueNumber: updatedValue,
-            onlyState: true
+            valueNumber: updatedValue
         });
-        this.notify({
+        this.notify('state', {
             target: updatedProperty,
-            valueNumber: updatedValue,
-            onlyState: true
+            valueNumber: updatedValue
         });
         let position = Model.getValueRelative(updatedValue, this.state.min, this.state.max);
         position = Model.moreThan0LessThan1(position);
-        this.notify({
+        this.notify('default', {
             target: updatedProperty,
-            valueNumber: position,
-            onlyState: false
+            valueNumber: position
         });
     }
 
     set changeOrientation(value: string) {
         this.updateState({
             target: 'direction',
-            valueString: value,
-            onlyState: true
+            valueString: value
         });
     }
 
     set changeType(value: string) {
         this.updateState({
             target: 'type',
-            valueString: value,
-            onlyState: true
+            valueString: value
         });
         if (this.state.min > this.state.valueFrom) {
             this.changeFrom = this.state.min;
@@ -89,8 +83,7 @@ class Model extends Observer {
         }
         this.updateState({
             target: 'max',
-            valueNumber: value,
-            onlyState: true
+            valueNumber: value
         });
         if (value < this.state.valueTo) {
             this.changeTo = value;
@@ -107,8 +100,7 @@ class Model extends Observer {
         }
         this.updateState({
             target: 'min',
-            valueNumber: value,
-            onlyState: true
+            valueNumber: value
         });
         if (this.state.type === 'double' && value > this.state.valueFrom) {
             this.changeFrom = value;
@@ -122,20 +114,17 @@ class Model extends Observer {
     set changeTo(value: number) {
         this.updateState({
             target: 'valueTo',
-            valueNumber: this.validValueTo(value),
-            onlyState: true
+            valueNumber: this.validValueTo(value)
         });
-        this.notify({
+        this.notify('state', {
             valueNumber: this.state.valueTo,
-            target: 'valueTo',
-            onlyState: true
+            target: 'valueTo'
         });
         let position = Model.getValueRelative(this.state.valueTo, this.state.min, this.state.max);
         position = Model.moreThan0LessThan1(position);
-        this.notify({
+        this.notify('default', {
             valueNumber: position,
-            target: 'valueTo',
-            onlyState: false
+            target: 'valueTo'
         });
     }
 
@@ -148,20 +137,17 @@ class Model extends Observer {
         this.updateState({
             target: 'valueFrom',
             valueNumber: Number(this.validValueFrom(value)
-                .toFixed(2)),
-            onlyState: true
+                .toFixed(2))
         });
-        this.notify({
+        this.notify('state', {
             valueNumber: this.state.valueFrom,
-            target: 'valueFrom',
-            onlyState: true
+            target: 'valueFrom'
         });
         let position = Model.getValueRelative(this.state.valueFrom, this.state.min, this.state.max);
         position = Model.moreThan0LessThan1(position);
-        this.notify({
+        this.notify('default', {
             valueNumber: position,
-            target: 'valueFrom',
-            onlyState: false
+            target: 'valueFrom'
         });
     }
 
@@ -170,7 +156,6 @@ class Model extends Observer {
     }
 
     updateState(data: NotifyData): void {
-        if (!data.onlyState) return;
         if (typeof this.state[data.target] === 'string') {
             this.state[data.target] = data.valueString;
         } else if (typeof this.state[data.target] === 'number') {

@@ -53,7 +53,6 @@ class View extends Observer {
     }
 
     changePosition(data: NotifyData): void {
-        if (data.onlyState) return;
         let position = 0;
         if (data.valueNumber !== undefined) {
             position = data.valueNumber;
@@ -80,38 +79,33 @@ class View extends Observer {
     hideBubble(): void {
         this.updateState({
             target: 'bubble',
-            valueBoolean: false,
-            onlyState: true
+            valueBoolean: false
         });
         this.head.hideBubble();
         this.head2?.hideBubble();
-        this.notify({
+        this.notify('state', {
             target: 'bubble',
-            valueBoolean: false,
-            onlyState: true
+            valueBoolean: false
         });
     }
 
     showBubble(): void {
         this.updateState({
             target: 'bubble',
-            valueBoolean: true,
-            onlyState: true
+            valueBoolean: true
         });
         this.head.showBubble();
         this.head2?.showBubble();
-        this.notify({
+        this.notify('state', {
             target: 'bubble',
-            valueBoolean: true,
-            onlyState: true
+            valueBoolean: true
         });
     }
 
     set changeOrientation(value: string) {
         this.updateState({
             target: 'direction',
-            valueString: value,
-            onlyState: true
+            valueString: value
         });
         this.head.removeHead();
         this.head2?.removeHead();
@@ -123,8 +117,7 @@ class View extends Observer {
     set changeType(value: string) {
         this.updateState({
             target: 'type',
-            valueString: value,
-            onlyState: true
+            valueString: value
         });
         this.head.removeHead();
         this.head2?.removeHead();
@@ -145,8 +138,7 @@ class View extends Observer {
         }
         this.updateState({
             target: 'max',
-            valueNumber: value,
-            onlyState: true
+            valueNumber: value
         });
         this.head.removeHead();
         this.head2?.removeHead();
@@ -161,8 +153,7 @@ class View extends Observer {
         }
         this.updateState({
             target: 'min',
-            valueNumber: value,
-            onlyState: true
+            valueNumber: value
         });
         this.head.removeHead();
         this.head2?.removeHead();
@@ -172,7 +163,6 @@ class View extends Observer {
     }
 
     updateState(data: NotifyData): void {
-        if (!data.onlyState) return;
         if (typeof this.state[data.target] === 'string') {
             this.state[data.target] = data.valueString;
         } else if (typeof this.state[data.target] === 'number') {
@@ -261,10 +251,9 @@ class View extends Observer {
             dataArray.push(evtSwipe.clientY);
         }
         dataArray.push(this.head.getWidth / 2);
-        this.notify({
+        this.notify('default', {
             valueArray: dataArray.slice(),
-            target: updatedHead,
-            onlyState: false
+            target: updatedHead
         });
         dataArray.splice(2, dataArray.length - 2);
         return dataArray;
@@ -281,10 +270,9 @@ class View extends Observer {
     private handleScaleClick = (event: CustomEvent): Array<number> => {
         const dataArray: Array<number> = this.scaleClickData(event);
 
-        this.notify({
+        this.notify('default', {
             target: 'value',
-            valueArray: dataArray.slice(),
-            onlyState: false
+            valueArray: dataArray.slice()
         });
         return dataArray;
     };

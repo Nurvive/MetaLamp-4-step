@@ -1,24 +1,37 @@
 import {NotifyData} from './types/types';
 
 type ObserverItem = (data: NotifyData) => void;
+type EventType = 'state' | 'default'
+
+type ObserverStore = {
+    eventType: EventType
+    observer: ObserverItem
+}
 
 class Observer {
-    observers: Array<ObserverItem>
+    observers: ObserverStore[];
 
     constructor() {
         this.observers = [];
     }
 
-    subscribe(observer: ObserverItem): void {
-        this.observers.push(observer);
+    subscribe(eventType: EventType, observer: ObserverItem): void {
+        this.observers.push({
+            eventType: eventType,
+            observer: observer
+        });
     }
 
-    unsubscribe(observer: ObserverItem): void {
-        this.observers = this.observers.filter((x) => x !== observer);
+    unsubscribe(eventType: EventType, observer: ObserverItem): void {
+        this.observers = this.observers.filter((item) => item.observer !== observer);
     }
 
-    notify(data: NotifyData): void {
-        this.observers.forEach((x) => x(data));
+    notify(eventType: EventType, data: NotifyData): void {
+        this.observers.forEach((item) => {
+            if (item.eventType === eventType) {
+                item.observer(data);
+            }
+        });
     }
 }
 
