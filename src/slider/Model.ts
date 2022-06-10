@@ -29,10 +29,7 @@ class Model extends Observer {
             updatedValue = this.calcUpdatedValue(data, updatedProperty);
         }
         updatedValue = Number(updatedValue.toFixed(2));
-        this.updateState({
-            target: updatedProperty,
-            valueNumber: updatedValue
-        });
+        this.state[updatedProperty] = updatedValue;
         this.notify('state', {
             target: updatedProperty,
             valueNumber: updatedValue
@@ -45,48 +42,70 @@ class Model extends Observer {
         });
     }
 
-    set changeOrientation(value: string) {
-        this.updateState({
+    set bubble(value: boolean) {
+        this.state.bubble = value;
+        if (value) {
+            this.notify('showBubble', {
+                target: 'bubble',
+                valueBoolean: value
+            });
+        } else {
+            this.notify('hideBubble', {
+                target: 'bubble',
+                valueBoolean: value
+            });
+        }
+    }
+
+    set direction(value: string) {
+        this.state.direction = value;
+        this.notify('direction', {
             target: 'direction',
             valueString: value
         });
     }
 
-    set changeType(value: string) {
-        this.updateState({
+    set type(value: string) {
+        this.state.type = value;
+        this.notify('type', {
             target: 'type',
             valueString: value
         });
         if (this.state.min > this.state.valueFrom) {
-            this.changeFrom = this.state.min;
+            this.from = this.state.min;
         }
         if (this.state.valueFrom > this.state.valueTo) {
-            this.changeFrom = this.state.valueTo;
+            this.from = this.state.valueTo;
         }
     }
 
-    set changeStep(value: number) {
+    set step(value: number) {
         const stepIsValid = (val: number, max: number, min: number): boolean => {
             return val < max - min && val > 0;
         };
         if (!stepIsValid(value, this.state.max, this.state.min)) throw new Error('Шаг не может быть больше разницы максимума и минимума или меньше нуля');
         this.state.step = value;
+        this.notify('step', {
+            target: 'type',
+            valueNumber: value
+        });
     }
 
     get getStep(): number {
         return this.state.step;
     }
 
-    set changeMax(value: number) {
+    set max(value: number) {
         if (value <= this.state.min) {
             throw new Error('Максимум не может быть меньше или равен минимуму');
         }
-        this.updateState({
+        this.state.max = value;
+        this.notify('max', {
             target: 'max',
             valueNumber: value
         });
         if (value < this.state.valueTo) {
-            this.changeTo = value;
+            this.to = value;
         }
     }
 
@@ -94,16 +113,17 @@ class Model extends Observer {
         return this.state.max;
     }
 
-    set changeMin(value: number) {
+    set min(value: number) {
         if (value >= this.state.max || value >= this.state.valueTo) {
             throw new Error('Минимум не может быть больше или равен максимуму');
         }
-        this.updateState({
+        this.state.min = value;
+        this.notify('min', {
             target: 'min',
             valueNumber: value
         });
         if (this.state.type === 'double' && value > this.state.valueFrom) {
-            this.changeFrom = value;
+            this.from = value;
         }
     }
 
@@ -111,11 +131,8 @@ class Model extends Observer {
         return this.state.min;
     }
 
-    set changeTo(value: number) {
-        this.updateState({
-            target: 'valueTo',
-            valueNumber: this.validValueTo(value)
-        });
+    set to(value: number) {
+        this.state.valueTo = this.validValueTo(value);
         this.notify('state', {
             valueNumber: this.state.valueTo,
             target: 'valueTo'
@@ -132,13 +149,10 @@ class Model extends Observer {
         return this.state.valueTo;
     }
 
-    set changeFrom(value: number) {
+    set from(value: number) {
         if (this.state.type === 'single') return;
-        this.updateState({
-            target: 'valueFrom',
-            valueNumber: Number(this.validValueFrom(value)
-                .toFixed(2))
-        });
+        this.state.valueFrom = Number(this.validValueFrom(value)
+            .toFixed(2));
         this.notify('state', {
             valueNumber: this.state.valueFrom,
             target: 'valueFrom'
@@ -153,16 +167,6 @@ class Model extends Observer {
 
     get getValueFrom(): number {
         return this.state.valueFrom;
-    }
-
-    updateState(data: NotifyData): void {
-        if (typeof this.state[data.target] === 'string') {
-            this.state[data.target] = data.valueString;
-        } else if (typeof this.state[data.target] === 'number') {
-            this.state[data.target] = data.valueNumber;
-        } else {
-            this.state[data.target] = data.valueBoolean;
-        }
     }
 
     private static moreThan0LessThan1(value: number): number {

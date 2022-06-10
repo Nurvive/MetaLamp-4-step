@@ -152,7 +152,6 @@ describe('Class View: ', () => {
     });
     test('func changePosition is OK', () => {
         let data = {
-            onlyState: false,
             target: 'valueTo',
             valueNumber: 0.93
         };
@@ -160,7 +159,6 @@ describe('Class View: ', () => {
         expect(view.head.element.style.left)
             .toBe('93%');
         data = {
-            onlyState: false,
             target: 'valueFrom',
             valueNumber: 0.18
         };
@@ -168,7 +166,6 @@ describe('Class View: ', () => {
         expect(view.head2.element.style.left)
             .toBe('18%');
         data = {
-            onlyState: false,
             target: 'valueFrom',
             valueNumber: undefined
         };
@@ -177,7 +174,6 @@ describe('Class View: ', () => {
         })
             .toThrow('Новое значение не определено');
         data = {
-            onlyState: false,
             target: 'valueFrom',
             valueNumber: 0.18
         };
@@ -188,93 +184,119 @@ describe('Class View: ', () => {
             .toThrow('Head2 не существует');
     });
     test('func changeMax is OK', () => {
-        view.changeMax = 50;
+        let data = {
+            target: 'max',
+            valueNumber: 50
+        };
+        view.changeMax(data);
         expect(view.state.max)
             .toBe(50);
-        view.changeMax = 150;
+        data = {
+            target: 'max',
+            valueNumber: 150
+        };
+        view.changeMax(data);
         expect(view.state.max)
             .toBe(150);
-        expect(() => {
-            view
-                .changeMax = -1;
-        })
-            .toThrow('Максимум не может быть меньше или равен минимуму');
     });
     test('func changeMin is OK', () => {
-        view.changeMin = 50;
+        let data = {
+            target: 'min',
+            valueNumber: 50
+        };
+        view.changeMin(data);
         expect(view.state.min)
             .toBe(50);
-        view.changeMin = -1;
+        data = {
+            target: 'min',
+            valueNumber: -1
+        };
+        view.changeMin(data);
         expect(view.state.min)
             .toBe(-1);
-        expect(() => {
-            view
-                .changeMin = 150;
-        })
-            .toThrow('Минимум не может быть больше или равен максимуму');
     });
     test('func hideBubble is OK', () => {
-        view.hideBubble();
+        let data = {
+            target: 'bubble',
+            valueBoolean: false
+        };
+        view.hideBubble(data);
         expect(view.state.bubble)
             .toBeFalsy();
     });
-    test('func hideBubble is OK', () => {
-        view.hideBubble();
-        view.showBubble();
+    test('func showBubble is OK', () => {
+        let data = {
+            target: 'bubble',
+            valueBoolean: false
+        };
+        view.hideBubble(data);
+        data = {
+            target: 'bubble',
+            valueBoolean: true
+        };
+        view.showBubble(data);
         expect(view.state.bubble)
             .toBeTruthy();
     });
-    test('func changeOrientation is OK', () => {
-        view.changeOrientation = 'vertical';
+    test('func changeDirection is OK', () => {
+        let data = {
+            target: 'direction',
+            valueString: 'vertical'
+        };
+        view.changeDirection(data);
         expect(view.state.direction)
             .toBe('vertical');
     });
     test('func changeType is OK', () => {
-        view.changeType = 'double';
+        let data = {
+            target: 'type',
+            valueString: 'double'
+        };
+        view.changeType(data);
         expect(view.state.type)
             .toBe('double');
     });
     test('func changeStep is OK', () => {
-        view.changeStep = 2;
+        let data = {
+            target: 'step',
+            valueNumber: 2
+        };
+        view.changeStep(data);
         expect(view.state.step)
             .toBe(2);
-        expect(() => {
-            view.changeStep = 1000;
-        })
-            .toThrow('Шаг не может быть больше разницы максимума и минимума');
+        data = {
+            target: 'step',
+            valueNumber: 1000
+        };
     });
     test('func updateState is OK', () => {
         let data = {
             target: 'min',
-            valueNumber: 10,
-            onlyState: true
+            valueNumber: 10
         };
         view.updateState(data);
         expect(view.state.min)
             .toBe(10);
         data = {
             target: 'bubble',
-            valueBoolean: false,
-            onlyState: true
+            valueBoolean: false
         };
         view.updateState(data);
         expect(view.state.bubble)
             .toBe(false);
         data = {
             target: 'direction',
-            valueString: 'vertical',
-            onlyState: true
+            valueString: 'vertical'
         };
         view.updateState(data);
         expect(view.state.direction)
             .toBe('vertical');
         data = {
-            onlyState: false,
             target: 'direction',
             valueString: 'horizontal'
         };
         view.updateState(data);
         expect(view.state.direction)
-            .toBe('vertical');
+            .toBe('horizontal');
     });
 });

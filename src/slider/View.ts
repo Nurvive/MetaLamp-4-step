@@ -76,36 +76,28 @@ class View extends Observer {
         }
     }
 
-    hideBubble(): void {
+    hideBubble(data: NotifyData): void {
         this.updateState({
-            target: 'bubble',
-            valueBoolean: false
+            target: data.target,
+            valueBoolean: data.valueBoolean
         });
         this.head.hideBubble();
         this.head2?.hideBubble();
-        this.notify('state', {
-            target: 'bubble',
-            valueBoolean: false
-        });
     }
 
-    showBubble(): void {
+    showBubble(data: NotifyData): void {
         this.updateState({
-            target: 'bubble',
-            valueBoolean: true
+            target: data.target,
+            valueBoolean: data.valueBoolean
         });
         this.head.showBubble();
         this.head2?.showBubble();
-        this.notify('state', {
-            target: 'bubble',
-            valueBoolean: true
-        });
     }
 
-    set changeOrientation(value: string) {
+    changeDirection(data: NotifyData): void {
         this.updateState({
-            target: 'direction',
-            valueString: value
+            target: data.target,
+            valueString: data.valueString
         });
         this.head.removeHead();
         this.head2?.removeHead();
@@ -114,10 +106,10 @@ class View extends Observer {
         this.reInit();
     }
 
-    set changeType(value: string) {
+    changeType(data: NotifyData): void {
         this.updateState({
-            target: 'type',
-            valueString: value
+            target: data.target,
+            valueString: data.valueString
         });
         this.head.removeHead();
         this.head2?.removeHead();
@@ -127,18 +119,17 @@ class View extends Observer {
         this.reInit();
     }
 
-    set changeStep(value: number) {
-        if (value > this.state.max - this.state.min) throw new Error('Шаг не может быть больше разницы максимума и минимума');
-        this.state.step = value;
+    changeStep(data: NotifyData): void {
+        this.updateState({
+            target: data.target,
+            valueNumber: data.valueNumber
+        });
     }
 
-    set changeMax(value: number) {
-        if (value <= this.state.min) {
-            throw new Error('Максимум не может быть меньше или равен минимуму');
-        }
+    changeMax(data: NotifyData): void {
         this.updateState({
-            target: 'max',
-            valueNumber: value
+            target: data.target,
+            valueNumber: data.valueNumber
         });
         this.head.removeHead();
         this.head2?.removeHead();
@@ -147,13 +138,10 @@ class View extends Observer {
         this.reInit();
     }
 
-    set changeMin(value: number) {
-        if (value >= this.state.max || value >= this.state.valueTo) {
-            throw new Error('Минимум не может быть больше или равен максимуму');
-        }
+    changeMin(data: NotifyData): void {
         this.updateState({
-            target: 'min',
-            valueNumber: value
+            target: data.target,
+            valueNumber: data.valueNumber
         });
         this.head.removeHead();
         this.head2?.removeHead();

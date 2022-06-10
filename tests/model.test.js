@@ -100,102 +100,67 @@ describe('Class Model: ', () => {
         expect(model['validValueFrom'](-1))
             .toBe(0);
     });
-    test('setter changeOrientation is OK', () => {
-        model.changeOrientation = 'vertical';
+    test('setter direction is OK', () => {
+        model.direction = 'vertical';
         expect(model.state.direction)
             .toBe('vertical');
     });
-    test('setter changeType is OK', () => {
-        model.changeType = 'double';
+    test('setter type is OK', () => {
+        model.type = 'double';
         expect(model.state.type)
             .toBe('double');
         model.state.min = 20;
-        model.changeType = 'double';
+        model.type = 'double';
         expect(model.state.valueFrom)
             .toBe(model.state.min);
         model.state.min = 0;
         model.state.valueTo = 2;
-        model.changeType = 'double';
+        model.type = 'double';
         expect(model.state.valueFrom)
             .toBe(model.state.valueTo - model.state.step);
     });
-    test('setter changeStep is OK', () => {
-        model.changeStep = 5;
+    test('setter step is OK', () => {
+        model.step = 5;
         expect(model.state.step)
             .toBe(5);
         expect(() => {
-            model.changeStep = 1000;
+            model.step = 1000;
         })
             .toThrow('Шаг не может быть больше разницы максимума и минимума');
     });
-    test('setter updateState is OK', () => {
-        let data = {
-            target: 'min',
-            valueNumber: 10,
-            onlyState: true
-        };
-        model.updateState(data);
-        expect(model.state.min)
-            .toBe(10);
-        data = {
-            target: 'bubble',
-            valueBoolean: false,
-            onlyState: true
-        };
-        model.updateState(data);
-        expect(model.state.bubble)
-            .toBe(false);
-        data = {
-            target: 'direction',
-            valueString: 'vertical',
-            onlyState: true
-        };
-        model.updateState(data);
-        expect(model.state.direction)
-            .toBe('vertical');
-        data = {
-            onlyState: false,
-            target: 'direction',
-            valueString: 'horizontal'
-        };
-        model.updateState(data);
-        expect(model.state.direction)
-            .toBe('vertical');
-    });
-    test('setter changeMax is OK', () => {
-        model.changeMax = 50;
+    test('setter max is OK', () => {
+        model.max = 50;
         expect(model.state.max)
             .toBe(50);
-        model.changeMax = 150;
+        model.max = 150;
         expect(model.state.max)
             .toBe(150);
         expect(() => {
             model
-                .changeMax = -1;
+                .max = -1;
         })
             .toThrow('Максимум не может быть меньше или равен минимуму');
     });
-    test('setter changeMin is OK', () => {
-        model.changeMin = 50;
+    test('setter min is OK', () => {
+        model.min = 50;
         expect(model.state.min)
             .toBe(50);
-        model.changeMin = -1;
+        model.min = -1;
         expect(model.state.min)
             .toBe(-1);
         expect(() => {
             model
-                .changeMin = 150;
+                .min = 150;
         })
             .toThrow('Минимум не может быть больше или равен максимуму');
         model.state.type = 'double';
         model.state.valueFrom = 15;
-        model.changeMin = 20;
+        model.min = 20;
         expect(model.state.valueFrom)
             .toBe(20);
     });
     test('func calcPosition is OK', () => {
         let data = {
-            onlyState: false,
             target: 'valueTo',
             valueArray: [874.4000244140625, 880, 300, 581, 874, 7]
         };
@@ -203,18 +168,16 @@ describe('Class Model: ', () => {
         expect(model.state.valueTo)
             .toBe(98);
         data = {
-            onlyState: false,
             target: 'value',
             valueArray: [300, 581, 870]
         };
         model.calcPosition(data);
         expect(model.state.valueTo)
             .toBe(96);
-        model.changeType = 'double';
+        model.type = 'double';
         data = {
             valueArray: [576.4000244140625, 580, 300, 581, 644, 7],
             target: 'valueFrom',
-            onlyState: false
         };
         model.calcPosition(data);
         expect(model.state.valueFrom)
@@ -222,13 +185,11 @@ describe('Class Model: ', () => {
         data = {
             target: 'value',
             valueArray: [300, 581, 695],
-            onlyState: false
         };
         model.calcPosition(data);
         expect(model.state.valueFrom)
             .toBe(38);
         data = {
-            onlyState: false,
             target: 'value',
             valueArray: [300, 581, 855]
         };
@@ -237,15 +198,13 @@ describe('Class Model: ', () => {
             .toBe(91);
         data = {
             valueArray: [847.5718994140625, 852, 300, 581, 630, 7],
-            onlyState: false,
             target: 'valueTo'
         };
         model.calcPosition(data);
         expect(model.state.valueTo)
             .toBe(39);
-        model.changeOrientation = 'vertical';
+        model.changeDirection = 'vertical';
         data = {
-            onlyState: false,
             target: 'valueTo',
             valueArray: [443.7749938964844, 451, 300, 207, 467, 7]
         };
@@ -253,7 +212,6 @@ describe('Class Model: ', () => {
         expect(model.state.valueTo)
             .toBe(87);
         data = {
-            onlyState: false,
             target: 'value',
             valueArray: [300, 207, 257]
         };
@@ -261,7 +219,6 @@ describe('Class Model: ', () => {
         expect(model.state.valueFrom)
             .toBe(17);
         data = {
-            onlyState: false,
             target: 'valueTo',
             valueArray: undefined
         };

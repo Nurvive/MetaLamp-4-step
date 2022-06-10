@@ -46,14 +46,14 @@ import {Slider} from './Slider';
             });
             slider.showBubble();
         },
-        changeOrientation: function (value) {
+        changeDirection: function (value) {
             let slider;
             sliders.forEach((x) => {
                 if (x.elem === this[0]) {
                     slider = x;
                 }
             });
-            slider.changeOrientation(value);
+            slider.changeDirection(value);
         },
         changeType: function (value) {
             let slider;

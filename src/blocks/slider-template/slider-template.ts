@@ -75,7 +75,7 @@ class SliderTemplate {
     };
 
     handleVerticalButtonClick = (e: JQuery.ClickEvent): void => {
-        e.target.checked ? this.slider?.Slider('changeOrientation', 'vertical') : this.slider?.Slider('changeOrientation', 'horizontal');
+        e.target.checked ? this.slider?.Slider('changeDirection', 'vertical') : this.slider?.Slider('changeDirection', 'horizontal');
     };
 
     handleRangeButtonClick = (e: JQuery.ClickEvent): void => {

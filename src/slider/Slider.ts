@@ -21,52 +21,47 @@ class Slider {
     }
 
     hideBubble(): boolean {
-        this.view.hideBubble();
+        this.model.bubble = false;
         return true;
     }
 
     showBubble(): boolean {
-        this.view.showBubble();
+        this.model.bubble = true;
         return true;
     }
 
-    changeOrientation(value: string): boolean {
-        this.view.changeOrientation = value;
-        this.model.changeOrientation = value;
+    changeDirection(value: string): boolean {
+        this.model.direction = value;
         return true;
     }
 
     changeType(value: string): boolean {
-        this.view.changeType = value;
-        this.model.changeType = value;
+        this.model.type = value;
         return true;
     }
 
     changeStep(value: number): boolean {
-        this.model.changeStep = value;
-        this.view.changeStep = value;
+        this.model.step = value;
         return true;
     }
 
     changeTo(value: number): boolean {
-        this.model.changeTo = value;
+        this.model.to = value;
         return true;
     }
 
     changeFrom(value: number): boolean {
-        this.model.changeFrom = value;
+        this.model.from = value;
         return true;
     }
 
     changeMax(value: number): boolean {
-        this.model.changeMax = value;
-        this.view.changeMax = value;
+        this.model.max = value;
         return true;
     }
 
     changeMin(value: number): boolean {
-        this.model.changeMin = value;
-        this.view.changeMin = value;
+        this.model.min = value;
         return true;
     }
 

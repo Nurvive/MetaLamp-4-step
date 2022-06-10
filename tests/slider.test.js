@@ -29,7 +29,7 @@ describe('Class Slider: ', () => {
             .toBeDefined();
         expect(slider.showBubble)
             .toBeDefined();
-        expect(slider.changeOrientation)
+        expect(slider.changeDirection)
             .toBeDefined();
         expect(slider.changeType)
             .toBeDefined();
@@ -57,7 +57,7 @@ describe('Class Slider: ', () => {
             .toBeTruthy();
         expect(slider.showBubble())
             .toBeTruthy();
-        expect(slider.changeOrientation('horizontal'))
+        expect(slider.changeDirection('horizontal'))
             .toBeTruthy();
         expect(slider.changeType('double'))
             .toBeTruthy();

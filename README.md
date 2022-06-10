@@ -27,12 +27,12 @@ npm run lint - запуск линтера
 
     const slider = new Slider({...});
     slider.Slider('showBubble');
-    slider.Slider('changeOrientation', 'vertical');
+    slider.Slider('changeDirection', 'vertical');
 
 Список доступный настроек:
 * showBubble - Показать элемент над ползунком.
 * hideBubble - Скрыть элемент над ползунком.
-* changeOrientation - Изменить ориентацию на вертикальную или горизонтальную. Принимает 'vertical' или 'horizontal'.
+* changeDirection - Изменить ориентацию на вертикальную или горизонтальную. Принимает 'vertical' или 'horizontal'.
 * changeType - Сделать слайдер двойным или одинарным. Принимает 'single' или 'double'.
 * changeStep - Изменить шаг ползунка. Принимает переменные типа number.
 * changeTo - Изменить текущее значение правого ползунка. Принимает переменные типа number.
