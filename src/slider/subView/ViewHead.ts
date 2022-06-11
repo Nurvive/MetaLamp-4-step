@@ -1,4 +1,5 @@
 import HeadBubble from './HeadBubble';
+import {ViewHeadCreate} from '../types/types';
 
 class ViewHead {
     parent: HTMLElement;
@@ -9,8 +10,12 @@ class ViewHead {
 
     bubble: HeadBubble;
 
-    constructor(parent: HTMLElement, direction: string,
-        value: number, bubbleValue: number) {
+    constructor({
+        parent,
+        direction,
+        value,
+        bubbleValue
+    }: ViewHeadCreate) {
         this.parent = parent;
         this.direction = direction;
         this.element = document.createElement('div');

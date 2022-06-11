@@ -1,5 +1,5 @@
 import {Observer} from './Observer';
-import {State} from './types/types';
+import {GetRelativeType, State} from './types/types';
 import {NotifyData} from './types/types';
 
 class Model extends Observer {
@@ -34,7 +34,11 @@ class Model extends Observer {
             target: updatedProperty,
             valueNumber: updatedValue
         });
-        let position = Model.getValueRelative(updatedValue, this.state.min, this.state.max);
+        let position = Model.getValueRelative({
+            value: updatedValue,
+            min: this.state.min,
+            max: this.state.max
+        });
         position = Model.moreThan0LessThan1(position);
         this.notify('default', {
             target: updatedProperty,
@@ -137,7 +141,11 @@ class Model extends Observer {
             valueNumber: this.state.valueTo,
             target: 'valueTo'
         });
-        let position = Model.getValueRelative(this.state.valueTo, this.state.min, this.state.max);
+        let position = Model.getValueRelative({
+            value: this.state.valueTo,
+            min: this.state.min,
+            max: this.state.max
+        });
         position = Model.moreThan0LessThan1(position);
         this.notify('default', {
             valueNumber: position,
@@ -157,7 +165,11 @@ class Model extends Observer {
             valueNumber: this.state.valueFrom,
             target: 'valueFrom'
         });
-        let position = Model.getValueRelative(this.state.valueFrom, this.state.min, this.state.max);
+        let position = Model.getValueRelative({
+            value: this.state.valueFrom,
+            min: this.state.min,
+            max: this.state.max
+        });
         position = Model.moreThan0LessThan1(position);
         this.notify('default', {
             valueNumber: position,
@@ -176,7 +188,11 @@ class Model extends Observer {
         return newValue;
     }
 
-    private static getValueRelative(value: number, min: number, max: number): number {
+    private static getValueRelative({
+        value,
+        min,
+        max
+    }: GetRelativeType): number {
         return (value - min) / (max - min);
     }
 

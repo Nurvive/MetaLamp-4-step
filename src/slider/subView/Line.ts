@@ -1,3 +1,5 @@
+import {LineCreate} from '../types/types';
+
 class Line {
     parent: HTMLElement;
 
@@ -9,7 +11,11 @@ class Line {
 
     type: string;
 
-    constructor(parent: HTMLElement, direction: string, type: string) {
+    constructor({
+        parent,
+        direction,
+        type
+    }: LineCreate) {
         this.parent = parent;
         this.direction = direction;
         this.type = type;

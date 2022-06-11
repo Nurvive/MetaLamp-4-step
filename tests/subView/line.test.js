@@ -4,7 +4,11 @@ describe('class Line: ', () => {
     const node = document.createElement('div');
     let line;
     beforeEach(() => {
-        line = new Line(node, 'horizontal', 'double');
+        line = new Line({
+            parent: node,
+            direction: 'horizontal',
+            type: 'double'
+        });
     });
     test('func setType', () => {
         line.setType = 'single';

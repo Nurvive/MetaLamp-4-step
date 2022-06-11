@@ -1,3 +1,5 @@
+import {ScaleCreate} from '../types/types';
+
 class Scale {
     parent: HTMLElement;
 
@@ -5,7 +7,12 @@ class Scale {
 
     element: HTMLElement;
 
-    constructor(parent: HTMLElement, direction: string, min: number, max: number) {
+    constructor({
+        parent,
+        direction,
+        min,
+        max
+    }: ScaleCreate) {
         this.parent = parent;
         this.direction = direction;
         this.element = document.createElement('div');

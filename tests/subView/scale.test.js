@@ -4,7 +4,12 @@ describe('class Scale: ', () => {
     const node = document.createElement('div');
     let scale;
     beforeEach(() => {
-        scale = new Scale(node, 'horizontal', 1, 100);
+        scale = new Scale({
+            parent: node,
+            direction: 'horizontal',
+            min: 1,
+            max: 100
+        });
     });
     test('func getHeight is OK', () => {
         expect(scale.getHeight)

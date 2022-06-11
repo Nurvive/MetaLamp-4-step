@@ -36,11 +36,23 @@ describe('Class Model: ', () => {
             .toBe(0);
     });
     test('func getValueRelative is OK', () => {
-        expect(Model['getValueRelative'](66, 0, 100))
+        expect(Model['getValueRelative']({
+            value: 66,
+            min: 0,
+            max: 100
+        }))
             .toBe(0.66);
-        expect(Model['getValueRelative'](100, 0, 100))
+        expect(Model['getValueRelative']({
+            value: 100,
+            min: 0,
+            max: 100
+        }))
             .toBe(1);
-        expect(Model['getValueRelative'](0, 0, 100))
+        expect(Model['getValueRelative']({
+            value: 0,
+            min: 0,
+            max: 100
+        }))
             .toBe(0);
     });
     test('func calcValueByStep is OK', () => {

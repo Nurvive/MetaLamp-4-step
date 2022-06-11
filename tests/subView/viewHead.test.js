@@ -4,7 +4,12 @@ describe('class ViewHead: ', () => {
     const node = document.createElement('div');
     let viewHead;
     beforeEach(() => {
-        viewHead = new ViewHead(node, 'horizontal', 1, 100);
+        viewHead = new ViewHead({
+            parent: node,
+            direction: 'horizontal',
+            value: 1,
+            bubbleValue: 100
+        });
     });
     test('func getHeight is OK', () => {
         expect(viewHead.getHeight).toBe(viewHead.element.getBoundingClientRect().height);

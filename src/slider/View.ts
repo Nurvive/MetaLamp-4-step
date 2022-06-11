@@ -25,19 +25,35 @@ class View extends Observer {
         this.elem = elem;
         this.handleSwipe = () => [];
         this.state = Object.assign({}, options);
-        this.line = new Line(this.elem, this.state.direction, this.state.type);
-        this.scale = new Scale(this.line.element,
-            this.state.direction, this.state.min, this.state.max);
+        this.line = new Line({
+            parent: this.elem,
+            direction: this.state.direction,
+            type: this.state.type
+        });
+        this.scale = new Scale({
+            parent: this.line.element,
+            direction: this.state.direction,
+            min: this.state.min,
+            max: this.state.max
+        });
         const headStartPos = this.calcHeadStartPosition(this.state.valueTo);
-        this.head = new ViewHead(this.line.element,
-            this.state.direction, headStartPos, this.state.valueTo);
+        this.head = new ViewHead({
+            parent: this.line.element,
+            direction: this.state.direction,
+            value: headStartPos,
+            bubbleValue: this.state.valueTo
+        });
     }
 
     init(): void {
         if (this.state.type === 'double') {
             const head2StartPos: number = this.calcHeadStartPosition(this.state.valueFrom);
-            this.head2 = new ViewHead(this.line.element,
-                this.state.direction, head2StartPos, this.state.valueFrom);
+            this.head2 = new ViewHead({
+                parent: this.line.element,
+                direction: this.state.direction,
+                value: head2StartPos,
+                bubbleValue: this.state.valueFrom
+            });
             this.head2.element.setAttribute('data-valueFrom', 'true');
         }
         if (this.state.bubble) {
@@ -161,18 +177,34 @@ class View extends Observer {
     }
 
     private reInit(): void {
-        this.line = new Line(this.elem, this.state.direction, this.state.type);
-        this.scale = new Scale(this.line.element,
-            this.state.direction, this.state.min, this.state.max);
+        this.line = new Line({
+            parent: this.elem,
+            direction: this.state.direction,
+            type: this.state.type
+        });
+        this.scale = new Scale({
+            parent: this.line.element,
+            direction: this.state.direction,
+            min: this.state.min,
+            max: this.state.max
+        });
         if (this.state.type === 'double') {
             const head2StartPos: number = this.calcHeadStartPosition(this.state.valueFrom);
-            this.head2 = new ViewHead(this.line.element,
-                this.state.direction, head2StartPos, this.state.valueFrom);
+            this.head2 = new ViewHead({
+                parent: this.line.element,
+                direction: this.state.direction,
+                value: head2StartPos,
+                bubbleValue: this.state.valueFrom
+            });
             this.head2.element.setAttribute('data-valueFrom', 'true');
         }
         const headStartPos = this.calcHeadStartPosition(this.state.valueTo);
-        this.head = new ViewHead(this.line.element,
-            this.state.direction, headStartPos, this.state.valueTo);
+        this.head = new ViewHead({
+            parent: this.line.element,
+            direction: this.state.direction,
+            value: headStartPos,
+            bubbleValue: this.state.valueTo
+        });
         if (this.state.bubble) {
             this.head.showBubble();
             if (this.state.type === 'double') {

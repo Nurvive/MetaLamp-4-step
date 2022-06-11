@@ -23,4 +23,32 @@ interface NotifyData {
     target: string;
 }
 
-export {NotifyData, State};
+type ScaleCreate = {
+    parent: HTMLElement,
+    direction: string,
+    min: number,
+    max: number
+}
+
+type LineCreate = {
+    parent: HTMLElement,
+    direction: string,
+    type: string
+}
+
+type ViewHeadCreate = {
+    parent: HTMLElement,
+    direction: string,
+    value: number,
+    bubbleValue: number
+}
+
+type GetRelativeType = {
+    value: number,
+    min: number,
+    max: number
+}
+
+export type {
+    NotifyData, State, ScaleCreate, LineCreate, ViewHeadCreate, GetRelativeType
+};
