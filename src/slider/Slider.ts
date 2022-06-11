@@ -1,7 +1,7 @@
 import {View} from './View';
 import {Presenter} from './Presenter';
 import {Model} from './Model';
-import {State} from './types/types';
+import {DirectionType, State, TypeOfSlider} from './types/types';
 
 class Slider {
     view: View;
@@ -30,12 +30,12 @@ class Slider {
         return true;
     }
 
-    changeDirection(value: string): boolean {
+    changeDirection(value: DirectionType): boolean {
         this.model.direction = value;
         return true;
     }
 
-    changeType(value: string): boolean {
+    changeType(value: TypeOfSlider): boolean {
         this.model.type = value;
         return true;
     }

@@ -2,7 +2,9 @@ import {Observer} from './Observer';
 import ViewHead from './subView/ViewHead';
 import Scale from './subView/Scale';
 import Line from './subView/Line';
-import {State} from './types/types';
+import {
+    State, TargetType
+} from './types/types';
 import {NotifyData} from './types/types';
 
 class View extends Observer {
@@ -151,8 +153,12 @@ class View extends Observer {
     }
 
     updateState(data: NotifyData): void {
-        const [target, value] = Object.values(data);
-        this.state = {...this.state, [target]: value};
+        const target = data.target;
+        const value = View.getValueFromData(data);
+        this.state = {
+            ...this.state,
+            [target]: value
+        };
     }
 
     private reInit(): void {
@@ -199,6 +205,17 @@ class View extends Observer {
         this.elem.addEventListener('scaleClick', this.handleScaleClick);
     }
 
+    private static getValueFromData(data: NotifyData) {
+        let value;
+        Object.entries(data)
+            .forEach((key) => {
+                if (key[0] !== 'target') {
+                    value = key[1];
+                }
+            });
+        return value;
+    }
+
     private calcHeadStartPosition(value: number): number {
         return (value - this.state.min) / (this.state.max - this.state.min);
     }
@@ -214,7 +231,7 @@ class View extends Observer {
         const evt: MouseEvent | Touch = View.getEvent(e.detail.data);
         // Здесь нужен каст через 'as', так как TS не знает, что target это html объект
         const target = evt.target as Element;
-        const updatedHead: string = target.hasAttribute('data-valueFrom') ? 'valueFrom' : 'valueTo';
+        const updatedHead: TargetType = target.hasAttribute('data-valueFrom') ? 'valueFrom' : 'valueTo';
         const dataArray: Array<number> = [];
         if (this.state.direction === 'horizontal') {
             dataArray.push(target.getBoundingClientRect().left);
@@ -234,7 +251,7 @@ class View extends Observer {
     };
 
     private swipeAction = (event: MouseEvent | TouchEvent, dataArray: Array<number>,
-        updatedHead: string):
+        updatedHead: TargetType):
         Array<number> => {
         event.preventDefault();
         const evtSwipe: MouseEvent | Touch = View.getEvent(event);

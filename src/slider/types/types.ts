@@ -1,9 +1,31 @@
-interface State {
+type TargetType =
+    'valueTo'
+    | 'valueFrom'
+    | 'max'
+    | 'min'
+    | 'direction'
+    | 'type'
+    | 'bubble'
+    | 'value';
+type DirectionType = 'horizontal' | 'vertical';
+type TypeOfSlider = 'single' | 'double';
+type EventType =
+    'state'
+    | 'default'
+    | 'direction'
+    | 'type'
+    | 'step'
+    | 'max'
+    | 'min'
+    | 'showBubble'
+    | 'hideBubble'
+
+type State = {
     min: number;
     max: number;
     step: number;
-    direction: string;
-    type: string;
+    direction: DirectionType;
+    type: TypeOfSlider;
     valueFrom: number;
     valueTo: number;
     bubble: boolean;
@@ -11,30 +33,30 @@ interface State {
     onChangeFrom: (value: number) => void;
 }
 
-interface NotifyData {
+type NotifyData = {
     valueNumber?: number;
-    valueString?: string;
+    valueString?: DirectionType | TypeOfSlider;
     valueBoolean?: boolean;
     valueArray?: Array<number>;
-    target: string;
+    target: TargetType;
 }
 
 type ScaleCreate = {
     parent: HTMLElement,
-    direction: string,
+    direction: DirectionType,
     min: number,
     max: number
 }
 
 type LineCreate = {
     parent: HTMLElement,
-    direction: string,
-    type: string
+    direction: DirectionType,
+    type: TypeOfSlider
 }
 
 type ViewHeadCreate = {
     parent: HTMLElement,
-    direction: string,
+    direction: DirectionType,
     value: number,
     bubbleValue: number
 }
@@ -45,6 +67,18 @@ type GetRelativeType = {
     max: number
 }
 
+type ObserverItem = (data: NotifyData) => void;
+
 export type {
-    NotifyData, State, ScaleCreate, LineCreate, ViewHeadCreate, GetRelativeType
+    NotifyData,
+    State,
+    ScaleCreate,
+    LineCreate,
+    ViewHeadCreate,
+    GetRelativeType,
+    TargetType,
+    DirectionType,
+    TypeOfSlider,
+    ObserverItem,
+    EventType
 };

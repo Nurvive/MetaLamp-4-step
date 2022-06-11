@@ -1,5 +1,7 @@
 import {Observer} from './Observer';
-import {GetRelativeType, State} from './types/types';
+import {
+    GetRelativeType, State, TargetType, TypeOfSlider, DirectionType
+} from './types/types';
 import {NotifyData} from './types/types';
 
 class Model extends Observer {
@@ -12,7 +14,7 @@ class Model extends Observer {
 
     calcPosition(data: NotifyData): void {
         let updatedValue: number;
-        let updatedProperty: string;
+        let updatedProperty: TargetType;
         if (data.target === 'valueTo') {
             updatedProperty = 'valueTo';
             updatedValue = this.calcUpdatedValue(data, updatedProperty);
@@ -28,7 +30,10 @@ class Model extends Observer {
             updatedValue = this.calcUpdatedValue(data, updatedProperty);
         }
         updatedValue = Number(updatedValue.toFixed(2));
-        this.state = {...this.state, [updatedProperty]: updatedValue};
+        this.state = {
+            ...this.state,
+            [updatedProperty]: updatedValue
+        };
         this.notify('state', {
             target: updatedProperty,
             valueNumber: updatedValue
@@ -60,7 +65,7 @@ class Model extends Observer {
         }
     }
 
-    set direction(value: string) {
+    set direction(value: DirectionType) {
         this.state.direction = value;
         this.notify('direction', {
             target: 'direction',
@@ -68,7 +73,7 @@ class Model extends Observer {
         });
     }
 
-    set type(value: string) {
+    set type(value: TypeOfSlider) {
         this.state.type = value;
         this.notify('type', {
             target: 'type',
@@ -211,7 +216,7 @@ class Model extends Observer {
 
     private calcValueHelper(data: NotifyData) {
         let updatedValue = this.calcUpdatedValueRelative(data);
-        let updatedProperty;
+        let updatedProperty: TargetType;
         if (this.state.type === 'single') {
             updatedProperty = 'valueTo';
         } else {

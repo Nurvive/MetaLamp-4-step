@@ -3,9 +3,10 @@ import '../blocks/slider-block/slider-block.scss';
 import '../slider/jquery.slider';
 import '../blocks/slider-template/slider-template';
 import SliderTemplate from '../blocks/slider-template/slider-template';
+import {State} from '../slider/types/types';
 
 $(function () {
-    const settings = [
+    const settings: State[] = [
         {
             bubble: true,
             direction: 'horizontal',

@@ -1,7 +1,6 @@
 import {NotifyData} from './types/types';
 
-type ObserverItem = (data: NotifyData) => void;
-type EventType = 'state' | 'default' | 'direction' | 'type' | 'step' | 'max' | 'min' | 'showBubble' | 'hideBubble'
+import {EventType, ObserverItem} from './types/types';
 
 type ObserverStore = {
     eventType: EventType
