@@ -17,13 +17,9 @@ class Model extends Observer {
             updatedProperty = 'valueTo';
             updatedValue = this.calcUpdatedValue(data, updatedProperty);
         } else if (data.target === 'value') {
-            updatedValue = this.calcUpdatedValueRelative(data);
-            if (this.state.type === 'single') {
-                updatedProperty = 'valueTo';
-            } else {
-                updatedProperty = this.isValueTo(updatedValue) ? 'valueTo' : 'valueFrom';
-            }
-            updatedValue = updatedProperty === 'valueFrom' ? this.validValueFrom(updatedValue) : this.validValueTo(updatedValue);
+            const {property, value} = this.calcValueHelper(data);
+            updatedValue = value;
+            updatedProperty = property;
         } else {
             updatedProperty = 'valueFrom';
             updatedValue = this.calcUpdatedValue(data, updatedProperty);
@@ -200,6 +196,21 @@ class Model extends Observer {
         let newValue: number = value;
         newValue *= (this.state.max - this.state.min);
         return this.state.min + this.calcValueByStep(newValue, updatedProperty);
+    }
+
+    private calcValueHelper(data: NotifyData) {
+        let updatedValue = this.calcUpdatedValueRelative(data);
+        let updatedProperty;
+        if (this.state.type === 'single') {
+            updatedProperty = 'valueTo';
+        } else {
+            updatedProperty = this.isValueTo(updatedValue) ? 'valueTo' : 'valueFrom';
+        }
+        updatedValue = updatedProperty === 'valueFrom' ? this.validValueFrom(updatedValue) : this.validValueTo(updatedValue);
+        return {
+            property: updatedProperty,
+            value: updatedValue
+        };
     }
 
     private calcValueByStep(value: number, updatedProperty: string): number {
