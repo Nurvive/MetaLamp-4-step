@@ -3,7 +3,7 @@ import {GetRelativeType, State} from './types/types';
 import {NotifyData} from './types/types';
 
 class Model extends Observer {
-    private readonly state: State;
+    private state: State;
 
     constructor(options: State) {
         super();
@@ -28,7 +28,7 @@ class Model extends Observer {
             updatedValue = this.calcUpdatedValue(data, updatedProperty);
         }
         updatedValue = Number(updatedValue.toFixed(2));
-        this.state[updatedProperty] = updatedValue;
+        this.state = {...this.state, [updatedProperty]: updatedValue};
         this.notify('state', {
             target: updatedProperty,
             valueNumber: updatedValue
@@ -102,14 +102,18 @@ class Model extends Observer {
         if (value <= this.state.min) {
             throw new Error('Максимум не может быть меньше или равен минимуму');
         }
+        if (value < this.state.valueTo) {
+            this.to = value;
+            this.notify('state', {
+                target: 'valueTo',
+                valueNumber: value
+            });
+        }
         this.state.max = value;
         this.notify('max', {
             target: 'max',
             valueNumber: value
         });
-        if (value < this.state.valueTo) {
-            this.to = value;
-        }
     }
 
     get getMax(): number {
@@ -120,14 +124,18 @@ class Model extends Observer {
         if (value >= this.state.max || value >= this.state.valueTo) {
             throw new Error('Минимум не может быть больше или равен максимуму');
         }
+        if (this.state.type === 'double' && value > this.state.valueFrom) {
+            this.from = value;
+            this.notify('state', {
+                target: 'valueFrom',
+                valueNumber: value
+            });
+        }
         this.state.min = value;
         this.notify('min', {
             target: 'min',
             valueNumber: value
         });
-        if (this.state.type === 'double' && value > this.state.valueFrom) {
-            this.from = value;
-        }
     }
 
     get getMin(): number {
@@ -137,8 +145,8 @@ class Model extends Observer {
     set to(value: number) {
         this.state.valueTo = this.validValueTo(value);
         this.notify('state', {
-            valueNumber: this.state.valueTo,
-            target: 'valueTo'
+            target: 'valueTo',
+            valueNumber: this.state.valueTo
         });
         let position = Model.getValueRelative({
             value: this.state.valueTo,
@@ -147,8 +155,8 @@ class Model extends Observer {
         });
         position = Model.moreThan0LessThan1(position);
         this.notify('default', {
-            valueNumber: position,
-            target: 'valueTo'
+            target: 'valueTo',
+            valueNumber: position
         });
     }
 
@@ -161,8 +169,8 @@ class Model extends Observer {
         this.state.valueFrom = Number(this.validValueFrom(value)
             .toFixed(2));
         this.notify('state', {
-            valueNumber: this.state.valueFrom,
-            target: 'valueFrom'
+            target: 'valueFrom',
+            valueNumber: this.state.valueFrom
         });
         let position = Model.getValueRelative({
             value: this.state.valueFrom,
@@ -171,8 +179,8 @@ class Model extends Observer {
         });
         position = Model.moreThan0LessThan1(position);
         this.notify('default', {
-            valueNumber: position,
-            target: 'valueFrom'
+            target: 'valueFrom',
+            valueNumber: position
         });
     }
 

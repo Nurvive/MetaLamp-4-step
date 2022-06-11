@@ -8,7 +8,7 @@ import {NotifyData} from './types/types';
 class View extends Observer {
     private readonly elem: HTMLElement;
 
-    private readonly state: State;
+    private state: State;
 
     head: ViewHead;
 
@@ -151,13 +151,8 @@ class View extends Observer {
     }
 
     updateState(data: NotifyData): void {
-        if (typeof this.state[data.target] === 'string') {
-            this.state[data.target] = data.valueString;
-        } else if (typeof this.state[data.target] === 'number') {
-            this.state[data.target] = data.valueNumber;
-        } else {
-            this.state[data.target] = data.valueBoolean;
-        }
+        const [target, value] = Object.values(data);
+        this.state = {...this.state, [target]: value};
     }
 
     private reInit(): void {

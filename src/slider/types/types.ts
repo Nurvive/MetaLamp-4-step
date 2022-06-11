@@ -1,5 +1,3 @@
-type StateContent = number | string | boolean | undefined | ((value: number) => void);
-
 interface State {
     min: number;
     max: number;
@@ -11,8 +9,6 @@ interface State {
     bubble: boolean;
     onChangeTo: (value: number) => void;
     onChangeFrom: (value: number) => void;
-
-    [key: string]: StateContent;
 }
 
 interface NotifyData {
