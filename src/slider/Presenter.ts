@@ -15,8 +15,8 @@ class Presenter {
         this.model.subscribe('direction', this.view.changeDirection.bind(this.view));
         this.model.subscribe('type', this.view.changeType.bind(this.view));
         this.model.subscribe('step', this.view.changeStep.bind(this.view));
-        this.model.subscribe('max', this.view.changeMax.bind(this.view));
-        this.model.subscribe('min', this.view.changeMin.bind(this.view));
+        this.model.subscribe('max', this.view.changeMaxMin.bind(this.view));
+        this.model.subscribe('min', this.view.changeMaxMin.bind(this.view));
         this.model.subscribe('showBubble', this.view.showBubble.bind(this.view));
         this.model.subscribe('hideBubble', this.view.hideBubble.bind(this.view));
     }

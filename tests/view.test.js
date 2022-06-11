@@ -188,30 +188,28 @@ describe('Class View: ', () => {
             target: 'max',
             valueNumber: 50
         };
-        view.changeMax(data);
+        view.changeMaxMin(data);
         expect(view.state.max)
             .toBe(50);
         data = {
             target: 'max',
             valueNumber: 150
         };
-        view.changeMax(data);
+        view.changeMaxMin(data);
         expect(view.state.max)
             .toBe(150);
-    });
-    test('func changeMin is OK', () => {
-        let data = {
+        data = {
             target: 'min',
             valueNumber: 50
         };
-        view.changeMin(data);
+        view.changeMaxMin(data);
         expect(view.state.min)
             .toBe(50);
         data = {
             target: 'min',
             valueNumber: -1
         };
-        view.changeMin(data);
+        view.changeMaxMin(data);
         expect(view.state.min)
             .toBe(-1);
     });
@@ -264,10 +262,6 @@ describe('Class View: ', () => {
         view.changeStep(data);
         expect(view.state.step)
             .toBe(2);
-        data = {
-            target: 'step',
-            valueNumber: 1000
-        };
     });
     test('func updateState is OK', () => {
         let data = {

@@ -138,19 +138,7 @@ class View extends Observer {
         });
     }
 
-    changeMax(data: NotifyData): void {
-        this.updateState({
-            target: data.target,
-            valueNumber: data.valueNumber
-        });
-        this.head.removeHead();
-        this.head2?.removeHead();
-        this.scale.removeScale();
-        this.line.removeLine();
-        this.reInit();
-    }
-
-    changeMin(data: NotifyData): void {
+    changeMaxMin(data: NotifyData): void {
         this.updateState({
             target: data.target,
             valueNumber: data.valueNumber
