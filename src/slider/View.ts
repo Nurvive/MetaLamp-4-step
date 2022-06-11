@@ -58,10 +58,8 @@ class View extends Observer {
         }
         if (this.state.bubble) {
             this.head.showBubble();
-            if (this.state.type === 'double') {
-                if (this.head2 !== undefined) {
-                    this.head2.showBubble();
-                }
+            if (this.state.type === 'double' && this.head2 !== undefined) {
+                this.head2.showBubble();
             }
         }
         this.line.progressValue(this.head.element, this.head2?.element);
@@ -80,15 +78,13 @@ class View extends Observer {
             this.head.updateBubble(this.state.valueTo);
             this.state.onChangeTo(this.state.valueTo);
             this.line.progressValue(this.head.element, this.head2?.element);
-        } else if (data.target === 'valueFrom') {
-            if (this.head2 !== undefined) {
-                this.head2.updatePosition(position);
-                this.head2.updateBubble(this.state.valueFrom);
-                this.state.onChangeFrom(this.state.valueFrom);
-                this.line.progressValue(this.head.element, this.head2.element);
-            } else {
-                throw new Error('Head2 не существует');
-            }
+        } else if (data.target === 'valueFrom' && this.head2 !== undefined) {
+            this.head2.updatePosition(position);
+            this.head2.updateBubble(this.state.valueFrom);
+            this.state.onChangeFrom(this.state.valueFrom);
+            this.line.progressValue(this.head.element, this.head2.element);
+        } else {
+            throw new Error('Head2 не существует');
         }
     }
 
@@ -207,10 +203,8 @@ class View extends Observer {
         });
         if (this.state.bubble) {
             this.head.showBubble();
-            if (this.state.type === 'double') {
-                if (this.head2 !== undefined) {
-                    this.head2.showBubble();
-                }
+            if (this.state.type === 'double' && this.head2 !== undefined) {
+                this.head2.showBubble();
             }
         }
         this.line.progressValue(this.head.element, this.head2?.element);

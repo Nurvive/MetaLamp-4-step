@@ -17,7 +17,10 @@ class Model extends Observer {
             updatedProperty = 'valueTo';
             updatedValue = this.calcUpdatedValue(data, updatedProperty);
         } else if (data.target === 'value') {
-            const {property, value} = this.calcValueHelper(data);
+            const {
+                property,
+                value
+            } = this.calcValueHelper(data);
             updatedValue = value;
             updatedProperty = property;
         } else {
@@ -248,10 +251,8 @@ class Model extends Observer {
         if (valueTo < this.state.min) {
             return this.state.min;
         }
-        if (this.state.type === 'double') {
-            if (valueTo <= this.state.valueFrom) {
-                return this.state.valueFrom + this.state.step;
-            }
+        if (this.state.type === 'double' && valueTo <= this.state.valueFrom) {
+            return this.state.valueFrom + this.state.step;
         }
         return valueTo;
     }
