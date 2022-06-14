@@ -26,6 +26,7 @@
         "test": "jest",
         "dev": "parcel src/index/index.pug --no-cache",
         "build": "parcel build src/index/index.pug --public-url .",
+        "build-plugin": "parcel build src/slider/jquery.slider.js --dist-dir prod/build",
         "lint": "eslint src --ext .ts,.js tests/**/*.js",
         "deploy": "gh-pages -d dist"
     }
