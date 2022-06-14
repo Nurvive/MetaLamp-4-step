@@ -99,7 +99,7 @@ class Model extends Observer {
         });
     }
 
-    get getStep(): number {
+    get step(): number {
         return this.state.step;
     }
 
@@ -121,7 +121,7 @@ class Model extends Observer {
         });
     }
 
-    get getMax(): number {
+    get max(): number {
         return this.state.max;
     }
 
@@ -143,7 +143,7 @@ class Model extends Observer {
         });
     }
 
-    get getMin(): number {
+    get min(): number {
         return this.state.min;
     }
 
@@ -165,7 +165,7 @@ class Model extends Observer {
         });
     }
 
-    get getValueTo(): number {
+    get valueTo(): number {
         return this.state.valueTo;
     }
 
@@ -189,7 +189,7 @@ class Model extends Observer {
         });
     }
 
-    get getValueFrom(): number {
+    get valueFrom(): number {
         return this.state.valueFrom;
     }
 

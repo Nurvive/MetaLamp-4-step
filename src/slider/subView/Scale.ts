@@ -80,19 +80,19 @@ class Scale {
         this.element.remove();
     }
 
-    get getWidth(): number {
+    get width(): number {
         return this.element.getBoundingClientRect().width;
     }
 
-    get getLeftCoordinate(): number {
+    get leftCoordinate(): number {
         return this.element.getBoundingClientRect().left;
     }
 
-    get getHeight(): number {
+    get height(): number {
         return this.element.getBoundingClientRect().height;
     }
 
-    get getTopCoordinate(): number {
+    get topCoordinate(): number {
         return this.element.getBoundingClientRect().top;
     }
 }

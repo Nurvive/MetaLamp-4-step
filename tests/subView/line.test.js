@@ -11,24 +11,24 @@ describe('class Line: ', () => {
         });
     });
     test('func setType', () => {
-        line.setType = 'single';
+        line.Type = 'single';
         expect(line.type)
             .toBe('single');
     });
     test('func getHeight is OK', () => {
-        expect(line.getHeight)
+        expect(line.height)
             .toBe(line.element.getBoundingClientRect().height);
     });
     test('func getWidth is OK', () => {
-        expect(line.getHeight)
+        expect(line.height)
             .toBe(line.element.getBoundingClientRect().width);
     });
     test('func getLeftCoordinate is OK', () => {
-        expect(line.getHeight)
+        expect(line.height)
             .toBe(line.element.getBoundingClientRect().left);
     });
     test('func getTopCoordinate is OK', () => {
-        expect(line.getHeight)
+        expect(line.height)
             .toBe(line.element.getBoundingClientRect().top);
     });
     test('func progressValue double is OK', () => {
@@ -55,7 +55,7 @@ describe('class Line: ', () => {
     test('func progressValue single is OK', () => {
         line.progressBar.style.width = '0';
         line.progressBar.style.height = '100%';
-        line.setType = 'single';
+        line.Type = 'single';
         const To = document.createElement('div');
         To.style.left = '40%';
         To.style.top = '40%';

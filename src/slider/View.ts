@@ -239,15 +239,15 @@ class View extends Observer {
         event.preventDefault();
         const evtSwipe: MouseEvent | Touch = View.getEvent(event);
         if (this.state.direction === 'horizontal') {
-            dataArray.push(this.line.getWidth);
-            dataArray.push(this.line.getLeftCoordinate);
+            dataArray.push(this.line.width);
+            dataArray.push(this.line.leftCoordinate);
             dataArray.push(evtSwipe.clientX);
         } else {
-            dataArray.push(this.line.getHeight);
-            dataArray.push(this.line.getTopCoordinate);
+            dataArray.push(this.line.height);
+            dataArray.push(this.line.topCoordinate);
             dataArray.push(evtSwipe.clientY);
         }
-        dataArray.push(this.head.getWidth / 2);
+        dataArray.push(this.head.width / 2);
         this.notify('default', {
             valueArray: dataArray.slice(),
             target: updatedHead
@@ -278,12 +278,12 @@ class View extends Observer {
         const evt: MouseEvent | Touch = View.getEvent(event.detail.data);
         const dataArray: Array<number> = [];
         if (this.state.direction === 'horizontal') {
-            dataArray.push(this.line.getWidth);
-            dataArray.push(this.line.getLeftCoordinate);
+            dataArray.push(this.line.width);
+            dataArray.push(this.line.leftCoordinate);
             dataArray.push(evt.clientX);
         } else {
-            dataArray.push(this.line.getHeight);
-            dataArray.push(this.line.getTopCoordinate);
+            dataArray.push(this.line.height);
+            dataArray.push(this.line.topCoordinate);
             dataArray.push(evt.clientY);
         }
         return dataArray;

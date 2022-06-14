@@ -66,23 +66,23 @@ class Slider {
     }
 
     getMax(): number {
-        return this.model.getMax;
+        return this.model.max;
     }
 
     getMin(): number {
-        return this.model.getMin;
+        return this.model.min;
     }
 
     getValueTo(): number {
-        return this.model.getValueTo;
+        return this.model.valueTo;
     }
 
     getValueFrom(): number {
-        return this.model.getValueFrom;
+        return this.model.valueFrom;
     }
 
     getStep(): number {
-        return this.model.getStep;
+        return this.model.step;
     }
 }
 

@@ -12,19 +12,19 @@ describe('class Scale: ', () => {
         });
     });
     test('func getHeight is OK', () => {
-        expect(scale.getHeight)
+        expect(scale.height)
             .toBe(scale.element.getBoundingClientRect().height);
     });
     test('func getWidth is OK', () => {
-        expect(scale.getWidth)
+        expect(scale.width)
             .toBe(scale.element.getBoundingClientRect().width);
     });
     test('func getHeight is OK', () => {
-        expect(scale.getLeftCoordinate)
+        expect(scale.leftCoordinate)
             .toBe(scale.element.getBoundingClientRect().left);
     });
     test('func getHeight is OK', () => {
-        expect(scale.getTopCoordinate)
+        expect(scale.topCoordinate)
             .toBe(scale.element.getBoundingClientRect().top);
     });
 });

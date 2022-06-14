@@ -71,11 +71,11 @@ class ViewHead {
         this.bubble.hide();
     }
 
-    get getWidth(): number {
+    get width(): number {
         return this.element.getBoundingClientRect().width;
     }
 
-    get getHeight(): number {
+    get height(): number {
         return this.element.getBoundingClientRect().height;
     }
 }

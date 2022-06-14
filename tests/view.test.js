@@ -127,11 +127,11 @@ describe('Class View: ', () => {
                 data: evt
             }
         });
-        let array = [view.line.getWidth, view.line.getLeftCoordinate, evt.clientX];
+        let array = [view.line.width, view.line.leftCoordinate, evt.clientX];
         expect(view['handleScaleClick'](customEvt))
             .toEqual(array);
         view.state.direction = 'vertical';
-        array = [view.line.getHeight, view.line.getTopCoordinate, evt.clientY];
+        array = [view.line.height, view.line.topCoordinate, evt.clientY];
         expect(view['handleScaleClick'](customEvt))
             .toEqual(array);
     });
@@ -142,11 +142,11 @@ describe('Class View: ', () => {
                 data: evt
             }
         });
-        let array = [view.line.getWidth, view.line.getLeftCoordinate, evt.clientX];
+        let array = [view.line.width, view.line.leftCoordinate, evt.clientX];
         expect(view['scaleClickData'](customEvt))
             .toEqual(array);
         view.state.direction = 'vertical';
-        array = [view.line.getHeight, view.line.getTopCoordinate, evt.clientY];
+        array = [view.line.height, view.line.topCoordinate, evt.clientY];
         expect(view['scaleClickData'](customEvt))
             .toEqual(array);
     });

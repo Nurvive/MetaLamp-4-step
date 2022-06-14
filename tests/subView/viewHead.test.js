@@ -12,10 +12,10 @@ describe('class ViewHead: ', () => {
         });
     });
     test('func getHeight is OK', () => {
-        expect(viewHead.getHeight).toBe(viewHead.element.getBoundingClientRect().height);
+        expect(viewHead.height).toBe(viewHead.element.getBoundingClientRect().height);
     });
     test('func getWidth is OK', () => {
-        expect(viewHead.getHeight).toBe(viewHead.element.getBoundingClientRect().width);
+        expect(viewHead.height).toBe(viewHead.element.getBoundingClientRect().width);
     });
     test('func updatePosition is OK', () => {
         viewHead.updatePosition(0.5);
