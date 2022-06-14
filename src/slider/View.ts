@@ -173,16 +173,6 @@ class View extends Observer {
             min: this.state.min,
             max: this.state.max
         });
-        if (this.state.type === 'double') {
-            const head2StartPos: number = this.calcHeadStartPosition(this.state.valueFrom);
-            this.head2 = new ViewHead({
-                parent: this.line.element,
-                direction: this.state.direction,
-                value: head2StartPos,
-                bubbleValue: this.state.valueFrom
-            });
-            this.head2.element.setAttribute('data-valueFrom', 'true');
-        }
         const headStartPos = this.calcHeadStartPosition(this.state.valueTo);
         this.head = new ViewHead({
             parent: this.line.element,
@@ -190,14 +180,7 @@ class View extends Observer {
             value: headStartPos,
             bubbleValue: this.state.valueTo
         });
-        if (this.state.bubble) {
-            this.head.showBubble();
-            if (this.state.type === 'double' && this.head2 !== undefined) {
-                this.head2.showBubble();
-            }
-        }
-        this.line.progressValue(this.head.element, this.head2?.element);
-        this.setup();
+        this.init();
     }
 
     private setup(): void {
