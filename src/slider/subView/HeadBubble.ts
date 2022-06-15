@@ -1,32 +1,48 @@
+import {HeadType} from '../types/types';
+
 class HeadBubble {
-    element: HTMLElement | undefined;
+    element: HTMLElement;
 
     parent: HTMLElement;
 
-    constructor(parent: HTMLElement) {
+    type: HeadType
+
+    constructor(parent: HTMLElement, type: HeadType) {
         this.parent = parent;
+        this.type = type;
+        this.element = document.createElement('span');
         this.init();
     }
 
     init(): void {
-        this.element = document.createElement('span');
         this.element.classList.add('slider__head-bubble');
         this.element.setAttribute('data-type', 'bubble');
+        if (this.type === 'to') {
+            this.element.setAttribute('data-valueTo', 'true');
+        } else {
+            this.element.setAttribute('data-valueFrom', 'true');
+        }
         this.parent.append(this.element);
     }
 
     update(value: number): void {
-        if (this.element) {
-            this.element.textContent = String(value);
-        }
+        this.element.textContent = String(value);
+    }
+
+    onActive(): void {
+        this.element.classList.add('slider__head-bubble_grabbing');
+    }
+
+    offActive(): void {
+        this.element.classList.remove('slider__head-bubble_grabbing');
     }
 
     show(): void {
-        this.element?.classList.add('slider__head-bubble_active');
+        this.element.classList.add('slider__head-bubble_active');
     }
 
     hide(): void {
-        this.element?.classList.remove('slider__head-bubble_active');
+        this.element.classList.remove('slider__head-bubble_active');
     }
 }
 

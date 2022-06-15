@@ -43,7 +43,8 @@ class View extends Observer {
             parent: this.line.element,
             direction: this.state.direction,
             value: headStartPos,
-            bubbleValue: this.state.valueTo
+            bubbleValue: this.state.valueTo,
+            type: 'to'
         });
     }
 
@@ -54,9 +55,9 @@ class View extends Observer {
                 parent: this.line.element,
                 direction: this.state.direction,
                 value: head2StartPos,
-                bubbleValue: this.state.valueFrom
+                bubbleValue: this.state.valueFrom,
+                type: 'from'
             });
-            this.head2.element.setAttribute('data-valueFrom', 'true');
         }
         if (this.state.bubble) {
             this.head.showBubble();
@@ -178,7 +179,8 @@ class View extends Observer {
             parent: this.line.element,
             direction: this.state.direction,
             value: headStartPos,
-            bubbleValue: this.state.valueTo
+            bubbleValue: this.state.valueTo,
+            type: 'to'
         });
         this.init();
     }
@@ -257,6 +259,8 @@ class View extends Observer {
     };
 
     private handleSwipeEnd = (): boolean => {
+        this.head.offActive();
+        this.head2?.offActive();
         document.removeEventListener('touchmove', this.handleSwipe);
         document.removeEventListener('mousemove', this.handleSwipe);
         document.removeEventListener('touchend', this.handleSwipeEnd);

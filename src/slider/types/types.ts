@@ -9,6 +9,7 @@ type TargetType =
     | 'value';
 type DirectionType = 'horizontal' | 'vertical';
 type TypeOfSlider = 'single' | 'double';
+type HeadType = 'from' | 'to';
 type EventType =
     'state'
     | 'default'
@@ -58,7 +59,8 @@ type ViewHeadCreate = {
     parent: HTMLElement,
     direction: DirectionType,
     value: number,
-    bubbleValue: number
+    bubbleValue: number,
+    type: HeadType
 }
 
 type GetRelativeType = {
@@ -80,5 +82,6 @@ export type {
     DirectionType,
     TypeOfSlider,
     ObserverItem,
-    EventType
+    EventType,
+    HeadType
 };

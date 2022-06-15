@@ -1,5 +1,5 @@
 import HeadBubble from './HeadBubble';
-import {ViewHeadCreate} from '../types/types';
+import {HeadType, ViewHeadCreate} from '../types/types';
 
 class ViewHead {
     parent: HTMLElement;
@@ -10,16 +10,20 @@ class ViewHead {
 
     bubble: HeadBubble;
 
+    type: HeadType;
+
     constructor({
         parent,
         direction,
         value,
-        bubbleValue
+        bubbleValue,
+        type
     }: ViewHeadCreate) {
         this.parent = parent;
         this.direction = direction;
         this.element = document.createElement('div');
-        this.bubble = new HeadBubble(this.element);
+        this.type = type;
+        this.bubble = new HeadBubble(this.element, this.type);
         this.updatePosition(value);
         this.updateBubble(bubbleValue);
         this.init();
@@ -27,6 +31,11 @@ class ViewHead {
 
     init(): void {
         this.element.classList.add('slider__head');
+        if (this.type === 'to') {
+            this.element.setAttribute('data-valueTo', 'true');
+        } else {
+            this.element.setAttribute('data-valueFrom', 'true');
+        }
         this.direction === 'horizontal'
             ? this.element.classList.add('slider__head')
             : this.element.classList.add('slider__head', 'slider__head_vertical');
@@ -36,6 +45,7 @@ class ViewHead {
     }
 
     handleHeadStart = (e: MouseEvent | TouchEvent): void => {
+        this.onActive();
         const headEvent = new CustomEvent('headStart', {
             detail: {
                 data: e
@@ -43,6 +53,16 @@ class ViewHead {
         });
         this.parent.dispatchEvent(headEvent);
     };
+
+    onActive(): void {
+        this.element.classList.add('slider__head_active');
+        this.bubble.onActive();
+    }
+
+    offActive(): void {
+        this.element.classList.remove('slider__head_active');
+        this.bubble.offActive();
+    }
 
     removeHead(): boolean {
         this.element.remove();

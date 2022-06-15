@@ -1,6 +1,7 @@
 import './slider-template.scss';
 import '../../slider/jquery.slider.js';
 import {State} from '../../slider/types/types';
+import {rootLogger} from 'ts-jest';
 
 class SliderTemplate {
     private readonly element: JQuery;
@@ -93,6 +94,9 @@ class SliderTemplate {
     handleStepInputChange = (e: JQuery.ChangeEvent): void => {
         try {
             this.slider?.Slider('changeStep', parseFloat(e.target.value));
+            const step = this.slider?.Slider('getStep');
+            this.$toInput?.attr('step', String(step));
+            this.$fromInput?.attr('step', String(step));
         } catch (error) {
             e.target.value = this.slider?.Slider('getStep');
         }
