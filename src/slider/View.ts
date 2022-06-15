@@ -259,14 +259,26 @@ class View extends Observer {
     };
 
     private handleSwipeEnd = (): boolean => {
-        this.head.offActive();
-        this.head2?.offActive();
+        this.onEndWork();
         document.removeEventListener('touchmove', this.handleSwipe);
         document.removeEventListener('mousemove', this.handleSwipe);
         document.removeEventListener('touchend', this.handleSwipeEnd);
         document.removeEventListener('mouseup', this.handleSwipeEnd);
         return true;
     };
+
+    private onEndWork(): void {
+        this.head.offActive();
+        this.head2?.offActive();
+        const isInCorner = (): boolean => {
+            return this.state.valueTo >= (this.state.max - this.state.step * 2);
+        };
+        if (this.head2 && isInCorner()) {
+            this.head2.high();
+        } else if (this.head2) {
+            this.head2.down();
+        }
+    }
 
     private handleScaleClick = (event: CustomEvent): Array<number> => {
         const dataArray: Array<number> = this.scaleClickData(event);

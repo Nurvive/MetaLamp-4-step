@@ -98,6 +98,14 @@ class ViewHead {
     get height(): number {
         return this.element.getBoundingClientRect().height;
     }
+
+    high(): void {
+        this.element.classList.add('slider__head_high');
+    }
+
+    down(): void {
+        this.element.classList.remove('slider__head_high');
+    }
 }
 
 export default ViewHead;

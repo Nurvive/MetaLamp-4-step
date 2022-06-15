@@ -57,6 +57,10 @@
             transform: translateY(-40%);
         }
 
+        &_high {
+            z-index: 4 !important;
+        }
+
         &-bubble {
             display: none;
             position: absolute;
