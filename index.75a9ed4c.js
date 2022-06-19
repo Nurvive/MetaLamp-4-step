@@ -619,12 +619,12 @@ var _slider = require("./Slider");
             });
             slider.showBubble();
         },
-        changeOrientation: function(value) {
+        changeDirection: function(value) {
             let slider;
             sliders.forEach((x)=>{
                 if (x.elem === this[0]) slider = x;
             });
-            slider.changeOrientation(value);
+            slider.changeDirection(value);
         },
         changeType: function(value) {
             let slider;
@@ -734,60 +734,55 @@ class Slider {
         this.presenter = new _presenter.Presenter(this.model, this.view);
     }
     hideBubble() {
-        this.view.hideBubble();
+        this.model.bubble = false;
         return true;
     }
     showBubble() {
-        this.view.showBubble();
+        this.model.bubble = true;
         return true;
     }
-    changeOrientation(value) {
-        this.view.changeOrientation = value;
-        this.model.changeOrientation = value;
+    changeDirection(value) {
+        this.model.direction = value;
         return true;
     }
     changeType(value) {
-        this.view.changeType = value;
-        this.model.changeType = value;
+        this.model.type = value;
         return true;
     }
     changeStep(value) {
-        this.model.changeStep = value;
-        this.view.changeStep = value;
+        this.model.step = value;
         return true;
     }
     changeTo(value) {
-        this.model.changeTo = value;
+        this.model.to = value;
         return true;
     }
     changeFrom(value) {
-        this.model.changeFrom = value;
+        this.model.from = value;
         return true;
     }
     changeMax(value) {
-        this.model.changeMax = value;
-        this.view.changeMax = value;
+        this.model.max = value;
         return true;
     }
     changeMin(value) {
-        this.model.changeMin = value;
-        this.view.changeMin = value;
+        this.model.min = value;
         return true;
     }
     getMax() {
-        return this.model.getMax;
+        return this.model.max;
     }
     getMin() {
-        return this.model.getMin;
+        return this.model.min;
     }
     getValueTo() {
-        return this.model.getValueTo;
+        return this.model.valueTo;
     }
     getValueFrom() {
-        return this.model.getValueFrom;
+        return this.model.valueFrom;
     }
     getStep() {
-        return this.model.getStep;
+        return this.model.step;
     }
 }
 
@@ -833,24 +828,24 @@ class View extends _observer.Observer {
             event.preventDefault();
             const evtSwipe = View.getEvent(event);
             if (this.state.direction === 'horizontal') {
-                dataArray.push(this.line.getWidth);
-                dataArray.push(this.line.getLeftCoordinate);
+                dataArray.push(this.line.width);
+                dataArray.push(this.line.leftCoordinate);
                 dataArray.push(evtSwipe.clientX);
             } else {
-                dataArray.push(this.line.getHeight);
-                dataArray.push(this.line.getTopCoordinate);
+                dataArray.push(this.line.height);
+                dataArray.push(this.line.topCoordinate);
                 dataArray.push(evtSwipe.clientY);
             }
-            dataArray.push(this.head.getWidth / 2);
-            this.notify({
+            dataArray.push(this.head.width / 2);
+            this.notify('default', {
                 valueArray: dataArray.slice(),
-                target: updatedHead,
-                onlyState: false
+                target: updatedHead
             });
             dataArray.splice(2, dataArray.length - 2);
             return dataArray;
         };
         this.handleSwipeEnd = ()=>{
+            this.onEndWork();
             document.removeEventListener('touchmove', this.handleSwipe);
             document.removeEventListener('mousemove', this.handleSwipe);
             document.removeEventListener('touchend', this.handleSwipeEnd);
@@ -859,11 +854,11 @@ class View extends _observer.Observer {
         };
         this.handleScaleClick = (event)=>{
             const dataArray = this.scaleClickData(event);
-            this.notify({
+            this.notify('default', {
                 target: 'value',
-                valueArray: dataArray.slice(),
-                onlyState: false
+                valueArray: dataArray.slice()
             });
+            this.changeZIndex();
             return dataArray;
         };
         this.elem = elem;
@@ -871,28 +866,46 @@ class View extends _observer.Observer {
         ;
         this.state = Object.assign({
         }, options);
-        this.line = new _lineDefault.default(this.elem, this.state.direction, this.state.type);
-        this.scale = new _scaleDefault.default(this.line.element, this.state.direction, this.state.min, this.state.max);
+        this.line = new _lineDefault.default({
+            parent: this.elem,
+            direction: this.state.direction,
+            type: this.state.type
+        });
+        this.scale = new _scaleDefault.default({
+            parent: this.line.element,
+            direction: this.state.direction,
+            min: this.state.min,
+            max: this.state.max
+        });
         const headStartPos = this.calcHeadStartPosition(this.state.valueTo);
-        this.head = new _viewHeadDefault.default(this.line.element, this.state.direction, headStartPos, this.state.valueTo);
+        this.head = new _viewHeadDefault.default({
+            parent: this.line.element,
+            direction: this.state.direction,
+            value: headStartPos,
+            bubbleValue: this.state.valueTo,
+            type: 'to'
+        });
     }
     init() {
         if (this.state.type === 'double') {
             const head2StartPos = this.calcHeadStartPosition(this.state.valueFrom);
-            this.head2 = new _viewHeadDefault.default(this.line.element, this.state.direction, head2StartPos, this.state.valueFrom);
-            this.head2.element.setAttribute('data-valueFrom', 'true');
+            this.head2 = new _viewHeadDefault.default({
+                parent: this.line.element,
+                direction: this.state.direction,
+                value: head2StartPos,
+                bubbleValue: this.state.valueFrom,
+                type: 'from'
+            });
         }
         if (this.state.bubble) {
             this.head.showBubble();
-            if (this.state.type === 'double') {
-                if (this.head2 !== undefined) this.head2.showBubble();
-            }
+            if (this.state.type === 'double' && this.head2 !== undefined) this.head2.showBubble();
         }
         this.line.progressValue(this.head.element, this.head2?.element);
+        this.changeZIndex();
         this.setup();
     }
     changePosition(data) {
-        if (data.onlyState) return;
         let position = 0;
         if (data.valueNumber !== undefined) position = data.valueNumber;
         else throw new Error('Новое значение не определено');
@@ -901,48 +914,33 @@ class View extends _observer.Observer {
             this.head.updateBubble(this.state.valueTo);
             this.state.onChangeTo(this.state.valueTo);
             this.line.progressValue(this.head.element, this.head2?.element);
-        } else if (data.target === 'valueFrom') {
-            if (this.head2 !== undefined) {
-                this.head2.updatePosition(position);
-                this.head2.updateBubble(this.state.valueFrom);
-                this.state.onChangeFrom(this.state.valueFrom);
-                this.line.progressValue(this.head.element, this.head2.element);
-            } else throw new Error('Head2 не существует');
-        }
+        } else if (data.target === 'valueFrom' && this.head2 !== undefined) {
+            this.head2.updatePosition(position);
+            this.head2.updateBubble(this.state.valueFrom);
+            this.state.onChangeFrom(this.state.valueFrom);
+            this.line.progressValue(this.head.element, this.head2.element);
+        } else throw new Error('Head2 не существует');
     }
-    hideBubble() {
+    hideBubble(data) {
         this.updateState({
-            target: 'bubble',
-            valueBoolean: false,
-            onlyState: true
+            target: data.target,
+            valueBoolean: data.valueBoolean
         });
         this.head.hideBubble();
         this.head2?.hideBubble();
-        this.notify({
-            target: 'bubble',
-            valueBoolean: false,
-            onlyState: true
-        });
     }
-    showBubble() {
+    showBubble(data) {
         this.updateState({
-            target: 'bubble',
-            valueBoolean: true,
-            onlyState: true
+            target: data.target,
+            valueBoolean: data.valueBoolean
         });
         this.head.showBubble();
         this.head2?.showBubble();
-        this.notify({
-            target: 'bubble',
-            valueBoolean: true,
-            onlyState: true
-        });
     }
-    set changeOrientation(value) {
+    changeDirection(data) {
         this.updateState({
-            target: 'direction',
-            valueString: value,
-            onlyState: true
+            target: data.target,
+            valueString: data.valueString
         });
         this.head.removeHead();
         this.head2?.removeHead();
@@ -950,11 +948,10 @@ class View extends _observer.Observer {
         this.line.removeLine();
         this.reInit();
     }
-    set changeType(value) {
+    changeType(data) {
         this.updateState({
-            target: 'type',
-            valueString: value,
-            onlyState: true
+            target: data.target,
+            valueString: data.valueString
         });
         this.head.removeHead();
         this.head2?.removeHead();
@@ -963,29 +960,16 @@ class View extends _observer.Observer {
         this.line.removeLine();
         this.reInit();
     }
-    set changeStep(value) {
-        if (value > this.state.max - this.state.min) throw new Error('Шаг не может быть больше разницы максимума и минимума');
-        this.state.step = value;
-    }
-    set changeMax(value) {
-        if (value <= this.state.min) throw new Error('Максимум не может быть меньше или равен минимуму');
+    changeStep(data) {
         this.updateState({
-            target: 'max',
-            valueNumber: value,
-            onlyState: true
+            target: data.target,
+            valueNumber: data.valueNumber
         });
-        this.head.removeHead();
-        this.head2?.removeHead();
-        this.scale.removeScale();
-        this.line.removeLine();
-        this.reInit();
     }
-    set changeMin(value) {
-        if (value >= this.state.max || value >= this.state.valueTo) throw new Error('Минимум не может быть больше или равен максимуму');
+    changeMaxMin(data) {
         this.updateState({
-            target: 'min',
-            valueNumber: value,
-            onlyState: true
+            target: data.target,
+            valueNumber: data.valueNumber
         });
         this.head.removeHead();
         this.head2?.removeHead();
@@ -994,33 +978,45 @@ class View extends _observer.Observer {
         this.reInit();
     }
     updateState(data) {
-        if (!data.onlyState) return;
-        if (typeof this.state[data.target] === 'string') this.state[data.target] = data.valueString;
-        else if (typeof this.state[data.target] === 'number') this.state[data.target] = data.valueNumber;
-        else this.state[data.target] = data.valueBoolean;
+        const target = data.target;
+        const value = View.getValueFromData(data);
+        this.state = {
+            ...this.state,
+            [target]: value
+        };
     }
     reInit() {
-        this.line = new _lineDefault.default(this.elem, this.state.direction, this.state.type);
-        this.scale = new _scaleDefault.default(this.line.element, this.state.direction, this.state.min, this.state.max);
-        if (this.state.type === 'double') {
-            const head2StartPos = this.calcHeadStartPosition(this.state.valueFrom);
-            this.head2 = new _viewHeadDefault.default(this.line.element, this.state.direction, head2StartPos, this.state.valueFrom);
-            this.head2.element.setAttribute('data-valueFrom', 'true');
-        }
+        this.line = new _lineDefault.default({
+            parent: this.elem,
+            direction: this.state.direction,
+            type: this.state.type
+        });
+        this.scale = new _scaleDefault.default({
+            parent: this.line.element,
+            direction: this.state.direction,
+            min: this.state.min,
+            max: this.state.max
+        });
         const headStartPos = this.calcHeadStartPosition(this.state.valueTo);
-        this.head = new _viewHeadDefault.default(this.line.element, this.state.direction, headStartPos, this.state.valueTo);
-        if (this.state.bubble) {
-            this.head.showBubble();
-            if (this.state.type === 'double') {
-                if (this.head2 !== undefined) this.head2.showBubble();
-            }
-        }
-        this.line.progressValue(this.head.element, this.head2?.element);
-        this.setup();
+        this.head = new _viewHeadDefault.default({
+            parent: this.line.element,
+            direction: this.state.direction,
+            value: headStartPos,
+            bubbleValue: this.state.valueTo,
+            type: 'to'
+        });
+        this.init();
     }
     setup() {
         this.elem.addEventListener('headStart', this.handleHeadStart);
         this.elem.addEventListener('scaleClick', this.handleScaleClick);
+    }
+    static getValueFromData(data) {
+        let value;
+        Object.entries(data).forEach((key)=>{
+            if (key[0] !== 'target') value = key[1];
+        });
+        return value;
     }
     calcHeadStartPosition(value) {
         return (value - this.state.min) / (this.state.max - this.state.min);
@@ -1029,16 +1025,28 @@ class View extends _observer.Observer {
         if (event instanceof TouchEvent) return event.touches[0];
         return event;
     }
+    onEndWork() {
+        this.head.offActive();
+        this.head2?.offActive();
+        this.changeZIndex();
+    }
+    changeZIndex() {
+        const isInCorner = ()=>{
+            return this.state.valueTo >= this.state.max - this.state.step * 2;
+        };
+        if (this.head2 && isInCorner()) this.head2.high();
+        else if (this.head2) this.head2.down();
+    }
     scaleClickData(event) {
         const evt = View.getEvent(event.detail.data);
         const dataArray = [];
         if (this.state.direction === 'horizontal') {
-            dataArray.push(this.line.getWidth);
-            dataArray.push(this.line.getLeftCoordinate);
+            dataArray.push(this.line.width);
+            dataArray.push(this.line.leftCoordinate);
             dataArray.push(evt.clientX);
         } else {
-            dataArray.push(this.line.getHeight);
-            dataArray.push(this.line.getTopCoordinate);
+            dataArray.push(this.line.height);
+            dataArray.push(this.line.topCoordinate);
             dataArray.push(evt.clientY);
         }
         return dataArray;
@@ -1054,16 +1062,20 @@ class Observer {
     constructor(){
         this.observers = [];
     }
-    subscribe(observer) {
-        this.observers.push(observer);
+    subscribe(eventType, observer) {
+        this.observers.push({
+            eventType: eventType,
+            observer: observer
+        });
     }
-    unsubscribe(observer) {
-        this.observers = this.observers.filter((x)=>x !== observer
+    unsubscribe(eventType, observer) {
+        this.observers = this.observers.filter((item)=>item.observer !== observer
         );
     }
-    notify(data) {
-        this.observers.forEach((x)=>x(data)
-        );
+    notify(eventType, data) {
+        this.observers.forEach((item)=>{
+            if (item.eventType === eventType) item.observer(data);
+        });
     }
 }
 
@@ -1103,8 +1115,9 @@ parcelHelpers.defineInteropFlag(exports);
 var _headBubble = require("./HeadBubble");
 var _headBubbleDefault = parcelHelpers.interopDefault(_headBubble);
 class ViewHead {
-    constructor(parent, direction, value, bubbleValue){
+    constructor({ parent , direction , value , bubbleValue , type  }){
         this.handleHeadStart = (e)=>{
+            this.onActive();
             const headEvent = new CustomEvent('headStart', {
                 detail: {
                     data: e
@@ -1115,17 +1128,28 @@ class ViewHead {
         this.parent = parent;
         this.direction = direction;
         this.element = document.createElement('div');
-        this.bubble = new _headBubbleDefault.default(this.element);
+        this.type = type;
+        this.bubble = new _headBubbleDefault.default(this.element, this.type);
         this.updatePosition(value);
         this.updateBubble(bubbleValue);
         this.init();
     }
     init() {
         this.element.classList.add('slider__head');
+        if (this.type === 'to') this.element.setAttribute('data-valueTo', 'true');
+        else this.element.setAttribute('data-valueFrom', 'true');
         this.direction === 'horizontal' ? this.element.classList.add('slider__head') : this.element.classList.add('slider__head', 'slider__head_vertical');
         this.parent.append(this.element);
         this.element.addEventListener('mousedown', this.handleHeadStart);
         this.element.addEventListener('touchstart', this.handleHeadStart);
+    }
+    onActive() {
+        this.element.classList.add('slider__head_active');
+        this.bubble.onActive();
+    }
+    offActive() {
+        this.element.classList.remove('slider__head_active');
+        this.bubble.offActive();
     }
     removeHead() {
         this.element.remove();
@@ -1144,11 +1168,17 @@ class ViewHead {
     hideBubble() {
         this.bubble.hide();
     }
-    get getWidth() {
+    get width() {
         return this.element.getBoundingClientRect().width;
     }
-    get getHeight() {
+    get height() {
         return this.element.getBoundingClientRect().height;
+    }
+    high() {
+        this.element.classList.add('slider__head_high');
+    }
+    down() {
+        this.element.classList.remove('slider__head_high');
     }
 }
 exports.default = ViewHead;
@@ -1157,24 +1187,33 @@ exports.default = ViewHead;
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 class HeadBubble {
-    constructor(parent){
+    constructor(parent, type){
         this.parent = parent;
+        this.type = type;
+        this.element = document.createElement('span');
         this.init();
     }
     init() {
-        this.element = document.createElement('span');
         this.element.classList.add('slider__head-bubble');
         this.element.setAttribute('data-type', 'bubble');
+        if (this.type === 'to') this.element.setAttribute('data-valueTo', 'true');
+        else this.element.setAttribute('data-valueFrom', 'true');
         this.parent.append(this.element);
     }
     update(value) {
-        if (this.element) this.element.textContent = String(value);
+        this.element.textContent = String(value);
+    }
+    onActive() {
+        this.element.classList.add('slider__head-bubble_grabbing');
+    }
+    offActive() {
+        this.element.classList.remove('slider__head-bubble_grabbing');
     }
     show() {
-        this.element?.classList.add('slider__head-bubble_active');
+        this.element.classList.add('slider__head-bubble_active');
     }
     hide() {
-        this.element?.classList.remove('slider__head-bubble_active');
+        this.element.classList.remove('slider__head-bubble_active');
     }
 }
 exports.default = HeadBubble;
@@ -1183,7 +1222,7 @@ exports.default = HeadBubble;
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 class Scale {
-    constructor(parent, direction, min, max){
+    constructor({ parent , direction , min , max  }){
         this.handleScaleClick = (e)=>{
             const headEvent = new CustomEvent('scaleClick', {
                 detail: {
@@ -1242,16 +1281,16 @@ class Scale {
     removeScale() {
         this.element.remove();
     }
-    get getWidth() {
+    get width() {
         return this.element.getBoundingClientRect().width;
     }
-    get getLeftCoordinate() {
+    get leftCoordinate() {
         return this.element.getBoundingClientRect().left;
     }
-    get getHeight() {
+    get height() {
         return this.element.getBoundingClientRect().height;
     }
-    get getTopCoordinate() {
+    get topCoordinate() {
         return this.element.getBoundingClientRect().top;
     }
 }
@@ -1261,7 +1300,7 @@ exports.default = Scale;
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 class Line {
-    constructor(parent, direction, type){
+    constructor({ parent , direction , type  }){
         this.handleHeadStart = (e)=>{
             const headEvent = new CustomEvent('headStart', {
                 detail: {
@@ -1298,7 +1337,7 @@ class Line {
         this.element.addEventListener('headStart', this.handleHeadStart);
         this.element.addEventListener('scaleClick', this.handleScaleClick);
     }
-    set setType(type) {
+    set Type(type) {
         this.type = type;
     }
     progressValue(to, from) {
@@ -1317,16 +1356,16 @@ class Line {
     removeLine() {
         this.element.remove();
     }
-    get getWidth() {
+    get width() {
         return this.element.getBoundingClientRect().width;
     }
-    get getLeftCoordinate() {
+    get leftCoordinate() {
         return this.element.getBoundingClientRect().left;
     }
-    get getHeight() {
+    get height() {
         return this.element.getBoundingClientRect().height;
     }
-    get getTopCoordinate() {
+    get topCoordinate() {
         return this.element.getBoundingClientRect().top;
     }
 }
@@ -1341,10 +1380,16 @@ class Presenter {
     constructor(model, view){
         this.model = model;
         this.view = view;
-        this.view.subscribe(this.model.updateState.bind(this.model));
-        this.view.subscribe(this.model.calcPosition.bind(this.model));
-        this.model.subscribe(this.view.updateState.bind(this.view));
-        this.model.subscribe(this.view.changePosition.bind(this.view));
+        this.view.subscribe('default', this.model.calcPosition.bind(this.model));
+        this.model.subscribe('state', this.view.updateState.bind(this.view));
+        this.model.subscribe('default', this.view.changePosition.bind(this.view));
+        this.model.subscribe('direction', this.view.changeDirection.bind(this.view));
+        this.model.subscribe('type', this.view.changeType.bind(this.view));
+        this.model.subscribe('step', this.view.changeStep.bind(this.view));
+        this.model.subscribe('max', this.view.changeMaxMin.bind(this.view));
+        this.model.subscribe('min', this.view.changeMaxMin.bind(this.view));
+        this.model.subscribe('showBubble', this.view.showBubble.bind(this.view));
+        this.model.subscribe('hideBubble', this.view.hideBubble.bind(this.view));
     }
 }
 
@@ -1363,140 +1408,156 @@ class Model extends _observer.Observer {
         }, options);
     }
     calcPosition(data) {
-        if (data.onlyState) return;
         let updatedValue;
         let updatedProperty;
         if (data.target === 'valueTo') {
             updatedProperty = 'valueTo';
             updatedValue = this.calcUpdatedValue(data, updatedProperty);
         } else if (data.target === 'value') {
-            updatedValue = this.calcUpdatedValueRelative(data);
-            if (this.state.type === 'single') updatedProperty = 'valueTo';
-            else updatedProperty = this.isValueTo(updatedValue) ? 'valueTo' : 'valueFrom';
-            updatedValue = updatedProperty === 'valueFrom' ? this.validValueFrom(updatedValue) : this.validValueTo(updatedValue);
+            const { property , value  } = this.calcValueHelper(data);
+            updatedValue = value;
+            updatedProperty = property;
         } else {
             updatedProperty = 'valueFrom';
             updatedValue = this.calcUpdatedValue(data, updatedProperty);
         }
         updatedValue = Number(updatedValue.toFixed(2));
-        this.updateState({
+        this.state = {
+            ...this.state,
+            [updatedProperty]: updatedValue
+        };
+        this.notify('state', {
             target: updatedProperty,
-            valueNumber: updatedValue,
-            onlyState: true
+            valueNumber: updatedValue
         });
-        this.notify({
-            target: updatedProperty,
-            valueNumber: updatedValue,
-            onlyState: true
+        let position = Model.getValueRelative({
+            value: updatedValue,
+            min: this.state.min,
+            max: this.state.max
         });
-        let position = Model.getValueRelative(updatedValue, this.state.min, this.state.max);
         position = Model.moreThan0LessThan1(position);
-        this.notify({
+        this.notify('default', {
             target: updatedProperty,
-            valueNumber: position,
-            onlyState: false
+            valueNumber: position
         });
     }
-    set changeOrientation(value) {
-        this.updateState({
+    set bubble(value) {
+        this.state.bubble = value;
+        if (value) this.notify('showBubble', {
+            target: 'bubble',
+            valueBoolean: value
+        });
+        else this.notify('hideBubble', {
+            target: 'bubble',
+            valueBoolean: value
+        });
+    }
+    set direction(value) {
+        this.state.direction = value;
+        this.notify('direction', {
             target: 'direction',
-            valueString: value,
-            onlyState: true
+            valueString: value
         });
     }
-    set changeType(value) {
-        this.updateState({
+    set type(value) {
+        this.state.type = value;
+        this.notify('type', {
             target: 'type',
-            valueString: value,
-            onlyState: true
+            valueString: value
         });
-        if (this.state.min > this.state.valueFrom) this.changeFrom = this.state.min;
-        if (this.state.valueFrom > this.state.valueTo) this.changeFrom = this.state.valueTo;
+        if (this.state.min > this.state.valueFrom) this.from = this.state.min;
+        if (this.state.valueFrom > this.state.valueTo) this.from = this.state.valueTo;
     }
-    set changeStep(value) {
+    set step(value) {
         const stepIsValid = (val, max, min)=>{
             return val < max - min && val > 0;
         };
         if (!stepIsValid(value, this.state.max, this.state.min)) throw new Error('Шаг не может быть больше разницы максимума и минимума или меньше нуля');
         this.state.step = value;
+        this.notify('step', {
+            target: 'step',
+            valueNumber: value
+        });
     }
-    get getStep() {
+    get step() {
         return this.state.step;
     }
-    set changeMax(value) {
+    set max(value) {
         if (value <= this.state.min) throw new Error('Максимум не может быть меньше или равен минимуму');
-        this.updateState({
+        if (value < this.state.valueTo) {
+            this.to = value;
+            this.notify('state', {
+                target: 'valueTo',
+                valueNumber: value
+            });
+        }
+        this.state.max = value;
+        this.notify('max', {
             target: 'max',
-            valueNumber: value,
-            onlyState: true
+            valueNumber: value
         });
-        if (value < this.state.valueTo) this.changeTo = value;
     }
-    get getMax() {
+    get max() {
         return this.state.max;
     }
-    set changeMin(value) {
+    set min(value) {
         if (value >= this.state.max || value >= this.state.valueTo) throw new Error('Минимум не может быть больше или равен максимуму');
-        this.updateState({
+        if (this.state.type === 'double' && value > this.state.valueFrom) {
+            this.from = value;
+            this.notify('state', {
+                target: 'valueFrom',
+                valueNumber: value
+            });
+        }
+        this.state.min = value;
+        this.notify('min', {
             target: 'min',
-            valueNumber: value,
-            onlyState: true
+            valueNumber: value
         });
-        if (this.state.type === 'double' && value > this.state.valueFrom) this.changeFrom = value;
     }
-    get getMin() {
+    get min() {
         return this.state.min;
     }
-    set changeTo(value) {
-        this.updateState({
+    set to(value) {
+        this.state.valueTo = this.validValueTo(value);
+        this.notify('state', {
             target: 'valueTo',
-            valueNumber: this.validValueTo(value),
-            onlyState: true
+            valueNumber: this.state.valueTo
         });
-        this.notify({
-            valueNumber: this.state.valueTo,
-            target: 'valueTo',
-            onlyState: true
+        let position = Model.getValueRelative({
+            value: this.state.valueTo,
+            min: this.state.min,
+            max: this.state.max
         });
-        let position = Model.getValueRelative(this.state.valueTo, this.state.min, this.state.max);
         position = Model.moreThan0LessThan1(position);
-        this.notify({
-            valueNumber: position,
+        this.notify('default', {
             target: 'valueTo',
-            onlyState: false
+            valueNumber: position
         });
     }
-    get getValueTo() {
+    get valueTo() {
         return this.state.valueTo;
     }
-    set changeFrom(value) {
+    set from(value) {
         if (this.state.type === 'single') return;
-        this.updateState({
+        this.state.valueFrom = Number(this.validValueFrom(value).toFixed(2));
+        this.notify('state', {
             target: 'valueFrom',
-            valueNumber: Number(this.validValueFrom(value).toFixed(2)),
-            onlyState: true
+            valueNumber: this.state.valueFrom
         });
-        this.notify({
-            valueNumber: this.state.valueFrom,
-            target: 'valueFrom',
-            onlyState: true
+        let position = Model.getValueRelative({
+            value: this.state.valueFrom,
+            min: this.state.min,
+            max: this.state.max
         });
-        let position = Model.getValueRelative(this.state.valueFrom, this.state.min, this.state.max);
         position = Model.moreThan0LessThan1(position);
-        this.notify({
-            valueNumber: position,
+        this.notify('default', {
             target: 'valueFrom',
-            onlyState: false
+            valueNumber: position
         });
     }
-    get getValueFrom() {
+    get valueFrom() {
         return this.state.valueFrom;
-    }
-    updateState(data) {
-        if (!data.onlyState) return;
-        if (typeof this.state[data.target] === 'string') this.state[data.target] = data.valueString;
-        else if (typeof this.state[data.target] === 'number') this.state[data.target] = data.valueNumber;
-        else this.state[data.target] = data.valueBoolean;
     }
     static moreThan0LessThan1(value) {
         let newValue = value;
@@ -1504,13 +1565,24 @@ class Model extends _observer.Observer {
         newValue = newValue < 0 ? 0 : newValue;
         return newValue;
     }
-    static getValueRelative(value, min, max) {
+    static getValueRelative({ value , min , max  }) {
         return (value - min) / (max - min);
     }
     calcValue(value, updatedProperty = 'valueTo') {
         let newValue = value;
         newValue *= this.state.max - this.state.min;
         return this.state.min + this.calcValueByStep(newValue, updatedProperty);
+    }
+    calcValueHelper(data) {
+        let updatedValue = this.calcUpdatedValueRelative(data);
+        let updatedProperty;
+        if (this.state.type === 'single') updatedProperty = 'valueTo';
+        else updatedProperty = this.isValueTo(updatedValue) ? 'valueTo' : 'valueFrom';
+        updatedValue = updatedProperty === 'valueFrom' ? this.validValueFrom(updatedValue) : this.validValueTo(updatedValue);
+        return {
+            property: updatedProperty,
+            value: updatedValue
+        };
     }
     calcValueByStep(value, updatedProperty) {
         let newValue = value;
@@ -1530,9 +1602,7 @@ class Model extends _observer.Observer {
     validValueTo(valueTo) {
         if (valueTo > this.state.max) return this.state.max;
         if (valueTo < this.state.min) return this.state.min;
-        if (this.state.type === 'double') {
-            if (valueTo <= this.state.valueFrom) return this.state.valueFrom + this.state.step;
-        }
+        if (this.state.type === 'double' && valueTo <= this.state.valueFrom) return this.state.valueFrom + this.state.step;
         return valueTo;
     }
     validValueFrom(valueFrom) {
@@ -1569,7 +1639,7 @@ class SliderTemplate {
             e.target.checked ? this.slider?.Slider('showBubble') : this.slider?.Slider('hideBubble');
         };
         this.handleVerticalButtonClick = (e)=>{
-            e.target.checked ? this.slider?.Slider('changeOrientation', 'vertical') : this.slider?.Slider('changeOrientation', 'horizontal');
+            e.target.checked ? this.slider?.Slider('changeDirection', 'vertical') : this.slider?.Slider('changeDirection', 'horizontal');
         };
         this.handleRangeButtonClick = (e)=>{
             if (e.target.checked) {
@@ -1583,6 +1653,9 @@ class SliderTemplate {
         this.handleStepInputChange = (e)=>{
             try {
                 this.slider?.Slider('changeStep', parseFloat(e.target.value));
+                const step = this.slider?.Slider('getStep');
+                this.$toInput?.attr('step', String(step));
+                this.$fromInput?.attr('step', String(step));
             } catch (error) {
                 e.target.value = this.slider?.Slider('getStep');
             }
@@ -1611,14 +1684,14 @@ class SliderTemplate {
         this.init(settings);
     }
     init(settings) {
-        this.$bubbleButton = $(this.element.find('input[data-type="bubble"]'));
-        this.$verticalButton = $(this.element.find('input[data-type="vertical"]'));
-        this.$rangeButton = $(this.element.find('input[data-type="range"]'));
-        this.$stepInput = $(this.element.find('input[data-type="step"]'));
-        this.$toInput = $(this.element.find('input[data-type="to"]'));
-        this.$fromInput = $(this.element.find('input[data-type="from"]'));
-        this.$maxInput = $(this.element.find('input[data-type="max"]'));
-        this.$minInput = $(this.element.find('input[data-type="min"]'));
+        this.$bubbleButton = $(this.element.find('.js-slider-template__inner-input-bubble'));
+        this.$verticalButton = $(this.element.find('.js-slider-template__inner-input-vertical'));
+        this.$rangeButton = $(this.element.find('.js-slider-template__inner-input-range'));
+        this.$stepInput = $(this.element.find('.js-slider-template__inner-input-step'));
+        this.$toInput = $(this.element.find('.js-slider-template__inner-input-to'));
+        this.$fromInput = $(this.element.find('.js-slider-template__inner-input-from'));
+        this.$maxInput = $(this.element.find('.js-slider-template__inner-input-max'));
+        this.$minInput = $(this.element.find('.js-slider-template__inner-input-min'));
         const options = Object.assign(settings, {
             onChangeTo: (value)=>{
                 this.$toInput?.val(value);
