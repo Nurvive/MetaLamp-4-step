@@ -6,7 +6,8 @@ type TargetType =
     | 'direction'
     | 'type'
     | 'bubble'
-    | 'value';
+    | 'value'
+    | 'step';
 type DirectionType = 'horizontal' | 'vertical';
 type TypeOfSlider = 'single' | 'double';
 type HeadType = 'from' | 'to';

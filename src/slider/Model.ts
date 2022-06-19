@@ -94,7 +94,7 @@ class Model extends Observer {
         if (!stepIsValid(value, this.state.max, this.state.min)) throw new Error('Шаг не может быть больше разницы максимума и минимума или меньше нуля');
         this.state.step = value;
         this.notify('step', {
-            target: 'type',
+            target: 'step',
             valueNumber: value
         });
     }

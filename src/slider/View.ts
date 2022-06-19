@@ -66,6 +66,7 @@ class View extends Observer {
             }
         }
         this.line.progressValue(this.head.element, this.head2?.element);
+        this.changeZIndex();
         this.setup();
     }
 
@@ -270,6 +271,10 @@ class View extends Observer {
     private onEndWork(): void {
         this.head.offActive();
         this.head2?.offActive();
+        this.changeZIndex();
+    }
+
+    private changeZIndex() {
         const isInCorner = (): boolean => {
             return this.state.valueTo >= (this.state.max - this.state.step * 2);
         };
@@ -287,6 +292,7 @@ class View extends Observer {
             target: 'value',
             valueArray: dataArray.slice()
         });
+        this.changeZIndex();
         return dataArray;
     };
 
