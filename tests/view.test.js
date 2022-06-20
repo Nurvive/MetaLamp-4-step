@@ -73,7 +73,9 @@ describe('Class View: ', () => {
         });
         let customEvt = new CustomEvent('start', {
             detail: {
-                data: evt
+                data: {
+                    data: evt
+                }
             }
         });
         let array = [view.head.element.getBoundingClientRect().left, evt.clientX];
@@ -86,7 +88,9 @@ describe('Class View: ', () => {
         });
         customEvt = new CustomEvent('start', {
             detail: {
-                data: evt
+                data: {
+                    data: evt
+                }
             }
         });
         array = [view.head.element.getBoundingClientRect().left, evt.clientX];
@@ -120,26 +124,13 @@ describe('Class View: ', () => {
         expect(view['handleSwipeEnd']())
             .toBeTruthy();
     });
-    test('func onLineClick is OK', () => {
-        let evt = new MouseEvent('mousedown');
-        let customEvt = new CustomEvent('start', {
-            detail: {
-                data: evt
-            }
-        });
-        let array = [view.line.width, view.line.leftCoordinate, evt.clientX];
-        expect(view['handleScaleClick'](customEvt))
-            .toEqual(array);
-        view.state.direction = 'vertical';
-        array = [view.line.height, view.line.topCoordinate, evt.clientY];
-        expect(view['handleScaleClick'](customEvt))
-            .toEqual(array);
-    });
     test('func lineClickData is OK', () => {
         let evt = new MouseEvent('mousedown');
         let customEvt = new CustomEvent('start', {
             detail: {
-                data: evt
+                data: {
+                    event: evt
+                }
             }
         });
         let array = [view.line.width, view.line.leftCoordinate, evt.clientX];

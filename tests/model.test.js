@@ -181,7 +181,7 @@ describe('Class Model: ', () => {
             .toBe(98);
         data = {
             target: 'value',
-            valueArray: [300, 581, 870]
+            valueArray: [300, 581, 870, 96]
         };
         model.calcPosition(data);
         expect(model.state.valueTo)
@@ -189,25 +189,18 @@ describe('Class Model: ', () => {
         model.type = 'double';
         data = {
             valueArray: [576.4000244140625, 580, 300, 581, 644, 7],
-            target: 'valueFrom',
+            target: 'valueFrom'
         };
         model.calcPosition(data);
         expect(model.state.valueFrom)
             .toBe(22);
         data = {
             target: 'value',
-            valueArray: [300, 581, 695],
+            valueArray: [300, 581, 695, 38]
         };
         model.calcPosition(data);
         expect(model.state.valueFrom)
             .toBe(38);
-        data = {
-            target: 'value',
-            valueArray: [300, 581, 855]
-        };
-        model.calcPosition(data);
-        expect(model.state.valueTo)
-            .toBe(91);
         data = {
             valueArray: [847.5718994140625, 852, 300, 581, 630, 7],
             target: 'valueTo'
@@ -225,7 +218,7 @@ describe('Class Model: ', () => {
             .toBe(87);
         data = {
             target: 'value',
-            valueArray: [300, 207, 257]
+            valueArray: [300, 207, 257, 17]
         };
         model.calcPosition(data);
         expect(model.state.valueFrom)
