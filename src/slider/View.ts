@@ -214,7 +214,7 @@ class View extends Observer {
     }
 
     private handleHeadStart = (e: CustomEvent): Array<number> => {
-        const evt: MouseEvent | Touch = View.getEvent(e.detail.data);
+        const evt: MouseEvent | Touch = View.getEvent(e.detail.data.data);
         // Здесь нужен каст через 'as', так как TS не знает, что target это html объект
         const target = evt.target as Element;
         const updatedHead: TargetType = target.hasAttribute('data-valueFrom') ? 'valueFrom' : 'valueTo';
@@ -285,19 +285,18 @@ class View extends Observer {
         }
     }
 
-    private handleScaleClick = (event: CustomEvent): Array<number> => {
+    private handleScaleClick = (event: CustomEvent): void => {
         const dataArray: Array<number> = this.scaleClickData(event);
-
+        dataArray.push(event.detail.data.value);
         this.notify('default', {
             target: 'value',
-            valueArray: dataArray.slice()
+            valueArray: dataArray
         });
         this.changeZIndex();
-        return dataArray;
     };
 
     private scaleClickData(event: CustomEvent): Array<number> {
-        const evt: MouseEvent | Touch = View.getEvent(event.detail.data);
+        const evt: MouseEvent | Touch = View.getEvent(event.detail.data.event);
         const dataArray: Array<number> = [];
         if (this.state.direction === 'horizontal') {
             dataArray.push(this.line.width);

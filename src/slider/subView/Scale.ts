@@ -25,52 +25,45 @@ class Scale {
             : this.element.classList.add('slider__scale', 'slider__scale_vertical');
         this.parent.append(this.element);
         const step = (max - min) / 4;
-        for (let i = 0; i <= 100; i += 5) {
+        for (let i = 0; i <= 100; i += 25) {
+            const dashValue = min + (i / 25) * step;
             const dash = document.createElement('div');
             dash.classList.add('slider__dash');
-            if (i % 25 === 0) {
-                const scaleNumber = document.createElement('div');
-                scaleNumber.classList.add('slider__scale-number');
-                if (this.direction === 'horizontal') {
-                    dash.style.left = `${i}%`;
-                    scaleNumber.style.left = `${i}%`;
-                    dash.append(scaleNumber);
-                    this.element.append(dash);
-                } else {
-                    dash.style.top = `${i}%`;
-                    dash.classList.add('slider__dash_vertical');
-                    scaleNumber.style.top = `${i}%`;
-                    scaleNumber.classList.add('slider__scale-number_vertical');
-                    dash.append(scaleNumber);
-                    this.element.append(dash);
-                }
-                const numbers = this.element.querySelectorAll('.slider__scale-number');
-                const number = numbers[numbers.length - 1];
-                if (i === 0) {
-                    number.innerHTML = String(min);
-                } else {
-                    const dashValue = min + (i / 25) * step;
-                    number.innerHTML = Number.isInteger(dashValue)
-                        ? String(dashValue)
-                        : dashValue.toFixed(2);
-                }
-            } else if (this.direction === 'horizontal') {
-                dash.classList.add('slider__dash_small');
+            const scaleNumber = document.createElement('div');
+            scaleNumber.classList.add('slider__scale-number');
+            scaleNumber.dataset.value = String(dashValue);
+            scaleNumber.addEventListener('click', this.handleScaleClick);
+            if (this.direction === 'horizontal') {
                 dash.style.left = `${i}%`;
+                scaleNumber.style.left = `${i}%`;
+                dash.append(scaleNumber);
                 this.element.append(dash);
             } else {
-                dash.classList.add('slider__dash_small-vertical');
                 dash.style.top = `${i}%`;
+                dash.classList.add('slider__dash_vertical');
+                scaleNumber.style.top = `${i}%`;
+                scaleNumber.classList.add('slider__scale-number_vertical');
+                dash.append(scaleNumber);
                 this.element.append(dash);
             }
+            const numbers = this.element.querySelectorAll('.slider__scale-number');
+            const number = numbers[numbers.length - 1];
+            if (i === 0) {
+                number.innerHTML = String(min);
+            } else {
+                number.innerHTML = Number.isInteger(dashValue)
+                    ? String(dashValue)
+                    : dashValue.toFixed(2);
+            }
         }
-        this.element.addEventListener('click', this.handleScaleClick);
     }
 
     handleScaleClick = (e: MouseEvent | TouchEvent): void => {
+        const node = e.target as HTMLElement;
         const headEvent = new CustomEvent('scaleClick', {
             detail: {
-                data: e
+                event: e,
+                value: Number(node.dataset.value)
             }
         });
         this.parent.dispatchEvent(headEvent);

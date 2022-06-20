@@ -41,7 +41,7 @@ class Line {
     handleHeadStart = (e: CustomEvent): void => {
         const headEvent = new CustomEvent('headStart', {
             detail: {
-                data: e.detail.data
+                data: e.detail
             }
         });
         this.parent.dispatchEvent(headEvent);
@@ -50,7 +50,7 @@ class Line {
     handleScaleClick = (e: CustomEvent): void => {
         const headEvent = new CustomEvent('scaleClick', {
             detail: {
-                data: e.detail.data
+                data: e.detail
             }
         });
         this.parent.dispatchEvent(headEvent);
