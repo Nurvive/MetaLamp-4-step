@@ -108,14 +108,6 @@ body {
   height: 1px;
   width: 8px;
 }
-.slider__dash_small {
-  height: 4px;
-}
-.slider__dash_small-vertical {
-  left: 16px;
-  height: 1px;
-  width: 4px;
-}
 .slider__scale-number {
   top: 10px;
   transform: translateX(-50%);

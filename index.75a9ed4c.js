@@ -802,7 +802,7 @@ class View extends _observer.Observer {
     constructor(elem, options){
         super();
         this.handleHeadStart = (e)=>{
-            const evt = View.getEvent(e.detail.data); // Здесь нужен каст через 'as', так как TS не знает, что target это html объект
+            const evt = View.getEvent(e.detail.data.data); // Здесь нужен каст через 'as', так как TS не знает, что target это html объект
             const target = evt.target;
             const updatedHead = target.hasAttribute('data-valueFrom') ? 'valueFrom' : 'valueTo';
             const dataArray = [];
@@ -854,12 +854,12 @@ class View extends _observer.Observer {
         };
         this.handleScaleClick = (event)=>{
             const dataArray = this.scaleClickData(event);
+            dataArray.push(event.detail.data.value);
             this.notify('default', {
                 target: 'value',
-                valueArray: dataArray.slice()
+                valueArray: dataArray
             });
             this.changeZIndex();
-            return dataArray;
         };
         this.elem = elem;
         this.handleSwipe = ()=>[]
@@ -1038,7 +1038,7 @@ class View extends _observer.Observer {
         else if (this.head2) this.head2.down();
     }
     scaleClickData(event) {
-        const evt = View.getEvent(event.detail.data);
+        const evt = View.getEvent(event.detail.data.event);
         const dataArray = [];
         if (this.state.direction === 'horizontal') {
             dataArray.push(this.line.width);
@@ -1224,9 +1224,11 @@ parcelHelpers.defineInteropFlag(exports);
 class Scale {
     constructor({ parent , direction , min , max  }){
         this.handleScaleClick = (e)=>{
+            const node = e.target;
             const headEvent = new CustomEvent('scaleClick', {
                 detail: {
-                    data: e
+                    event: e,
+                    value: Number(node.dataset.value)
                 }
             });
             this.parent.dispatchEvent(headEvent);
@@ -1240,43 +1242,32 @@ class Scale {
         this.direction === 'horizontal' ? this.element.classList.add('slider__scale') : this.element.classList.add('slider__scale', 'slider__scale_vertical');
         this.parent.append(this.element);
         const step = (max - min) / 4;
-        for(let i = 0; i <= 100; i += 5){
+        for(let i = 0; i <= 100; i += 25){
+            const dashValue = min + i / 25 * step;
             const dash = document.createElement('div');
             dash.classList.add('slider__dash');
-            if (i % 25 === 0) {
-                const scaleNumber = document.createElement('div');
-                scaleNumber.classList.add('slider__scale-number');
-                if (this.direction === 'horizontal') {
-                    dash.style.left = `${i}%`;
-                    scaleNumber.style.left = `${i}%`;
-                    dash.append(scaleNumber);
-                    this.element.append(dash);
-                } else {
-                    dash.style.top = `${i}%`;
-                    dash.classList.add('slider__dash_vertical');
-                    scaleNumber.style.top = `${i}%`;
-                    scaleNumber.classList.add('slider__scale-number_vertical');
-                    dash.append(scaleNumber);
-                    this.element.append(dash);
-                }
-                const numbers = this.element.querySelectorAll('.slider__scale-number');
-                const number = numbers[numbers.length - 1];
-                if (i === 0) number.innerHTML = String(min);
-                else {
-                    const dashValue = min + i / 25 * step;
-                    number.innerHTML = Number.isInteger(dashValue) ? String(dashValue) : dashValue.toFixed(2);
-                }
-            } else if (this.direction === 'horizontal') {
-                dash.classList.add('slider__dash_small');
+            const scaleNumber = document.createElement('div');
+            scaleNumber.classList.add('slider__scale-number');
+            scaleNumber.dataset.value = String(dashValue);
+            scaleNumber.addEventListener('click', this.handleScaleClick);
+            if (this.direction === 'horizontal') {
                 dash.style.left = `${i}%`;
+                scaleNumber.style.left = `${i}%`;
+                dash.append(scaleNumber);
                 this.element.append(dash);
             } else {
-                dash.classList.add('slider__dash_small-vertical');
                 dash.style.top = `${i}%`;
+                dash.classList.add('slider__dash_vertical');
+                scaleNumber.style.top = `${i}%`;
+                scaleNumber.classList.add('slider__scale-number_vertical');
+                dash.append(scaleNumber);
                 this.element.append(dash);
             }
+            const numbers = this.element.querySelectorAll('.slider__scale-number');
+            const number = numbers[numbers.length - 1];
+            if (i === 0) number.innerHTML = String(min);
+            else number.innerHTML = Number.isInteger(dashValue) ? String(dashValue) : dashValue.toFixed(2);
         }
-        this.element.addEventListener('click', this.handleScaleClick);
     }
     removeScale() {
         this.element.remove();
@@ -1304,7 +1295,7 @@ class Line {
         this.handleHeadStart = (e)=>{
             const headEvent = new CustomEvent('headStart', {
                 detail: {
-                    data: e.detail.data
+                    data: e.detail
                 }
             });
             this.parent.dispatchEvent(headEvent);
@@ -1312,7 +1303,7 @@ class Line {
         this.handleScaleClick = (e)=>{
             const headEvent = new CustomEvent('scaleClick', {
                 detail: {
-                    data: e.detail.data
+                    data: e.detail
                 }
             });
             this.parent.dispatchEvent(headEvent);
@@ -1414,8 +1405,8 @@ class Model extends _observer.Observer {
             updatedProperty = 'valueTo';
             updatedValue = this.calcUpdatedValue(data, updatedProperty);
         } else if (data.target === 'value') {
-            const { property , value  } = this.calcValueHelper(data);
-            updatedValue = value;
+            const property = this.calcValueHelper(data);
+            updatedValue = data.valueArray?.[3] || 0;
             updatedProperty = property;
         } else {
             updatedProperty = 'valueFrom';
@@ -1574,15 +1565,11 @@ class Model extends _observer.Observer {
         return this.state.min + this.calcValueByStep(newValue, updatedProperty);
     }
     calcValueHelper(data) {
-        let updatedValue = this.calcUpdatedValueRelative(data);
+        const updatedValue = this.calcUpdatedValueRelative(data);
         let updatedProperty;
         if (this.state.type === 'single') updatedProperty = 'valueTo';
         else updatedProperty = this.isValueTo(updatedValue) ? 'valueTo' : 'valueFrom';
-        updatedValue = updatedProperty === 'valueFrom' ? this.validValueFrom(updatedValue) : this.validValueTo(updatedValue);
-        return {
-            property: updatedProperty,
-            value: updatedValue
-        };
+        return updatedProperty;
     }
     calcValueByStep(value, updatedProperty) {
         let newValue = value;
