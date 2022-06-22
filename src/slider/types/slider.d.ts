@@ -10,5 +10,6 @@ declare global {
     interface HTMLElementEventMap {
         'headStart': CustomEvent<{data: MouseEvent | TouchEvent}>;
         'scaleClick': CustomEvent<{data: MouseEvent | TouchEvent}>;
+        'lineClick': CustomEvent<{data: MouseEvent | TouchEvent}>;
     }
 }

@@ -36,6 +36,7 @@ class Line {
         this.parent.append(this.element);
         this.element.addEventListener('headStart', this.handleHeadStart);
         this.element.addEventListener('scaleClick', this.handleScaleClick);
+        this.element.addEventListener('click', this.handleLineClick);
     }
 
     handleHeadStart = (e: CustomEvent): void => {
@@ -51,6 +52,20 @@ class Line {
         const headEvent = new CustomEvent('scaleClick', {
             detail: {
                 data: e.detail
+            }
+        });
+        this.parent.dispatchEvent(headEvent);
+    };
+
+    handleLineClick = (e: MouseEvent | TouchEvent): void => {
+        if (e.target !== this.element) {
+            return;
+        }
+        const headEvent = new CustomEvent('lineClick', {
+            detail: {
+                data: {
+                    event: e
+                }
             }
         });
         this.parent.dispatchEvent(headEvent);

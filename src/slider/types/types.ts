@@ -7,7 +7,8 @@ type TargetType =
     | 'type'
     | 'bubble'
     | 'value'
-    | 'step';
+    | 'step'
+    | 'valueClick';
 type DirectionType = 'horizontal' | 'vertical';
 type TypeOfSlider = 'single' | 'double';
 type HeadType = 'from' | 'to';

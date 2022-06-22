@@ -189,6 +189,7 @@ class View extends Observer {
     private setup(): void {
         this.elem.addEventListener('headStart', this.handleHeadStart);
         this.elem.addEventListener('scaleClick', this.handleScaleClick);
+        this.elem.addEventListener('lineClick', this.handleLineClick);
     }
 
     private static getValueFromData(data: NotifyData) {
@@ -286,10 +287,19 @@ class View extends Observer {
     }
 
     private handleScaleClick = (event: CustomEvent): void => {
-        const dataArray: Array<number> = this.scaleClickData(event);
+        const dataArray: number[] = this.scaleClickData(event);
         dataArray.push(event.detail.data.value);
         this.notify('default', {
             target: 'value',
+            valueArray: dataArray
+        });
+        this.changeZIndex();
+    };
+
+    private handleLineClick = (event: CustomEvent): void => {
+        const dataArray: number[] = this.scaleClickData(event);
+        this.notify('default', {
+            target: 'valueClick',
             valueArray: dataArray
         });
         this.changeZIndex();

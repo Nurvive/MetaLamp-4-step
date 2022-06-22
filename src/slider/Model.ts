@@ -22,6 +22,13 @@ class Model extends Observer {
             const property = this.calcValueHelper(data);
             updatedValue = data.valueArray?.[3] || 0;
             updatedProperty = property;
+        } else if (data.target === 'valueClick') {
+            const {
+                property,
+                value
+            } = this.calcValueHelperClick(data);
+            updatedValue = value;
+            updatedProperty = property;
         } else {
             updatedProperty = 'valueFrom';
             updatedValue = this.calcUpdatedValue(data, updatedProperty);
@@ -220,6 +227,21 @@ class Model extends Observer {
             updatedProperty = this.isValueTo(updatedValue) ? 'valueTo' : 'valueFrom';
         }
         return updatedProperty;
+    }
+
+    private calcValueHelperClick(data: NotifyData) {
+        let updatedValue = this.calcUpdatedValueRelative(data);
+        let updatedProperty: TargetType;
+        if (this.state.type === 'single') {
+            updatedProperty = 'valueTo';
+        } else {
+            updatedProperty = this.isValueTo(updatedValue) ? 'valueTo' : 'valueFrom';
+        }
+        updatedValue = updatedProperty === 'valueFrom' ? this.validValueFrom(updatedValue) : this.validValueTo(updatedValue);
+        return {
+            property: updatedProperty,
+            value: updatedValue
+        };
     }
 
     private calcValueByStep(value: number, updatedProperty: string): number {
