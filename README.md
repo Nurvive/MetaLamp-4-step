@@ -20,6 +20,7 @@ npm run build - запуск билда
 
 npm run lint - запуск линтера
 
+npm run build-plugin - запуск билда только для слайдера
 
 ### Использование
 
