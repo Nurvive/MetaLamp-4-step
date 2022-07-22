@@ -7,10 +7,10 @@ type ObserverStore = {
     observer: ObserverItem
 }
 
-class Observer {
+abstract class Observer {
     observers: ObserverStore[];
 
-    constructor() {
+    protected constructor() {
         this.observers = [];
     }
 
@@ -25,7 +25,7 @@ class Observer {
         this.observers = this.observers.filter((item) => item.observer !== observer);
     }
 
-    notify(eventType: EventType, data: NotifyData): void {
+    protected notify(eventType: EventType, data: NotifyData): void {
         this.observers.forEach((item) => {
             if (item.eventType === eventType) {
                 item.observer(data);
