@@ -30,11 +30,11 @@ class HeadBubble {
     }
 
     onActive(): void {
-        this.element.classList.add('slider__head-bubble_grabbing');
+        this.element.classList.add('slider__head-bubble_isGrabbing');
     }
 
     offActive(): void {
-        this.element.classList.remove('slider__head-bubble_grabbing');
+        this.element.classList.remove('slider__head-bubble_isGrabbing');
     }
 
     show(): void {

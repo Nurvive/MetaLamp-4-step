@@ -38,7 +38,7 @@ class ViewHead {
         }
         this.direction === 'horizontal'
             ? this.element.classList.add('slider__head')
-            : this.element.classList.add('slider__head', 'slider__head_vertical');
+            : this.element.classList.add('slider__head', 'slider__head_direction_vertical');
         this.parent.append(this.element);
         this.element.addEventListener('mousedown', this.handleHeadStart);
         this.element.addEventListener('touchstart', this.handleHeadStart);
@@ -100,11 +100,11 @@ class ViewHead {
     }
 
     high(): void {
-        this.element.classList.add('slider__head_high');
+        this.element.classList.add('slider__head_z_high');
     }
 
     down(): void {
-        this.element.classList.remove('slider__head_high');
+        this.element.classList.remove('slider__head_z_high');
     }
 }
 

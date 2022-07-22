@@ -22,7 +22,7 @@ class Scale {
     init(min: number, max: number): void {
         this.direction === 'horizontal'
             ? this.element.classList.add('slider__scale')
-            : this.element.classList.add('slider__scale', 'slider__scale_vertical');
+            : this.element.classList.add('slider__scale', 'slider__scale_direction_vertical');
         this.parent.append(this.element);
         const step = (max - min) / 4;
         for (let i = 0; i <= 100; i += 25) {
@@ -40,9 +40,9 @@ class Scale {
                 this.element.append(dash);
             } else {
                 dash.style.top = `${i}%`;
-                dash.classList.add('slider__dash_vertical');
+                dash.classList.add('slider__dash_direction_vertical');
                 scaleNumber.style.top = `${i}%`;
-                scaleNumber.classList.add('slider__scale-number_vertical');
+                scaleNumber.classList.add('slider__scale-number_direction_vertical');
                 dash.append(scaleNumber);
                 this.element.append(dash);
             }

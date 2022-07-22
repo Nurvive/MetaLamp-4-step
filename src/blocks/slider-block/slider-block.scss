@@ -20,16 +20,15 @@
             inset 0 -2px 6px rgba(0, 0, 0, 0.4);
             z-index: -1;
 
-            &_vertical {
+            &_direction_vertical {
                 width: 100%;
                 height: 0;
             }
         }
 
-        &_vertical {
+        &_direction_vertical {
             width: 10px;
             height: 300px;
-
         }
     }
 
@@ -53,13 +52,13 @@
             z-index: 2;
         }
 
-        &_vertical {
+        &_direction_vertical {
             top: 0;
             left: -3px;
             transform: translateY(-40%);
         }
 
-        &_high {
+        &_z_high {
             z-index: 4 !important;
         }
 
@@ -79,7 +78,7 @@
                 display: block;
             }
 
-            &_grabbing {
+            &_isGrabbing {
                 cursor: grabbing;
             }
         }
@@ -93,7 +92,7 @@
         user-select: none;
         cursor: initial;
 
-        &_vertical {
+        &_direction_vertical {
             height: 100%;
             width: 20px;
             left: -20px;
@@ -109,7 +108,7 @@
         transform: translateX(-50%);
         position: absolute;
 
-        &_vertical {
+        &_direction_vertical {
             left: 14px;
             height: 1px;
             width: 8px;
@@ -124,7 +123,7 @@
         position: absolute;
         cursor: pointer;
 
-        &_vertical {
+        &_direction_vertical {
             right: 12px;
             transform: translateY(-50%);
             text-align: right;

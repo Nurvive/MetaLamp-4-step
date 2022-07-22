@@ -29,8 +29,8 @@ class Line {
             this.element.classList.add('slider__line');
             this.progressBar.classList.add('slider__line-progress');
         } else {
-            this.element.classList.add('slider__line', 'slider__line_vertical');
-            this.progressBar.classList.add('slider__line-progress', 'slider__line-progress_vertical');
+            this.element.classList.add('slider__line', 'slider__line_direction_vertical');
+            this.progressBar.classList.add('slider__line-progress', 'slider__line-progress_direction_vertical');
         }
         this.element.append(this.progressBar);
         this.parent.append(this.element);
