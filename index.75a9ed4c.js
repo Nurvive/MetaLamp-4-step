@@ -861,6 +861,14 @@ class View extends _observer.Observer {
             });
             this.changeZIndex();
         };
+        this.handleLineClick = (event)=>{
+            const dataArray = this.scaleClickData(event);
+            this.notify('default', {
+                target: 'valueClick',
+                valueArray: dataArray
+            });
+            this.changeZIndex();
+        };
         this.elem = elem;
         this.handleSwipe = ()=>[]
         ;
@@ -1010,6 +1018,7 @@ class View extends _observer.Observer {
     setup() {
         this.elem.addEventListener('headStart', this.handleHeadStart);
         this.elem.addEventListener('scaleClick', this.handleScaleClick);
+        this.elem.addEventListener('lineClick', this.handleLineClick);
     }
     static getValueFromData(data) {
         let value;
@@ -1138,7 +1147,7 @@ class ViewHead {
         this.element.classList.add('slider__head');
         if (this.type === 'to') this.element.setAttribute('data-valueTo', 'true');
         else this.element.setAttribute('data-valueFrom', 'true');
-        this.direction === 'horizontal' ? this.element.classList.add('slider__head') : this.element.classList.add('slider__head', 'slider__head_vertical');
+        this.direction === 'horizontal' ? this.element.classList.add('slider__head') : this.element.classList.add('slider__head', 'slider__head_direction_vertical');
         this.parent.append(this.element);
         this.element.addEventListener('mousedown', this.handleHeadStart);
         this.element.addEventListener('touchstart', this.handleHeadStart);
@@ -1175,10 +1184,10 @@ class ViewHead {
         return this.element.getBoundingClientRect().height;
     }
     high() {
-        this.element.classList.add('slider__head_high');
+        this.element.classList.add('slider__head_z_high');
     }
     down() {
-        this.element.classList.remove('slider__head_high');
+        this.element.classList.remove('slider__head_z_high');
     }
 }
 exports.default = ViewHead;
@@ -1204,10 +1213,10 @@ class HeadBubble {
         this.element.textContent = String(value);
     }
     onActive() {
-        this.element.classList.add('slider__head-bubble_grabbing');
+        this.element.classList.add('slider__head-bubble_isGrabbing');
     }
     offActive() {
-        this.element.classList.remove('slider__head-bubble_grabbing');
+        this.element.classList.remove('slider__head-bubble_isGrabbing');
     }
     show() {
         this.element.classList.add('slider__head-bubble_active');
@@ -1239,7 +1248,7 @@ class Scale {
         this.init(min, max);
     }
     init(min, max) {
-        this.direction === 'horizontal' ? this.element.classList.add('slider__scale') : this.element.classList.add('slider__scale', 'slider__scale_vertical');
+        this.direction === 'horizontal' ? this.element.classList.add('slider__scale') : this.element.classList.add('slider__scale', 'slider__scale_direction_vertical');
         this.parent.append(this.element);
         const step = (max - min) / 4;
         for(let i = 0; i <= 100; i += 25){
@@ -1257,9 +1266,9 @@ class Scale {
                 this.element.append(dash);
             } else {
                 dash.style.top = `${i}%`;
-                dash.classList.add('slider__dash_vertical');
+                dash.classList.add('slider__dash_direction_vertical');
                 scaleNumber.style.top = `${i}%`;
-                scaleNumber.classList.add('slider__scale-number_vertical');
+                scaleNumber.classList.add('slider__scale-number_direction_vertical');
                 dash.append(scaleNumber);
                 this.element.append(dash);
             }
@@ -1308,6 +1317,17 @@ class Line {
             });
             this.parent.dispatchEvent(headEvent);
         };
+        this.handleLineClick = (e)=>{
+            if (e.target !== this.element) return;
+            const headEvent = new CustomEvent('lineClick', {
+                detail: {
+                    data: {
+                        event: e
+                    }
+                }
+            });
+            this.parent.dispatchEvent(headEvent);
+        };
         this.parent = parent;
         this.direction = direction;
         this.type = type;
@@ -1320,13 +1340,14 @@ class Line {
             this.element.classList.add('slider__line');
             this.progressBar.classList.add('slider__line-progress');
         } else {
-            this.element.classList.add('slider__line', 'slider__line_vertical');
-            this.progressBar.classList.add('slider__line-progress', 'slider__line-progress_vertical');
+            this.element.classList.add('slider__line', 'slider__line_direction_vertical');
+            this.progressBar.classList.add('slider__line-progress', 'slider__line-progress_direction_vertical');
         }
         this.element.append(this.progressBar);
         this.parent.append(this.element);
         this.element.addEventListener('headStart', this.handleHeadStart);
         this.element.addEventListener('scaleClick', this.handleScaleClick);
+        this.element.addEventListener('click', this.handleLineClick);
     }
     set Type(type) {
         this.type = type;
@@ -1407,6 +1428,10 @@ class Model extends _observer.Observer {
         } else if (data.target === 'value') {
             const property = this.calcValueHelper(data);
             updatedValue = data.valueArray?.[3] || 0;
+            updatedProperty = property;
+        } else if (data.target === 'valueClick') {
+            const { property , value  } = this.calcValueHelperClick(data);
+            updatedValue = value;
             updatedProperty = property;
         } else {
             updatedProperty = 'valueFrom';
@@ -1570,6 +1595,17 @@ class Model extends _observer.Observer {
         if (this.state.type === 'single') updatedProperty = 'valueTo';
         else updatedProperty = this.isValueTo(updatedValue) ? 'valueTo' : 'valueFrom';
         return updatedProperty;
+    }
+    calcValueHelperClick(data) {
+        let updatedValue = this.calcUpdatedValueRelative(data);
+        let updatedProperty;
+        if (this.state.type === 'single') updatedProperty = 'valueTo';
+        else updatedProperty = this.isValueTo(updatedValue) ? 'valueTo' : 'valueFrom';
+        updatedValue = updatedProperty === 'valueFrom' ? this.validValueFrom(updatedValue) : this.validValueTo(updatedValue);
+        return {
+            property: updatedProperty,
+            value: updatedValue
+        };
     }
     calcValueByStep(value, updatedProperty) {
         let newValue = value;
