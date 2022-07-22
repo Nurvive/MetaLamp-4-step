@@ -12,13 +12,13 @@ class View extends Observer {
 
     private state: State;
 
-    head: ViewHead;
+    private head: ViewHead;
 
-    scale: Scale;
+    private scale: Scale;
 
-    line: Line;
+    private line: Line;
 
-    head2?: ViewHead;
+    private head2?: ViewHead;
 
     private handleSwipe: (event: (MouseEvent | TouchEvent)) => Array<number>;
 

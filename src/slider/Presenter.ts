@@ -2,9 +2,9 @@ import {Model} from './Model';
 import {View} from './View';
 
 class Presenter {
-    model: Model;
+    private readonly model: Model;
 
-    view: View;
+    private readonly view: View;
 
     constructor(model: Model, view: View) {
         this.model = model;

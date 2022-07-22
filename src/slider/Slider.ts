@@ -4,13 +4,13 @@ import {Model} from './Model';
 import {DirectionType, State, TypeOfSlider} from './types/types';
 
 class Slider {
-    view: View;
+    private readonly view: View;
 
-    elem: HTMLElement;
+    readonly elem: HTMLElement;
 
-    presenter: Presenter;
+    private readonly presenter: Presenter;
 
-    model: Model;
+    private readonly model: Model;
 
     constructor(elem: HTMLElement, settings: State) {
         this.elem = elem;
