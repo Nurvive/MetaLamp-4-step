@@ -216,8 +216,8 @@ class View extends Observer {
 
     private handleHeadStart = (e: CustomEvent): Array<number> => {
         const evt: MouseEvent | Touch = View.getEvent(e.detail.data.data);
-        // Здесь нужен каст через 'as', так как TS не знает, что target это html объект
-        const target = evt.target as Element;
+        const target = evt.target;
+        if (!(target instanceof HTMLElement)) return [];
         const updatedHead: TargetType = target.hasAttribute('data-valueFrom') ? 'valueFrom' : 'valueTo';
         const dataArray: Array<number> = [];
         if (this.state.direction === 'horizontal') {

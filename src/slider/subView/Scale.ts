@@ -59,7 +59,8 @@ class Scale {
     }
 
     handleScaleClick = (e: MouseEvent | TouchEvent): void => {
-        const node = e.target as HTMLElement;
+        const node = e.target;
+        if (!(node instanceof HTMLElement)) return;
         const headEvent = new CustomEvent('scaleClick', {
             detail: {
                 event: e,
