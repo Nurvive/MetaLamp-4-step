@@ -3,11 +3,11 @@ import ViewHead from './subView/ViewHead';
 import Scale from './subView/Scale';
 import Line from './subView/Line';
 import {
-    State, TargetType
+    State, TargetType, ViewEvents
 } from './types/types';
 import {NotifyData} from './types/types';
 
-class View extends Observer {
+class View extends Observer<ViewEvents> {
     private readonly elem: HTMLElement;
 
     private state: State;
@@ -252,7 +252,7 @@ class View extends Observer {
             dataArray.push(evtSwipe.clientY);
         }
         dataArray.push(this.head.width / 2);
-        this.notify('default', {
+        this.notify('position', {
             valueArray: dataArray.slice(),
             target: updatedHead
         });
@@ -289,7 +289,7 @@ class View extends Observer {
     private handleScaleClick = (event: CustomEvent): void => {
         const dataArray: number[] = this.scaleClickData(event);
         dataArray.push(event.detail.data.value);
-        this.notify('default', {
+        this.notify('position', {
             target: 'value',
             valueArray: dataArray
         });
@@ -298,7 +298,7 @@ class View extends Observer {
 
     private handleLineClick = (event: CustomEvent): void => {
         const dataArray: number[] = this.scaleClickData(event);
-        this.notify('default', {
+        this.notify('position', {
             target: 'valueClick',
             valueArray: dataArray
         });

@@ -1,35 +1,41 @@
-import {NotifyData} from './types/types';
+import {ObserverItem} from './types/types';
 
-import {EventType, ObserverItem} from './types/types';
+type ObserverStore<T> = {
+    [K in keyof T]: ObserverItem<T[K]>[];
+};
 
-type ObserverStore = {
-    eventType: EventType
-    observer: ObserverItem
-}
-
-abstract class Observer {
-    observers: ObserverStore[];
+abstract class Observer<T extends Record<string, unknown>> {
+    observers: ObserverStore<T>;
 
     protected constructor() {
-        this.observers = [];
+        this.observers = {} as ObserverStore<T>;
     }
 
-    subscribe(eventType: EventType, observer: ObserverItem): void {
-        this.observers.push({
-            eventType: eventType,
-            observer: observer
-        });
+    subscribe<K extends keyof T>(
+        eventType: K,
+        observer: ObserverItem<T[K]>
+    ): void {
+        if (!this.observers[eventType]) {
+            this.observers[eventType] = [observer];
+        } else {
+            this.observers[eventType].push(observer);
+        }
     }
 
-    unsubscribe(eventType: EventType, observer: ObserverItem): void {
-        this.observers = this.observers.filter((item) => item.observer !== observer);
+    unsubscribe<K extends keyof T>(
+        eventType: K,
+        observer: ObserverItem<T[K]>
+    ): void {
+        if (this.observers.eventType) {
+            this.observers[eventType] = this.observers[eventType].filter(
+                (item) => item !== observer
+            );
+        }
     }
 
-    protected notify(eventType: EventType, data: NotifyData): void {
-        this.observers.forEach((item) => {
-            if (item.eventType === eventType) {
-                item.observer(data);
-            }
+    protected notify<K extends keyof T>(eventType: K, data: T[K]): void {
+        this.observers[eventType]?.forEach((observer) => {
+            observer(data);
         });
     }
 }

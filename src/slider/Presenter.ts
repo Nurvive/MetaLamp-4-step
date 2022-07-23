@@ -9,9 +9,9 @@ class Presenter {
     constructor(model: Model, view: View) {
         this.model = model;
         this.view = view;
-        this.view.subscribe('default', this.model.calcPosition.bind(this.model));
+        this.view.subscribe('position', this.model.calcPosition.bind(this.model));
         this.model.subscribe('state', this.view.updateState.bind(this.view));
-        this.model.subscribe('default', this.view.changePosition.bind(this.view));
+        this.model.subscribe('position', this.view.changePosition.bind(this.view));
         this.model.subscribe('direction', this.view.changeDirection.bind(this.view));
         this.model.subscribe('type', this.view.changeType.bind(this.view));
         this.model.subscribe('step', this.view.changeStep.bind(this.view));

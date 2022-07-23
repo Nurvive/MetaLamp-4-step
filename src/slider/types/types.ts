@@ -9,19 +9,20 @@ type TargetType =
     | 'value'
     | 'step'
     | 'valueClick';
+
 type DirectionType = 'horizontal' | 'vertical';
+
 type TypeOfSlider = 'single' | 'double';
+
 type HeadType = 'from' | 'to';
-type EventType =
-    'state'
-    | 'default'
-    | 'direction'
-    | 'type'
-    | 'step'
-    | 'max'
-    | 'min'
-    | 'showBubble'
-    | 'hideBubble'
+
+type NotifyData = {
+    valueNumber?: number;
+    valueString?: DirectionType | TypeOfSlider;
+    valueBoolean?: boolean;
+    valueArray?: Array<number>;
+    target: TargetType;
+}
 
 type State = {
     min: number;
@@ -36,13 +37,28 @@ type State = {
     onChangeFrom: (value: number) => void;
 }
 
-type NotifyData = {
-    valueNumber?: number;
-    valueString?: DirectionType | TypeOfSlider;
-    valueBoolean?: boolean;
-    valueArray?: Array<number>;
-    target: TargetType;
-}
+type PositionEvent = { position: NotifyData };
+type StateEvent = { state: NotifyData }
+type MinEvent = { min: NotifyData }
+type MaxEvent = { max: NotifyData }
+type TypeEvent = { type: NotifyData }
+type StepEvent = { step: NotifyData }
+type DirectionEvent = { direction: NotifyData }
+type HideBubbleEvent = { hideBubble: NotifyData }
+type ShowBubbleEvent = { showBubble: NotifyData }
+
+type ViewEvents = PositionEvent;
+
+type ModelEvents =
+    PositionEvent
+    | StateEvent
+    | DirectionEvent
+    | MinEvent
+    | MaxEvent
+    | TypeEvent
+    | StepEvent
+    | HideBubbleEvent
+    | ShowBubbleEvent;
 
 type ScaleCreate = {
     parent: HTMLElement,
@@ -71,7 +87,7 @@ type GetRelativeType = {
     max: number
 }
 
-type ObserverItem = (data: NotifyData) => void;
+type ObserverItem<T> = (args: T) => void;
 
 export type {
     NotifyData,
@@ -84,6 +100,7 @@ export type {
     DirectionType,
     TypeOfSlider,
     ObserverItem,
-    EventType,
-    HeadType
+    HeadType,
+    ModelEvents,
+    ViewEvents
 };

@@ -1,10 +1,10 @@
 import {Observer} from './Observer';
 import {
-    GetRelativeType, State, TargetType, TypeOfSlider, DirectionType
+    GetRelativeType, State, TargetType, TypeOfSlider, DirectionType, ModelEvents, EventTypes
 } from './types/types';
 import {NotifyData} from './types/types';
 
-class Model extends Observer {
+class Model extends Observer<ModelEvents> {
     private state: State;
 
     constructor(options: State) {
@@ -48,7 +48,7 @@ class Model extends Observer {
             max: this.state.max
         });
         position = Model.moreThan0LessThan1(position);
-        this.notify('default', {
+        this.notify('position', {
             target: updatedProperty,
             valueNumber: position
         });
@@ -62,7 +62,7 @@ class Model extends Observer {
                 valueBoolean: value
             });
         } else {
-            this.notify('hideBubble', {
+            this.notify('hideBubble',{
                 target: 'bubble',
                 valueBoolean: value
             });
