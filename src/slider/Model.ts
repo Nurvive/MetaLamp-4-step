@@ -1,6 +1,6 @@
 import {Observer} from './Observer';
 import {
-    GetRelativeType, State, TargetType, TypeOfSlider, DirectionType, ModelEvents, EventTypes
+    GetRelativeType, State, TargetType, TypeOfSlider, DirectionType, ModelEvents
 } from './types/types';
 import {NotifyData} from './types/types';
 
@@ -48,7 +48,7 @@ class Model extends Observer<ModelEvents> {
             max: this.state.max
         });
         position = Model.moreThan0LessThan1(position);
-        this.notify('position', {
+        this.notify('changePosition', {
             target: updatedProperty,
             valueNumber: position
         });
@@ -62,7 +62,7 @@ class Model extends Observer<ModelEvents> {
                 valueBoolean: value
             });
         } else {
-            this.notify('hideBubble',{
+            this.notify('hideBubble', {
                 target: 'bubble',
                 valueBoolean: value
             });
@@ -163,7 +163,7 @@ class Model extends Observer<ModelEvents> {
             max: this.state.max
         });
         position = Model.moreThan0LessThan1(position);
-        this.notify('default', {
+        this.notify('changePosition', {
             target: 'valueTo',
             valueNumber: position
         });
@@ -187,7 +187,7 @@ class Model extends Observer<ModelEvents> {
             max: this.state.max
         });
         position = Model.moreThan0LessThan1(position);
-        this.notify('default', {
+        this.notify('changePosition', {
             target: 'valueFrom',
             valueNumber: position
         });

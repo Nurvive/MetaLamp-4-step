@@ -37,28 +37,19 @@ type State = {
     onChangeFrom: (value: number) => void;
 }
 
-type PositionEvent = { position: NotifyData };
-type StateEvent = { state: NotifyData }
-type MinEvent = { min: NotifyData }
-type MaxEvent = { max: NotifyData }
-type TypeEvent = { type: NotifyData }
-type StepEvent = { step: NotifyData }
-type DirectionEvent = { direction: NotifyData }
-type HideBubbleEvent = { hideBubble: NotifyData }
-type ShowBubbleEvent = { showBubble: NotifyData }
+type ViewEvents = { calcPosition: NotifyData };
 
-type ViewEvents = PositionEvent;
-
-type ModelEvents =
-    PositionEvent
-    | StateEvent
-    | DirectionEvent
-    | MinEvent
-    | MaxEvent
-    | TypeEvent
-    | StepEvent
-    | HideBubbleEvent
-    | ShowBubbleEvent;
+type ModelEvents = {
+    changePosition: NotifyData,
+    state: NotifyData,
+    min: NotifyData,
+    max: NotifyData,
+    type: NotifyData,
+    step: NotifyData,
+    direction: NotifyData,
+    hideBubble: NotifyData,
+    showBubble: NotifyData
+}
 
 type ScaleCreate = {
     parent: HTMLElement,

@@ -252,7 +252,7 @@ class View extends Observer<ViewEvents> {
             dataArray.push(evtSwipe.clientY);
         }
         dataArray.push(this.head.width / 2);
-        this.notify('position', {
+        this.notify('calcPosition', {
             valueArray: dataArray.slice(),
             target: updatedHead
         });
@@ -289,7 +289,7 @@ class View extends Observer<ViewEvents> {
     private handleScaleClick = (event: CustomEvent): void => {
         const dataArray: number[] = this.scaleClickData(event);
         dataArray.push(event.detail.data.value);
-        this.notify('position', {
+        this.notify('calcPosition', {
             target: 'value',
             valueArray: dataArray
         });
@@ -298,7 +298,7 @@ class View extends Observer<ViewEvents> {
 
     private handleLineClick = (event: CustomEvent): void => {
         const dataArray: number[] = this.scaleClickData(event);
-        this.notify('position', {
+        this.notify('calcPosition', {
             target: 'valueClick',
             valueArray: dataArray
         });
