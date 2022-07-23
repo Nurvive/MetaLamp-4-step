@@ -802,8 +802,9 @@ class View extends _observer.Observer {
     constructor(elem, options){
         super();
         this.handleHeadStart = (e)=>{
-            const evt = View.getEvent(e.detail.data.data); // Здесь нужен каст через 'as', так как TS не знает, что target это html объект
+            const evt = View.getEvent(e.detail.data.data);
             const target = evt.target;
+            if (!(target instanceof HTMLElement)) return [];
             const updatedHead = target.hasAttribute('data-valueFrom') ? 'valueFrom' : 'valueTo';
             const dataArray = [];
             if (this.state.direction === 'horizontal') {
@@ -837,7 +838,7 @@ class View extends _observer.Observer {
                 dataArray.push(evtSwipe.clientY);
             }
             dataArray.push(this.head.width / 2);
-            this.notify('default', {
+            this.notify('calcPosition', {
                 valueArray: dataArray.slice(),
                 target: updatedHead
             });
@@ -855,7 +856,7 @@ class View extends _observer.Observer {
         this.handleScaleClick = (event)=>{
             const dataArray = this.scaleClickData(event);
             dataArray.push(event.detail.data.value);
-            this.notify('default', {
+            this.notify('calcPosition', {
                 target: 'value',
                 valueArray: dataArray
             });
@@ -863,7 +864,7 @@ class View extends _observer.Observer {
         };
         this.handleLineClick = (event)=>{
             const dataArray = this.scaleClickData(event);
-            this.notify('default', {
+            this.notify('calcPosition', {
                 target: 'valueClick',
                 valueArray: dataArray
             });
@@ -1069,21 +1070,22 @@ parcelHelpers.export(exports, "Observer", ()=>Observer
 );
 class Observer {
     constructor(){
-        this.observers = [];
+        this.observers = {
+        };
     }
     subscribe(eventType, observer) {
-        this.observers.push({
-            eventType: eventType,
-            observer: observer
-        });
+        if (!this.observers[eventType]) this.observers[eventType] = [
+            observer
+        ];
+        else this.observers[eventType].push(observer);
     }
     unsubscribe(eventType, observer) {
-        this.observers = this.observers.filter((item)=>item.observer !== observer
+        if (this.observers.eventType) this.observers[eventType] = this.observers[eventType].filter((item)=>item !== observer
         );
     }
     notify(eventType, data) {
-        this.observers.forEach((item)=>{
-            if (item.eventType === eventType) item.observer(data);
+        this.observers[eventType]?.forEach((observer)=>{
+            observer(data);
         });
     }
 }
@@ -1234,6 +1236,7 @@ class Scale {
     constructor({ parent , direction , min , max  }){
         this.handleScaleClick = (e)=>{
             const node = e.target;
+            if (!(node instanceof HTMLElement)) return;
             const headEvent = new CustomEvent('scaleClick', {
                 detail: {
                     event: e,
@@ -1392,9 +1395,9 @@ class Presenter {
     constructor(model, view){
         this.model = model;
         this.view = view;
-        this.view.subscribe('default', this.model.calcPosition.bind(this.model));
+        this.view.subscribe('calcPosition', this.model.calcPosition.bind(this.model));
         this.model.subscribe('state', this.view.updateState.bind(this.view));
-        this.model.subscribe('default', this.view.changePosition.bind(this.view));
+        this.model.subscribe('changePosition', this.view.changePosition.bind(this.view));
         this.model.subscribe('direction', this.view.changeDirection.bind(this.view));
         this.model.subscribe('type', this.view.changeType.bind(this.view));
         this.model.subscribe('step', this.view.changeStep.bind(this.view));
@@ -1452,7 +1455,7 @@ class Model extends _observer.Observer {
             max: this.state.max
         });
         position = Model.moreThan0LessThan1(position);
-        this.notify('default', {
+        this.notify('changePosition', {
             target: updatedProperty,
             valueNumber: position
         });
@@ -1546,7 +1549,7 @@ class Model extends _observer.Observer {
             max: this.state.max
         });
         position = Model.moreThan0LessThan1(position);
-        this.notify('default', {
+        this.notify('changePosition', {
             target: 'valueTo',
             valueNumber: position
         });
@@ -1567,7 +1570,7 @@ class Model extends _observer.Observer {
             max: this.state.max
         });
         position = Model.moreThan0LessThan1(position);
-        this.notify('default', {
+        this.notify('changePosition', {
             target: 'valueFrom',
             valueNumber: position
         });
