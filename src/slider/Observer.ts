@@ -5,7 +5,7 @@ type ObserverStore<T> = {
 };
 
 abstract class Observer<T extends Record<string, unknown>> {
-    observers: ObserverStore<T>;
+    private readonly observers: ObserverStore<T>;
 
     protected constructor() {
         this.observers = {} as ObserverStore<T>;
