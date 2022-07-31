@@ -13,10 +13,8 @@ import {Slider} from './Slider';
                 valueTo: 100,
                 valueFrom: 5,
                 direction: 'horizontal',
-                onChangeTo: function () {
-                },
-                onChangeFrom: function () {
-                }
+                onChangeTo() {},
+                onChangeFrom() {}
             }, options);
 
             return this.each(function () {
