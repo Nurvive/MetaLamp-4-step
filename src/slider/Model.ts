@@ -198,10 +198,7 @@ class Model extends Observer<ModelEvents> {
     }
 
     private static moreThan0LessThan1(value: number): number {
-        let newValue = value;
-        newValue = newValue > 1 ? 1 : newValue;
-        newValue = newValue < 0 ? 0 : newValue;
-        return newValue;
+        return Math.max(Math.min(value, 1), 0);
     }
 
     private static getValueRelative({
@@ -263,12 +260,10 @@ class Model extends Observer<ModelEvents> {
         }
         const popRes: string | undefined = this.state.step.toString()
             .split('.')
-            .pop();
+            .pop() || '';
         let accuracy = 0;
-        if (popRes !== undefined) {
-            accuracy = this.state.step.toString()
-                .includes('.') ? (popRes.length) : 0;
-        }
+        accuracy = this.state.step.toString()
+            .includes('.') ? (popRes.length) : 0;
         return Number(newValue.toFixed(accuracy));
     }
 
