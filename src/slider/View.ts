@@ -218,7 +218,8 @@ class View extends Observer<ViewEvents> {
         const evt: MouseEvent | Touch = View.getEvent(e.detail.data.data);
         const target = evt.target;
         if (!(target instanceof HTMLElement)) return [];
-        const updatedHead: TargetType = target.hasAttribute('data-valueFrom') ? 'valueFrom' : 'valueTo';
+        const updatedHead: TargetType = target
+            .hasAttribute('data-valueFrom') ? 'valueFrom' : 'valueTo';
         const dataArray: Array<number> = [];
         if (this.state.direction === 'horizontal') {
             dataArray.push(target.getBoundingClientRect().left);

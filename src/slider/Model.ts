@@ -95,7 +95,10 @@ class Model extends Observer<ModelEvents> {
         const stepIsValid = (val: number, max: number, min: number): boolean => {
             return val < max - min && val > 0;
         };
-        if (!stepIsValid(value, this.state.max, this.state.min)) throw new Error('Шаг не может быть больше разницы максимума и минимума или меньше нуля');
+        if (!stepIsValid(value, this.state.max, this.state.min)) {
+            throw new Error('Шаг не может быть больше разницы '
+                + 'максимума и минимума или меньше нуля');
+        }
         this.state.step = value;
         this.notify('step', {
             target: 'step',
@@ -234,7 +237,9 @@ class Model extends Observer<ModelEvents> {
         } else {
             updatedProperty = this.isValueTo(updatedValue) ? 'valueTo' : 'valueFrom';
         }
-        updatedValue = updatedProperty === 'valueFrom' ? this.validValueFrom(updatedValue) : this.validValueTo(updatedValue);
+        updatedValue = updatedProperty === 'valueFrom'
+            ? this.validValueFrom(updatedValue)
+            : this.validValueTo(updatedValue);
         return {
             property: updatedProperty,
             value: updatedValue
@@ -261,8 +266,7 @@ class Model extends Observer<ModelEvents> {
         const popRes: string | undefined = this.state.step.toString()
             .split('.')
             .pop() || '';
-        let accuracy = 0;
-        accuracy = this.state.step.toString()
+        const accuracy = this.state.step.toString()
             .includes('.') ? (popRes.length) : 0;
         return Number(newValue.toFixed(accuracy));
     }
@@ -301,7 +305,9 @@ class Model extends Observer<ModelEvents> {
             / lineParameter;
         newPosition = Model.moreThan0LessThan1(newPosition);
         const updatedValue = this.calcValue(newPosition, updatedProperty);
-        return updatedProperty === 'valueTo' ? this.validValueTo(updatedValue) : this.validValueFrom(updatedValue);
+        return updatedProperty === 'valueTo'
+            ? this.validValueTo(updatedValue)
+            : this.validValueFrom(updatedValue);
     }
 
     private calcUpdatedValueRelative(data: NotifyData): number {

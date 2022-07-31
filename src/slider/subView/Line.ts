@@ -30,7 +30,8 @@ class Line {
             this.progressBar.classList.add('slider__line-progress');
         } else {
             this.element.classList.add('slider__line', 'slider__line_direction_vertical');
-            this.progressBar.classList.add('slider__line-progress', 'slider__line-progress_direction_vertical');
+            this.progressBar.classList
+                .add('slider__line-progress', 'slider__line-progress_direction_vertical');
         }
         this.element.append(this.progressBar);
         this.parent.append(this.element);
@@ -80,13 +81,15 @@ class Line {
             if (this.type === 'single') {
                 this.progressBar.style.width = to.style.left;
             } else if (from !== undefined) {
-                this.progressBar.style.width = `${parseInt(to.style.left, 10) - parseInt(from.style.left, 10)}%`;
+                this.progressBar.style
+                    .width = `${parseInt(to.style.left, 10) - parseInt(from.style.left, 10)}%`;
                 this.progressBar.style.left = from.style.left;
             }
         } else if (this.type === 'single') {
             this.progressBar.style.height = to.style.top;
         } else if (from !== undefined) {
-            this.progressBar.style.height = `${parseInt(to.style.top, 10) - parseInt(from.style.top, 10)}%`;
+            this.progressBar.style
+                .height = `${parseInt(to.style.top, 10) - parseInt(from.style.top, 10)}%`;
             this.progressBar.style.top = from.style.top;
         }
     }

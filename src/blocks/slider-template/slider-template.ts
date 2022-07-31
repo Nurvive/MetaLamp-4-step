@@ -1,7 +1,6 @@
 import './slider-template.scss';
 import '../../slider/jquery.slider.js';
 import {State} from '../../slider/types/types';
-import {rootLogger} from 'ts-jest';
 
 class SliderTemplate {
     private readonly element: JQuery;
@@ -76,7 +75,9 @@ class SliderTemplate {
     };
 
     handleVerticalButtonClick = (e: JQuery.ClickEvent): void => {
-        e.target.checked ? this.slider?.Slider('changeDirection', 'vertical') : this.slider?.Slider('changeDirection', 'horizontal');
+        e.target.checked
+            ? this.slider?.Slider('changeDirection', 'vertical')
+            : this.slider?.Slider('changeDirection', 'horizontal');
     };
 
     handleRangeButtonClick = (e: JQuery.ClickEvent): void => {
