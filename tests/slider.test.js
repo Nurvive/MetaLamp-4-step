@@ -52,25 +52,25 @@ describe('Class Slider: ', () => {
         expect(slider.getValueFrom)
             .toBeDefined();
     });
-    test('functions should return true', () => {
+    test('functions should return this', () => {
         expect(slider.hideBubble())
-            .toBeTruthy();
+            .toEqual(slider);
         expect(slider.showBubble())
-            .toBeTruthy();
+            .toEqual(slider);
         expect(slider.changeDirection('horizontal'))
-            .toBeTruthy();
+            .toEqual(slider);
         expect(slider.changeType('double'))
-            .toBeTruthy();
+            .toEqual(slider);
         expect(slider.changeStep(1))
-            .toBeTruthy();
+            .toEqual(slider);
         expect(slider.changeTo(10))
-            .toBeTruthy();
+            .toEqual(slider);
         expect(slider.changeMax(50))
-            .toBeTruthy();
+            .toEqual(slider);
         expect(slider.changeMin(-1))
-            .toBeTruthy();
+            .toEqual(slider);
         expect(slider.changeFrom(0))
-            .toBeTruthy();
+            .toEqual(slider);
     });
     test('getters should return numbers', () => {
         expect(slider.getMax())

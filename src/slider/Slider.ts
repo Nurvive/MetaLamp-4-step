@@ -20,49 +20,49 @@ class Slider {
         this.presenter = new Presenter(this.model, this.view);
     }
 
-    hideBubble(): boolean {
+    hideBubble(): Slider {
         this.model.bubble = false;
-        return true;
+        return this;
     }
 
-    showBubble(): boolean {
+    showBubble(): Slider {
         this.model.bubble = true;
-        return true;
+        return this;
     }
 
-    changeDirection(value: DirectionType): boolean {
+    changeDirection(value: DirectionType): Slider {
         this.model.direction = value;
-        return true;
+        return this;
     }
 
-    changeType(value: TypeOfSlider): boolean {
+    changeType(value: TypeOfSlider): Slider {
         this.model.type = value;
-        return true;
+        return this;
     }
 
-    changeStep(value: number): boolean {
+    changeStep(value: number): Slider {
         this.model.step = value;
-        return true;
+        return this;
     }
 
-    changeTo(value: number): boolean {
+    changeTo(value: number): Slider {
         this.model.to = value;
-        return true;
+        return this;
     }
 
-    changeFrom(value: number): boolean {
+    changeFrom(value: number): Slider {
         this.model.from = value;
-        return true;
+        return this;
     }
 
-    changeMax(value: number): boolean {
+    changeMax(value: number): Slider {
         this.model.max = value;
-        return true;
+        return this;
     }
 
-    changeMin(value: number): boolean {
+    changeMin(value: number): Slider {
         this.model.min = value;
-        return true;
+        return this;
     }
 
     getMax(): number {
