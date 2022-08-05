@@ -263,7 +263,7 @@ class Model extends Observer<ModelEvents> {
                     : this.state.max;
             }
         }
-        const popRes: string | undefined = this.state.step.toString()
+        const popRes = this.state.step.toString()
             .split('.')
             .pop() || '';
         const accuracy = this.state.step.toString()
