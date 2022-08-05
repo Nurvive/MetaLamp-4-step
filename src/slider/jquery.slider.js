@@ -1,9 +1,9 @@
 import {Slider} from './Slider';
 
-(function ($) {
+(($) => {
     const sliders = [];
     const methods = {
-        init: function (options) {
+        init(options) {
             const settings = $.extend({
                 bubble: true,
                 max: 100,
@@ -17,8 +17,7 @@ import {Slider} from './Slider';
                 onChangeFrom() {}
             }, options);
 
-            return this.each(function () {
-                const ths = $(this);
+            return this.each(() => {
                 if (settings.step > settings.max - settings.min) {
                     throw new Error('Шаг не может быть больше разницы максимума и минимума');
                 }
@@ -31,10 +30,10 @@ import {Slider} from './Slider';
                 if (settings.valueFrom < settings.min) {
                     throw new Error('Текущее значение не может быть меньше минимума');
                 }
-                sliders.push(new Slider(ths[0], settings));
+                sliders.push(new Slider(this[0], settings));
             });
         },
-        hideBubble: function () {
+        hideBubble() {
             let slider;
             sliders.forEach((x) => {
                 if (x.elem === this[0]) {
@@ -43,7 +42,7 @@ import {Slider} from './Slider';
             });
             slider.hideBubble();
         },
-        showBubble: function () {
+        showBubble() {
             let slider;
             sliders.forEach((x) => {
                 if (x.elem === this[0]) {
@@ -52,7 +51,7 @@ import {Slider} from './Slider';
             });
             slider.showBubble();
         },
-        changeDirection: function (value) {
+        changeDirection(value) {
             let slider;
             sliders.forEach((x) => {
                 if (x.elem === this[0]) {
@@ -61,7 +60,7 @@ import {Slider} from './Slider';
             });
             slider.changeDirection(value);
         },
-        changeType: function (value) {
+        changeType(value) {
             let slider;
             sliders.forEach((x) => {
                 if (x.elem === this[0]) {
@@ -70,7 +69,7 @@ import {Slider} from './Slider';
             });
             slider.changeType(value);
         },
-        changeStep: function (value) {
+        changeStep(value) {
             let slider;
             sliders.forEach((x) => {
                 if (x.elem === this[0]) {
@@ -80,7 +79,7 @@ import {Slider} from './Slider';
             if (Number.isNaN(value)) throw new Error('step должно быть числом');
             slider.changeStep(value);
         },
-        changeTo: function (value) {
+        changeTo(value) {
             let slider;
             sliders.forEach((x) => {
                 if (x.elem === this[0]) {
@@ -90,7 +89,7 @@ import {Slider} from './Slider';
             if (Number.isNaN(value)) throw new Error('valueTo должно быть числом');
             slider.changeTo(value);
         },
-        changeFrom: function (value) {
+        changeFrom(value) {
             let slider;
             sliders.forEach((x) => {
                 if (x.elem === this[0]) {
@@ -100,7 +99,7 @@ import {Slider} from './Slider';
             if (Number.isNaN(value)) throw new Error('valueFrom должно быть числом');
             slider.changeFrom(value);
         },
-        changeMax: function (value) {
+        changeMax(value) {
             let slider;
             sliders.forEach((x) => {
                 if (x.elem === this[0]) {
@@ -110,7 +109,7 @@ import {Slider} from './Slider';
             if (Number.isNaN(value)) throw new Error('valueFrom должно быть числом');
             slider.changeMax(value);
         },
-        getMax: function () {
+        getMax() {
             let slider;
             sliders.forEach((x) => {
                 if (x.elem === this[0]) {
@@ -119,7 +118,7 @@ import {Slider} from './Slider';
             });
             return slider.getMax();
         },
-        getMin: function () {
+        getMin() {
             let slider;
             sliders.forEach((x) => {
                 if (x.elem === this[0]) {
@@ -128,7 +127,7 @@ import {Slider} from './Slider';
             });
             return slider.getMin();
         },
-        getValueTo: function () {
+        getValueTo() {
             let slider;
             sliders.forEach((x) => {
                 if (x.elem === this[0]) {
@@ -137,7 +136,7 @@ import {Slider} from './Slider';
             });
             return slider.getValueTo();
         },
-        getValueFrom: function () {
+        getValueFrom() {
             let slider;
             sliders.forEach((x) => {
                 if (x.elem === this[0]) {
@@ -146,7 +145,7 @@ import {Slider} from './Slider';
             });
             return slider.getValueFrom();
         },
-        getStep: function () {
+        getStep() {
             let slider;
             sliders.forEach((x) => {
                 if (x.elem === this[0]) {
@@ -155,7 +154,7 @@ import {Slider} from './Slider';
             });
             return slider.getStep();
         },
-        changeMin: function (value) {
+        changeMin(value) {
             let slider;
             sliders.forEach((x) => {
                 if (x.elem === this[0]) {
@@ -178,4 +177,4 @@ import {Slider} from './Slider';
         $.error('Метод с именем ' + method + ' не существует для jQuery.slider');
         return null;
     };
-}(jQuery));
+})(jQuery);
